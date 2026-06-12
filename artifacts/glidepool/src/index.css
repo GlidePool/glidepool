@@ -170,6 +170,45 @@
   0% { transform: translateY(-100%); }
   100% { transform: translateY(100vh); }
 }
+@keyframes hero-breathe {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.12); }
+}
+@keyframes ground-pulse {
+  0%, 100% { opacity: 0.18; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.42; transform: translateX(-50%) scaleX(1.18); }
+}
+@keyframes logo-ring-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes logo-ring-breathe {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+@keyframes particle-rise {
+  0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+  20%  { opacity: 0.8; }
+  80%  { opacity: 0.3; }
+  100% { opacity: 0; transform: translateY(-80px) scale(0.2); }
+}
+@keyframes beam-flicker {
+  0%, 100% { opacity: 0.12; }
+  45% { opacity: 0.28; }
+  50% { opacity: 0.38; }
+  55% { opacity: 0.24; }
+}
+@keyframes light-sweep {
+  0% { transform: rotate(-20deg) scaleY(1); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: rotate(20deg) scaleY(1); opacity: 0; }
+}
 
 .animate-float { animation: float-slow 8s ease-in-out infinite; }
 .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-hero-breathe { animation: hero-breathe 5s ease-in-out infinite; }
+.animate-ground-pulse { animation: ground-pulse 4s ease-in-out infinite; }
+.animate-logo-spin { animation: logo-ring-spin 6s linear infinite; }
+.animate-logo-breathe { animation: logo-ring-breathe 3s ease-in-out infinite; }
+.animate-beam { animation: beam-flicker 6s ease-in-out infinite; }

@@ -173,16 +173,99 @@ export default function Landing() {
           </div>
         </div>
 
+        {/* ── Center light layers (behind content) ── */}
+
+        {/* Breathing radial glow */}
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          <div className="w-[600px] h-[600px] rounded-full animate-hero-breathe"
+            style={{ background: "radial-gradient(circle, rgba(0,245,100,0.13) 0%, rgba(0,200,80,0.05) 40%, transparent 70%)" }} />
+        </div>
+
+        {/* Vertical light beam shaft – logo → ground */}
+        <div className="absolute pointer-events-none animate-beam"
+          style={{
+            top: "38%", left: "50%",
+            transform: "translateX(-50%)",
+            width: "2px",
+            height: "28%",
+            background: "linear-gradient(to bottom, rgba(0,245,100,0.55) 0%, rgba(0,245,100,0.10) 70%, transparent 100%)",
+            filter: "blur(3px)"
+          }} />
+
+        {/* Wide light cone from logo downwards */}
+        <div className="absolute pointer-events-none animate-beam"
+          style={{
+            top: "39%", left: "50%",
+            transform: "translateX(-50%)",
+            width: "140px",
+            height: "30%",
+            background: "linear-gradient(to bottom, rgba(0,245,100,0.10) 0%, rgba(0,245,100,0.04) 60%, transparent 100%)",
+            clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
+            animationDelay: "0.3s"
+          }} />
+
+        {/* Ground shadow ellipse – stage spotlight effect */}
+        <div className="absolute bottom-[14%] pointer-events-none animate-ground-pulse"
+          style={{
+            left: "50%",
+            width: "340px",
+            height: "48px",
+            background: "radial-gradient(ellipse at 50% 50%, rgba(0,245,100,0.22) 0%, rgba(0,245,100,0.06) 55%, transparent 100%)",
+            filter: "blur(10px)",
+          }} />
+
+        {/* Floating light particles */}
+        {[
+          { x: "46%", delay: "0s",    dur: "3.6s" },
+          { x: "50%", delay: "0.8s",  dur: "4.2s" },
+          { x: "53%", delay: "1.5s",  dur: "3.1s" },
+          { x: "48%", delay: "2.2s",  dur: "4.8s" },
+          { x: "51%", delay: "0.4s",  dur: "3.9s" },
+          { x: "44%", delay: "1.9s",  dur: "4.0s" },
+          { x: "55%", delay: "1.1s",  dur: "3.4s" },
+          { x: "47%", delay: "2.8s",  dur: "4.5s" },
+        ].map(({ x, delay, dur }, i) => (
+          <div key={i} className="absolute pointer-events-none rounded-full"
+            style={{
+              left: x,
+              bottom: "28%",
+              width: "3px",
+              height: "3px",
+              background: "rgba(0,245,100,0.9)",
+              boxShadow: "0 0 6px 2px rgba(0,245,100,0.4)",
+              animation: `particle-rise ${dur} ease-out infinite`,
+              animationDelay: delay,
+            }} />
+        ))}
+
         {/* ── Center content ── */}
         <div className="absolute inset-0 flex flex-col items-center justify-center z-10 text-center px-6">
-          {/* Logo mark */}
-          <div className="w-16 h-16 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm flex items-center justify-center mb-5 glow-green-sm">
-            <span className="font-mono font-black text-2xl text-primary">G</span>
+          {/* Logo mark with rotating arc + breathing glow */}
+          <div className="relative mb-5">
+            {/* Outer breathing glow ring */}
+            <div className="absolute -inset-6 rounded-full animate-logo-breathe pointer-events-none"
+              style={{ background: "radial-gradient(circle, rgba(0,245,100,0.20) 0%, transparent 70%)" }} />
+            {/* Spinning arc */}
+            <div className="absolute -inset-3 rounded-full animate-logo-spin pointer-events-none"
+              style={{
+                background: "conic-gradient(transparent 0deg, transparent 200deg, rgba(0,245,100,0.55) 290deg, rgba(0,245,100,0.9) 350deg, transparent 360deg)",
+              }} />
+            {/* Second slower arc (opposite direction) */}
+            <div className="absolute -inset-2 rounded-full pointer-events-none"
+              style={{
+                background: "conic-gradient(transparent 0deg, rgba(0,245,100,0.3) 60deg, transparent 120deg, transparent 360deg)",
+                animation: "logo-ring-spin 9s linear infinite reverse",
+              }} />
+            {/* Logo circle */}
+            <div className="relative w-16 h-16 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm flex items-center justify-center glow-green-sm">
+              <span className="font-mono font-black text-2xl text-primary">G</span>
+            </div>
           </div>
 
           {/* Brand name */}
-          <h1 className="font-black uppercase tracking-[0.18em] text-white mb-2"
-            style={{ fontSize: "clamp(2.2rem, 6vw, 5rem)", letterSpacing: "0.16em" }}>
+          <h1 className="font-black uppercase text-white mb-2"
+            style={{ fontSize: "clamp(2.2rem, 6vw, 5rem)", letterSpacing: "0.16em",
+              textShadow: "0 0 60px rgba(0,245,100,0.25), 0 2px 30px rgba(0,0,0,0.8)" }}>
             GlidePool
           </h1>
 

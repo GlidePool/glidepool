@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import {
   ArrowRight, Bot, Shield, Zap, ChevronDown, ChevronUp,
   TrendingUp, BarChart2, Lock, Cpu, Users, Globe,
-  CheckCircle, ArrowUpRight, Minus,
+  ArrowUpRight,
 } from "lucide-react";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -59,12 +59,12 @@ const STATS = [
 
 /* ── Benefits ──────────────────────────────────────────────── */
 const BENEFITS = [
-  { icon: Cpu,    title: "AI-Powered Analysis",    desc: "GPT-5 reads on-chain pool state, tick depth, and your position bins to generate surgical recommendations tailored to your risk profile." },
-  { icon: Lock,   title: "Fully Non-Custodial",    desc: "GlidePool never holds funds or signs transactions. Every action is previewed before it reaches your wallet — you stay in control." },
-  { icon: Zap,    title: "Real-Time On-Chain Data", desc: "Pulls live state directly from Maverick V2 contracts on Base mainnet via viem — no stale oracles, no middleware lag." },
-  { icon: BarChart2, title: "Bin-Level Precision",  desc: "See exactly which bin IDs hold your liquidity, their value, and the recommended bin range for your next rebalance." },
-  { icon: Globe,  title: "Base Mainnet Native",    desc: "Built exclusively on Base — fast finality, low gas, and native USDC for x402 micropayment gating on premium advisor calls." },
-  { icon: Users,  title: "For Serious LPs",         desc: "Designed for DeFi power users who want more than a dashboard — actionable recommendations backed by transparent reasoning." },
+  { icon: Cpu,      title: "AI-Powered Analysis",    desc: "GPT reads on-chain pool state, tick depth, and your position bins to generate surgical recommendations tailored to your risk profile." },
+  { icon: Lock,     title: "Fully Non-Custodial",    desc: "GlidePool never holds funds or signs transactions. Every action is previewed before it reaches your wallet — you stay in control." },
+  { icon: Zap,      title: "Real-Time On-Chain Data", desc: "Pulls live state directly from Maverick V2 contracts on Base mainnet via viem — no stale oracles, no middleware lag." },
+  { icon: BarChart2,title: "Bin-Level Precision",    desc: "See exactly which bin IDs hold your liquidity, their value, and the recommended bin range for your next rebalance." },
+  { icon: Globe,    title: "Base Mainnet Native",    desc: "Built exclusively on Base — fast finality, low gas, and native USDC for x402 micropayment gating on premium advisor calls." },
+  { icon: Users,    title: "For Serious LPs",         desc: "Designed for DeFi power users who want more than a dashboard — actionable recommendations backed by transparent reasoning." },
 ];
 
 /* ── Guide steps ────────────────────────────────────────────── */
@@ -108,190 +108,198 @@ export default function Landing() {
   const { data: pools, isLoading } = useListPools({ query: { queryKey: getListPoolsQueryKey() } });
 
   return (
-    <div className="flex flex-col gap-0 -mt-8 -mx-6 overflow-x-hidden">
+    <div className="flex flex-col">
 
-      {/* ══ HERO ══════════════════════════════════════════════ */}
-      <section className="relative aurora-bg mesh-grid min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center text-center px-6 pb-16">
-        {/* floating token chips */}
-        {[
-          { label: "Bitcoin ₿",   pos: "top-10 left-8",   show: "hidden lg:flex" },
-          { label: "Ethereum Ξ",  pos: "top-10 right-8",  show: "hidden lg:flex" },
-          { label: "USDC ●",     pos: "top-28 left-4",   show: "hidden xl:flex" },
-          { label: "◎ cbETH",    pos: "top-28 right-4",  show: "hidden xl:flex" },
-        ].map(({ label, pos, show }) => (
-          <div key={label} className={`absolute ${pos} ${show} items-center gap-2 text-white/20 font-mono text-xs border border-white/[0.06] rounded px-3 py-1.5 backdrop-blur-sm`}>
-            {label}
+      {/* ══ HERO — full-bleed cinematic ═══════════════════════ */}
+      <section
+        className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden"
+        style={{
+          backgroundImage: "url('/hero-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center 30%",
+        }}
+      >
+        {/* Multi-layer overlay for depth and text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/15 to-black/80 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+        {/* Subtle vignette on sides */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 pointer-events-none" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center px-6 max-w-5xl mx-auto">
+          {/* Live badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/30 bg-primary/8 backdrop-blur-sm text-primary font-mono text-[11px] tracking-widest mb-8 uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            Maverick V2 · AI Advisor · Base Mainnet
           </div>
-        ))}
 
-        {/* glow orb */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full pointer-events-none animate-pulse-glow"
-          style={{ background: "radial-gradient(ellipse, rgba(0,245,100,0.11) 0%, rgba(0,200,80,0.03) 55%, transparent 72%)" }} />
+          {/* Headline — editorial scale */}
+          <h1 className="font-black tracking-tighter leading-[0.9] mb-6"
+            style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}>
+            <span className="text-white drop-shadow-[0_2px_32px_rgba(0,0,0,0.8)]">The Smartest Way</span>
+            <br />
+            <span className="text-white drop-shadow-[0_2px_32px_rgba(0,0,0,0.8)]">to Manage </span>
+            <span className="text-gradient-green drop-shadow-[0_0_40px_rgba(0,245,100,0.4)]">Liquidity.</span>
+          </h1>
 
-        {/* badge */}
-        <div className="relative z-10 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-primary font-mono text-xs tracking-wider mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-          Maverick V2 · AI Advisor · Base Mainnet
-        </div>
+          <p className="text-white/60 text-base md:text-lg max-w-xl leading-relaxed mb-10 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+            AI-driven rebalancing advice for Maverick V2 concentrated liquidity —
+            non-custodial, on-chain, and ready in seconds.
+          </p>
 
-        {/* headline */}
-        <h1 className="relative z-10 text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none mb-4 max-w-5xl">
-          <span className="text-white">A Trusted &</span>
-          <br />
-          <span className="text-white">Secure </span>
-          <span className="text-gradient-green">LP Advisor.</span>
-        </h1>
-
-        <p className="relative z-10 text-base text-white/35 max-w-lg leading-relaxed mb-10">
-          GlidePool is the most convenient platform for managing Maverick V2
-          concentrated liquidity — get AI-driven rebalancing advice and sign
-          transactions directly from your own wallet.
-        </p>
-
-        <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4">
-          {!isConnected ? (
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            {!isConnected ? (
+              <>
                 <ConnectButton />
                 <Link href="/pools">
-                  <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm border border-white/10 text-white/50 hover:border-primary/25 hover:text-white/80 transition-all">
+                  <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm border border-white/20 text-white/70 hover:border-primary/35 hover:text-white backdrop-blur-sm transition-all">
                     Explore Pools <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
-              </div>
-              <p className="text-[10px] text-white/20 font-mono">Non-custodial · No sign-up · Base Mainnet</p>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Link href="/advisor">
-                <button className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm bg-primary text-primary-foreground glow-green hover:glow-green-lg transition-all">
-                  <Bot className="w-4 h-4" /> Open AI Advisor
-                </button>
-              </Link>
-              <Link href="/positions">
-                <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm border border-white/10 text-white/50 hover:border-primary/25 hover:text-white/80 transition-all">
-                  My Positions <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-            </div>
-          )}
+              </>
+            ) : (
+              <>
+                <Link href="/advisor">
+                  <button className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm bg-primary text-primary-foreground glow-green hover:glow-green-lg transition-all">
+                    <Bot className="w-4 h-4" /> Open AI Advisor
+                  </button>
+                </Link>
+                <Link href="/positions">
+                  <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm border border-white/20 text-white/70 hover:border-primary/35 hover:text-white backdrop-blur-sm transition-all">
+                    My Positions <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
+              </>
+            )}
+          </div>
+
+          <p className="mt-5 text-[11px] text-white/30 font-mono tracking-wider">
+            Non-custodial · No sign-up · Base Mainnet
+          </p>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 green-line opacity-25" />
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+          <span className="text-[10px] font-mono text-white/50 tracking-widest uppercase">Scroll</span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" />
+        </div>
       </section>
 
       {/* ══ STATS TICKER ══════════════════════════════════════ */}
-      <section className="border-y border-white/[0.05] bg-white/[0.015]">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.05]">
+      <section className="border-y border-white/[0.07] bg-white/[0.02]">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.06]">
           {STATS.map(({ label, value }) => (
-            <div key={label} className="flex flex-col items-center justify-center py-7 px-4 text-center gap-1">
+            <div key={label} className="flex flex-col items-center justify-center py-8 px-4 text-center gap-1">
               <span className="text-3xl md:text-4xl font-black text-primary font-mono">{value}</span>
-              <span className="text-[10px] text-white/25 uppercase tracking-widest font-mono">{label}</span>
+              <span className="text-[10px] text-white/30 uppercase tracking-widest font-mono">{label}</span>
             </div>
           ))}
         </div>
       </section>
 
       {/* ══ POOL TABLE ════════════════════════════════════════ */}
-      <section className="px-6 py-16 max-w-6xl mx-auto w-full">
-        <div className="flex items-end justify-between mb-6">
-          <div>
-            <div className="bracket-label mb-1 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse inline-block" />
-              Popular Pools
-            </div>
-            <h2 className="text-2xl font-black tracking-tight">Buy Your<br />Own Liquidity Position</h2>
-          </div>
-          <Link href="/pools">
-            <button className="text-[10px] font-mono text-primary/60 hover:text-primary border border-primary/15 rounded px-3 py-1.5 hover:border-primary/30 transition-all">
-              Show all →
-            </button>
-          </Link>
-        </div>
-
-        {/* Table */}
-        <div className="glass-card rounded-xl overflow-hidden">
-          {/* Header */}
-          <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-5 py-3 border-b border-white/[0.06]">
-            {["Assets", "TVL", "Fee Rate", "Active Tick", ""].map((h) => (
-              <div key={h} className="text-[10px] text-white/25 uppercase tracking-widest font-mono">{h}</div>
-            ))}
-          </div>
-
-          {isLoading ? (
+      <section className="px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-end justify-between mb-8">
             <div>
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-5 py-4 border-b border-white/[0.04] animate-pulse">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/5" />
-                    <div className="h-4 bg-white/5 rounded w-24" />
-                  </div>
-                  <div className="h-4 bg-white/5 rounded w-16 self-center" />
-                  <div className="h-4 bg-white/5 rounded w-12 self-center" />
-                  <div className="h-8 bg-white/5 rounded w-20 self-center" />
-                  <div className="h-7 bg-white/5 rounded w-16 self-center" />
-                </div>
+              <div className="bracket-label mb-2 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse inline-block" />
+                Popular Pools
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
+                Buy Your Own<br />
+                <span className="text-gradient-green">Liquidity Position</span>
+              </h2>
+            </div>
+            <Link href="/pools">
+              <button className="text-[10px] font-mono text-primary/60 hover:text-primary border border-primary/15 rounded px-3 py-1.5 hover:border-primary/30 transition-all">
+                Show all →
+              </button>
+            </Link>
+          </div>
+
+          {/* Table */}
+          <div className="glass-card rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-6 py-3.5 border-b border-white/[0.06]">
+              {["Assets", "TVL", "Fee Rate", "Active Tick", ""].map((h) => (
+                <div key={h} className="text-[10px] text-white/25 uppercase tracking-widest font-mono">{h}</div>
               ))}
             </div>
-          ) : (
-            <div>
-              {pools?.map((pool, idx) => {
-                const positive = idx % 3 !== 1;
-                const mockChange = positive ? `+${(1.2 + idx * 0.7).toFixed(2)}%` : `-${(0.5 + idx * 0.3).toFixed(2)}%`;
-                return (
-                  <Link key={pool.poolAddress} href={`/pools/${pool.poolAddress}`}>
-                    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-5 py-4 border-b border-white/[0.03] hover:bg-white/[0.025] transition-colors cursor-pointer group items-center last:border-0">
-                      {/* Asset */}
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-9 h-9 shrink-0">
-                          <div className="absolute inset-0 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center font-bold text-xs text-primary">
-                            {pool.tokenASymbol[0]}
-                          </div>
-                          <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white/[0.08] border border-white/[0.12] flex items-center justify-center font-bold text-[9px] text-white/60">
-                            {pool.tokenBSymbol[0]}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-bold text-sm group-hover:text-primary transition-colors">
-                            {pool.tokenASymbol} · {pool.tokenBSymbol}
-                          </div>
-                          <div className="font-mono text-[10px] text-white/20">{truncateAddress(pool.poolAddress)}</div>
-                        </div>
-                      </div>
 
-                      {/* TVL */}
-                      <div className="font-mono text-sm text-white/70">{formatUsd(pool.tvlUsd)}</div>
-
-                      {/* Fee Rate */}
-                      <div className={`font-mono text-sm font-semibold ${positive ? "text-primary" : "text-red-400"}`}>
-                        {formatPercent(pool.feeRate || 0)}
-                      </div>
-
-                      {/* Spark chart */}
-                      <div>
-                        <SparkBars seed={idx * 31 + 7} positive={positive} />
-                      </div>
-
-                      {/* Action */}
-                      <div>
-                        <button className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground hover:glow-green-sm transition-all">
-                          Analyze
-                        </button>
-                      </div>
+            {isLoading ? (
+              <div>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-6 py-4 border-b border-white/[0.04] animate-pulse">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-white/5" />
+                      <div className="h-4 bg-white/5 rounded w-24" />
                     </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+                    <div className="h-4 bg-white/5 rounded w-16 self-center" />
+                    <div className="h-4 bg-white/5 rounded w-12 self-center" />
+                    <div className="h-8 bg-white/5 rounded w-20 self-center" />
+                    <div className="h-7 bg-white/5 rounded w-16 self-center" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>
+                {pools?.map((pool, idx) => {
+                  const positive = idx % 3 !== 1;
+                  return (
+                    <Link key={pool.poolAddress} href={`/pools/${pool.poolAddress}`}>
+                      <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-6 py-4 border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors cursor-pointer group items-center last:border-0">
+                        {/* Asset */}
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-9 h-9 shrink-0">
+                            <div className="absolute inset-0 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center font-bold text-xs text-primary">
+                              {pool.tokenASymbol[0]}
+                            </div>
+                            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white/[0.08] border border-white/[0.12] flex items-center justify-center font-bold text-[9px] text-white/60">
+                              {pool.tokenBSymbol[0]}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-bold text-sm group-hover:text-primary transition-colors">
+                              {pool.tokenASymbol} · {pool.tokenBSymbol}
+                            </div>
+                            <div className="font-mono text-[10px] text-white/20">{truncateAddress(pool.poolAddress)}</div>
+                          </div>
+                        </div>
+
+                        {/* TVL */}
+                        <div className="font-mono text-sm text-white/70">{formatUsd(pool.tvlUsd)}</div>
+
+                        {/* Fee Rate */}
+                        <div className={`font-mono text-sm font-semibold ${positive ? "text-primary" : "text-red-400"}`}>
+                          {formatPercent(pool.feeRate || 0)}
+                        </div>
+
+                        {/* Spark chart */}
+                        <div>
+                          <SparkBars seed={idx * 31 + 7} positive={positive} />
+                        </div>
+
+                        {/* Action */}
+                        <div>
+                          <button className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground hover:glow-green-sm transition-all">
+                            Analyze
+                          </button>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ══ ABOUT / GUIDE ════════════════════════════════════ */}
-      <section className="px-6 py-20 border-t border-white/[0.05] bg-white/[0.01]">
+      <section className="px-6 py-24 border-t border-white/[0.05] bg-white/[0.012]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left: About text */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            {/* Left: About */}
             <div>
               <div className="bracket-label mb-3">About GlidePool</div>
               <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-tight mb-6">
@@ -299,13 +307,11 @@ export default function Landing() {
                 <span className="text-gradient-green">Endless Possibilities</span>{" "}
                 With These Easy Steps
               </h2>
-              <p className="text-white/35 text-sm leading-relaxed mb-6">
+              <p className="text-white/35 text-sm leading-relaxed mb-5">
                 GlidePool is the first non-custodial AI advisor purpose-built for Maverick V2 DLMM
                 concentrated liquidity positions on Base mainnet. We combine live on-chain data with
                 GPT-powered reasoning to give you actionable, risk-rated recommendations — not just
-                charts. Whether you're adding a new position or managing an existing one, GlidePool
-                shows you exactly which bin range to use, which directional mode to enable, and
-                when to rebalance.
+                charts.
               </p>
               <p className="text-white/25 text-sm leading-relaxed">
                 All analysis is transparent. Every recommendation includes the full reasoning chain
@@ -316,18 +322,17 @@ export default function Landing() {
 
             {/* Right: Steps */}
             <div className="space-y-4">
-              {STEPS.map(({ n, title, desc }, i) => (
-                <div key={n} className="flex gap-5 p-5 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-primary/15 transition-colors group">
-                  <div className="shrink-0 w-10 h-10 rounded-lg border border-primary/25 bg-primary/5 flex items-center justify-center font-mono font-black text-primary text-xs group-hover:bg-primary/10 transition-colors">
+              {STEPS.map(({ n, title, desc }) => (
+                <div key={n} className="flex gap-5 p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-primary/15 transition-colors group">
+                  <div className="shrink-0 w-10 h-10 rounded-xl border border-primary/25 bg-primary/5 flex items-center justify-center font-mono font-black text-primary text-xs group-hover:bg-primary/10 transition-colors">
                     {n}
                   </div>
                   <div>
-                    <div className="font-bold text-sm text-white/80 mb-1">{title}</div>
+                    <div className="font-bold text-sm text-white/85 mb-1.5">{title}</div>
                     <div className="text-xs text-white/30 leading-relaxed">{desc}</div>
                   </div>
                 </div>
               ))}
-
               <div className="pt-2">
                 <Link href="/advisor">
                   <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-primary text-primary-foreground glow-green hover:glow-green-lg transition-all">
@@ -341,14 +346,14 @@ export default function Landing() {
       </section>
 
       {/* ══ BENEFITS ════════════════════════════════════════ */}
-      <section className="px-6 py-20 border-t border-white/[0.05]">
+      <section className="px-6 py-24 border-t border-white/[0.05]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
             <div className="bracket-label mb-3 justify-center flex">Advantages</div>
             <h2 className="text-3xl md:text-4xl font-black tracking-tighter mb-3">
               Reliable LP Management
             </h2>
-            <p className="text-white/30 text-sm max-w-lg mx-auto">
+            <p className="text-white/30 text-sm max-w-md mx-auto leading-relaxed">
               GlidePool has a variety of features that make it the best place to start managing your Maverick V2 positions.
             </p>
           </div>
@@ -356,12 +361,12 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {BENEFITS.map(({ icon: Icon, title, desc }) => (
               <div key={title}
-                className="relative group p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-primary/20 hover:bg-white/[0.035] transition-all overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-primary/[0.04] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/[0.08] transition-colors" />
-                <div className="w-9 h-9 rounded-lg border border-primary/20 bg-primary/5 flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+                className="relative group p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-primary/20 hover:bg-white/[0.04] transition-all overflow-hidden">
+                <div className="absolute top-0 right-0 w-28 h-28 rounded-full bg-primary/[0.04] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/[0.09] transition-colors" />
+                <div className="w-9 h-9 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-center mb-4 group-hover:bg-primary/12 transition-colors">
                   <Icon className="w-4 h-4 text-primary/70 group-hover:text-primary transition-colors" />
                 </div>
-                <h3 className="font-bold text-sm text-white/80 mb-2">{title}</h3>
+                <h3 className="font-bold text-sm text-white/85 mb-2">{title}</h3>
                 <p className="text-xs text-white/30 leading-relaxed">{desc}</p>
               </div>
             ))}
@@ -370,9 +375,9 @@ export default function Landing() {
       </section>
 
       {/* ══ FAQ ════════════════════════════════════════════ */}
-      <section className="px-6 py-20 border-t border-white/[0.05] bg-white/[0.01]">
+      <section className="px-6 py-24 border-t border-white/[0.05] bg-white/[0.012]">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
+          <div className="text-center mb-12">
             <div className="bracket-label mb-3 justify-center flex">FAQ</div>
             <h2 className="text-3xl md:text-4xl font-black tracking-tighter mb-3">
               Frequently Asked Questions
@@ -381,7 +386,6 @@ export default function Landing() {
               Everything you need to know about GlidePool and Maverick V2 LP management.
             </p>
           </div>
-
           <div className="space-y-2">
             {FAQS.map((item) => (
               <FaqItem key={item.q} {...item} />
@@ -391,16 +395,24 @@ export default function Landing() {
       </section>
 
       {/* ══ CTA FOOTER ═════════════════════════════════════ */}
-      <section className="relative px-6 py-24 border-t border-white/[0.05] aurora-bg text-center overflow-hidden">
+      <section
+        className="relative px-6 py-28 border-t border-white/[0.05] text-center overflow-hidden"
+        style={{
+          backgroundImage: "url('/hero-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center 60%",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/75 pointer-events-none" />
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(0,245,100,0.07) 0%, transparent 60%)" }} />
+          style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(0,245,100,0.08) 0%, transparent 65%)" }} />
         <div className="relative z-10 max-w-xl mx-auto">
           <div className="bracket-label mb-4 justify-center flex">Ready to start?</div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-4">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-5">
             Ready to become<br />
             <span className="text-gradient-green">a smarter LP?</span>
           </h2>
-          <p className="text-white/30 text-sm mb-8 leading-relaxed">
+          <p className="text-white/35 text-sm mb-9 leading-relaxed">
             Connect your wallet and let GlidePool analyze your Maverick V2 positions.
             No subscription. No custody. Just better decisions.
           </p>

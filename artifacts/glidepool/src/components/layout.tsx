@@ -1,8 +1,19 @@
 import { Link, useLocation } from "wouter";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useEffect, useState } from "react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const isHome = location === "/";
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!isHome) { setScrolled(true); return; }
+    setScrolled(window.scrollY > 60);
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   const navItems = [
     { href: "/", label: "Overview", code: "01" },
@@ -11,10 +22,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { href: "/advisor", label: "AI Advisor", code: "04" },
   ];
 
+  const headerOpaque = !isHome || scrolled;
+
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans">
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] backdrop-blur-xl"
-        style={{ background: "rgba(8, 8, 8, 0.85)" }}>
+      <header
+        className={`${isHome ? "fixed" : "sticky"} top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          headerOpaque
+            ? "border-b border-white/[0.06] backdrop-blur-xl"
+            : "border-b border-transparent"
+        }`}
+        style={{ background: headerOpaque ? "rgba(8, 8, 8, 0.88)" : "transparent" }}
+      >
         <div className="container mx-auto px-6 h-14 flex items-center justify-between gap-8">
           <div className="flex items-center gap-10">
             <Link href="/" className="flex items-center gap-2.5 group shrink-0">
@@ -26,16 +45,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
-                const isActive = location === item.href ||
+                const isActive =
+                  location === item.href ||
                   (location.startsWith(item.href) && item.href !== "/");
                 return (
                   <Link key={item.href} href={item.href}>
-                    <div className={`px-3.5 py-1.5 rounded text-xs font-mono tracking-wide cursor-pointer transition-all ${
-                      isActive
-                        ? "text-primary bg-primary/8 border border-primary/20"
-                        : "text-white/40 hover:text-white/80 hover:bg-white/[0.04]"
-                    }`}>
-                      <span className={isActive ? "text-primary/60" : "text-white/20"}>
+                    <div
+                      className={`px-3.5 py-1.5 rounded text-xs font-mono tracking-wide cursor-pointer transition-all ${
+                        isActive
+                          ? "text-primary bg-primary/8 border border-primary/20"
+                          : "text-white/50 hover:text-white/90 hover:bg-white/[0.05]"
+                      }`}
+                    >
+                      <span className={isActive ? "text-primary/60" : "text-white/25"}>
                         [{item.code}]
                       </span>{" "}
                       {item.label}
@@ -50,7 +72,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-6 py-8">
+      <main className={`flex-1 ${isHome ? "" : "container mx-auto px-6 py-8"}`}>
         {children}
       </main>
 

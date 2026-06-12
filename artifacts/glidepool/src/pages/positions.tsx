@@ -18,9 +18,9 @@ export default function Positions() {
         <div className="w-16 h-16 rounded-full border border-white/[0.08] bg-white/[0.03] flex items-center justify-center">
           <Wallet className="w-7 h-7 text-white/25" />
         </div>
-        <h1 className="text-2xl font-black tracking-tight">Connect Wallet</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Connect your wallet</h1>
         <p className="text-white/30 text-sm max-w-sm">
-          Connect your wallet to view your Maverick V2 liquidity positions.
+          Connect to view your Maverick V2 liquidity positions on Base.
         </p>
         <ConnectButton />
       </div>
@@ -34,9 +34,9 @@ export default function Positions() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <div className="bracket-label mb-1">[03] Positions</div>
-          <h1 className="text-3xl font-black tracking-tight">My Positions</h1>
-          <p className="text-white/30 text-sm mt-1">Manage and optimize your active Maverick V2 liquidity.</p>
+          <div className="bracket-label mb-2">[03] Positions</div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">My Positions</h1>
+          <p className="text-white/30 text-sm mt-1.5">Manage and optimize your active Maverick V2 liquidity.</p>
         </div>
 
         <div className="glass-card rounded-xl px-6 py-4 text-right">

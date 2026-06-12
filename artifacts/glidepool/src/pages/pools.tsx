@@ -22,9 +22,9 @@ export default function Pools() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <div className="bracket-label mb-1">[02] Pool Explorer</div>
-          <h1 className="text-3xl font-black tracking-tight">Maverick V2 Pools</h1>
-          <p className="text-white/30 text-sm mt-1">Discover and analyze supported liquidity pools on Base.</p>
+          <div className="bracket-label mb-2">[02] Pool Explorer</div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Maverick V2 Pools</h1>
+          <p className="text-white/30 text-sm mt-1.5">Discover and analyze liquidity pools on Base mainnet.</p>
         </div>
 
         <div className="relative w-full md:w-72">

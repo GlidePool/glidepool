@@ -90,9 +90,9 @@ export default function Advisor() {
         <div className="w-16 h-16 rounded-full border border-primary/20 bg-primary/5 flex items-center justify-center glow-green-sm animate-pulse-glow">
           <Bot className="w-8 h-8 text-primary" />
         </div>
-        <h1 className="text-3xl font-black">AI Advisor</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Connect your wallet</h1>
         <p className="text-white/30 text-sm max-w-sm leading-relaxed">
-          Connect your wallet to access the GlidePool AI advisor — analyze pools and get on-chain recommendations.
+          Connect to access the GlidePool AI advisor — analyze pools and get on-chain recommendations.
         </p>
         <ConnectButton />
       </div>
@@ -110,7 +110,7 @@ export default function Advisor() {
         </div>
         <div>
           <div className="bracket-label">[04] AI Advisor</div>
-          <h1 className="text-xl font-black tracking-tight leading-tight">On-Chain LP Co-Pilot</h1>
+          <h1 className="text-lg font-bold tracking-tight">On-Chain LP Co-Pilot</h1>
         </div>
       </div>
 

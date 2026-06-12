@@ -67,7 +67,7 @@ export default function PositionDetail() {
     return (
       <div className="flex flex-col items-center justify-center py-40 text-center gap-6">
         <Wallet className="w-10 h-10 text-white/20" />
-        <h1 className="text-2xl font-bold">Connect Wallet</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Connect your wallet</h1>
         <ConnectButton />
       </div>
     );
@@ -122,9 +122,9 @@ export default function PositionDetail() {
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
-            <h1 className="text-4xl font-black tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
               {position.tokenASymbol}
-              <span className="text-white/20 mx-2">/</span>
+              <span className="text-white/15 mx-2.5">/</span>
               {position.tokenBSymbol}
             </h1>
             <div className="flex items-center gap-3 mt-2">

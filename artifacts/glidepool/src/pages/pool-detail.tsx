@@ -82,9 +82,9 @@ export default function PoolDetail() {
               </span>
               <span className="font-mono text-[10px] text-white/20">{truncateAddress(poolAddress)}</span>
             </div>
-            <h1 className="text-4xl font-black tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
               {pool.tokenASymbol}
-              <span className="text-white/20 mx-2">/</span>
+              <span className="text-white/15 mx-2.5">/</span>
               {pool.tokenBSymbol}
             </h1>
           </div>

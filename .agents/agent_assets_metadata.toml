@@ -4,10 +4,10 @@ uploads = []
 id = "wSXjW7cUca43_qupv6uKh"
 uri = "file://artifacts/glidepool/public/hero-bg.png"
 type = "image"
-title = "glidepool-hero-bg"
+title = "glidepool-cinematic-hero"
 
 [[outputs]]
 id = "JsEVPB7X0YpDgDmZ0A1j3"
 uri = "file://artifacts/glidepool/public/hero-bg.png"
 type = "image"
-title = "GlidePool Hero Background"
+title = "New Hero Background"

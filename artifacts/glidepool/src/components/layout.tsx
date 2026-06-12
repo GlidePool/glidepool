@@ -1,51 +1,65 @@
 import { Link, useLocation } from "wouter";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Activity, Layers, PieChart } from "lucide-react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
 
   const navItems = [
-    { href: "/", label: "Overview", icon: Activity },
-    { href: "/pools", label: "Pools", icon: Layers },
-    { href: "/positions", label: "Positions", icon: PieChart },
+    { href: "/", label: "Overview", code: "01" },
+    { href: "/pools", label: "Pools", code: "02" },
+    { href: "/positions", label: "Positions", code: "03" },
+    { href: "/advisor", label: "AI Advisor", code: "04" },
   ];
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans dark">
-      <header className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2 text-primary font-bold text-xl tracking-tight">
-              <span className="w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center font-mono font-black shadow-[0_0_15px_rgba(0,255,255,0.4)]">G</span>
-              GlidePool
+    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans">
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] backdrop-blur-xl"
+        style={{ background: "rgba(8, 8, 8, 0.85)" }}>
+        <div className="container mx-auto px-6 h-14 flex items-center justify-between gap-8">
+          <div className="flex items-center gap-10">
+            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+              <div className="w-7 h-7 rounded border border-primary/40 flex items-center justify-center font-mono font-black text-sm text-primary glow-green-sm transition-all group-hover:glow-green">
+                G
+              </div>
+              <span className="font-bold text-base tracking-tight">GlidePool</span>
             </Link>
-            
+
             <nav className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <div className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer ${
-                    location === item.href || (location.startsWith(item.href) && item.href !== "/") 
-                      ? "bg-primary/10 text-primary" 
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  }`}>
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </div>
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = location === item.href ||
+                  (location.startsWith(item.href) && item.href !== "/");
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <div className={`px-3.5 py-1.5 rounded text-xs font-mono tracking-wide cursor-pointer transition-all ${
+                      isActive
+                        ? "text-primary bg-primary/8 border border-primary/20"
+                        : "text-white/40 hover:text-white/80 hover:bg-white/[0.04]"
+                    }`}>
+                      <span className={isActive ? "text-primary/60" : "text-white/20"}>
+                        [{item.code}]
+                      </span>{" "}
+                      {item.label}
+                    </div>
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 
-          <div>
-            <ConnectButton />
-          </div>
+          <ConnectButton />
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-6 py-8">
         {children}
       </main>
+
+      <footer className="border-t border-white/[0.05] py-5">
+        <div className="container mx-auto px-6 flex items-center justify-between">
+          <span className="font-mono text-xs text-white/20">GlidePool — Maverick V2 AI Advisor</span>
+          <span className="font-mono text-xs text-white/20">Base Mainnet</span>
+        </div>
+      </footer>
     </div>
   );
 }

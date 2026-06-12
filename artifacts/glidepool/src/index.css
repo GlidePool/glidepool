@@ -49,41 +49,42 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-:root, .dark {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 98%;
+:root {
+  --background: 0 0% 3%;
+  --foreground: 0 0% 97%;
 
-  --card: 222 47% 8%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 217 32% 17%;
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 97%;
+  --card-border: 0 0% 12%;
 
-  --popover: 222 47% 8%;
-  --popover-foreground: 210 40% 98%;
-  --popover-border: 217 32% 17%;
+  --popover: 0 0% 6%;
+  --popover-foreground: 0 0% 97%;
+  --popover-border: 0 0% 12%;
 
-  --primary: 191 97% 55%;
-  --primary-foreground: 222 47% 6%;
+  /* Electric green */
+  --primary: 145 100% 48%;
+  --primary-foreground: 0 0% 3%;
 
-  --secondary: 217 32% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 97%;
 
-  --muted: 217 32% 17%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 50%;
 
-  --accent: 191 97% 55%;
-  --accent-foreground: 222 47% 6%;
+  --accent: 145 100% 48%;
+  --accent-foreground: 0 0% 3%;
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 97%;
 
-  --border: 217 32% 17%;
-  --input: 217 32% 17%;
-  --ring: 191 97% 55%;
+  --border: 0 0% 12%;
+  --input: 0 0% 10%;
+  --ring: 145 100% 48%;
 
-  --app-font-sans: 'Inter', sans-serif;
+  --app-font-sans: 'Inter', 'system-ui', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: 'Space Mono', 'Menlo', monospace;
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 }
 
 @layer base {
@@ -94,3 +95,81 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .glow-green {
+    box-shadow: 0 0 20px rgba(0, 245, 100, 0.25), 0 0 60px rgba(0, 245, 100, 0.08);
+  }
+  .glow-green-sm {
+    box-shadow: 0 0 10px rgba(0, 245, 100, 0.2), 0 0 30px rgba(0, 245, 100, 0.06);
+  }
+  .glow-green-lg {
+    box-shadow: 0 0 40px rgba(0, 245, 100, 0.3), 0 0 120px rgba(0, 245, 100, 0.1);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .glass-card-hover {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 245, 100, 0.2);
+    box-shadow: 0 0 20px rgba(0, 245, 100, 0.06), 0 0 60px rgba(0, 245, 100, 0.03);
+  }
+  .text-gradient-green {
+    background: linear-gradient(135deg, #ffffff 0%, rgba(0, 245, 100, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .aurora-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  .aurora-bg::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse at center, rgba(0, 245, 100, 0.12) 0%, rgba(0, 200, 80, 0.04) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .mesh-grid {
+    background-image:
+      linear-gradient(rgba(0, 245, 100, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 100, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .green-line {
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 100, 0.6), transparent);
+    height: 1px;
+    width: 100%;
+  }
+  .bracket-label {
+    font-family: var(--app-font-mono);
+    font-size: 0.7rem;
+    color: rgba(0, 245, 100, 0.7);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.8; }
+  50% { transform: translateY(-20px) scale(1.02); opacity: 1; }
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.animate-float { animation: float-slow 8s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }

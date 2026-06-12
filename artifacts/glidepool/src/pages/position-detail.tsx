@@ -8,9 +8,6 @@ import {
   getGetAdviceQueryKey,
   useComputeRemoveParams,
 } from "@workspace/api-client-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatUsd, formatCrypto, truncateAddress } from "@/lib/format";
 import {
   ArrowLeft,
@@ -25,25 +22,18 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const RISK_COLORS: Record<string, string> = {
-  low: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  medium: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-  high: "bg-red-500/15 text-red-400 border-red-500/30",
+const RISK_STYLES: Record<string, string> = {
+  low: "bg-primary/10 text-primary border-primary/25",
+  medium: "bg-amber-500/10 text-amber-400 border-amber-500/25",
+  high: "bg-red-500/10 text-red-400 border-red-500/25",
 };
 
 const ACTION_ICONS: Record<string, React.ReactNode> = {
-  hold: <Minus className="w-4 h-4" />,
-  rebalance: <TrendingUp className="w-4 h-4" />,
-  withdraw: <TrendingDown className="w-4 h-4" />,
-  add_liquidity: <TrendingUp className="w-4 h-4" />,
-  switch_mode: <ChevronRight className="w-4 h-4" />,
-};
-
-const BIN_MODE_LABELS: Record<number, { label: string; color: string }> = {
-  1: { label: "Static", color: "bg-slate-500/20 text-slate-300 border-slate-500/30" },
-  2: { label: "Right", color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" },
-  4: { label: "Left", color: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
-  8: { label: "Both", color: "bg-primary/20 text-primary border-primary/30" },
+  hold: <Minus className="w-3.5 h-3.5" />,
+  rebalance: <TrendingUp className="w-3.5 h-3.5" />,
+  withdraw: <TrendingDown className="w-3.5 h-3.5" />,
+  add_liquidity: <TrendingUp className="w-3.5 h-3.5" />,
+  switch_mode: <ChevronRight className="w-3.5 h-3.5" />,
 };
 
 export default function PositionDetail() {
@@ -54,16 +44,12 @@ export default function PositionDetail() {
   const [removePercent, setRemovePercent] = useState(50);
   const [txPreview, setTxPreview] = useState<{ binIds: string[]; amounts: string[]; estimatedTokenA: string; estimatedTokenB: string } | null>(null);
 
-  const { data: position, isLoading } = useGetPositionDetail(
-    address ?? "",
-    nftId,
-    {
-      query: {
-        enabled: !!address && !!nftId,
-        queryKey: getGetPositionDetailQueryKey(address ?? "", nftId),
-      },
-    }
-  );
+  const { data: position, isLoading } = useGetPositionDetail(address ?? "", nftId, {
+    query: {
+      enabled: !!address && !!nftId,
+      queryKey: getGetPositionDetailQueryKey(address ?? "", nftId),
+    },
+  });
 
   const { data: advice, isLoading: adviceLoading, refetch: fetchAdvice } = useGetAdvice(
     { poolAddress: position?.poolAddress ?? "", nftId, userAddress: address },
@@ -79,10 +65,9 @@ export default function PositionDetail() {
 
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 text-center gap-6">
-        <Wallet className="w-12 h-12 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center py-40 text-center gap-6">
+        <Wallet className="w-10 h-10 text-white/20" />
         <h1 className="text-2xl font-bold">Connect Wallet</h1>
-        <p className="text-muted-foreground">Connect your wallet to view position details.</p>
         <ConnectButton />
       </div>
     );
@@ -90,17 +75,11 @@ export default function PositionDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-6 animate-in fade-in duration-500">
-        <div className="h-8 w-48 bg-muted/40 rounded animate-pulse" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="bg-card border-card-border">
-              <CardContent className="p-6 space-y-3">
-                <div className="h-5 bg-muted/40 rounded w-1/3 animate-pulse" />
-                <div className="h-8 bg-muted/40 rounded w-2/3 animate-pulse" />
-              </CardContent>
-            </Card>
-          ))}
+      <div className="space-y-6 animate-pulse">
+        <div className="h-4 bg-white/5 rounded w-24" />
+        <div className="h-10 bg-white/5 rounded w-48 mt-4" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          {[1, 2, 3].map((i) => <div key={i} className="h-24 bg-white/5 rounded-xl" />)}
         </div>
       </div>
     );
@@ -108,263 +87,231 @@ export default function PositionDetail() {
 
   if (!position) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 text-center gap-4">
-        <AlertCircle className="w-12 h-12 text-destructive" />
-        <h2 className="text-2xl font-bold">Position not found</h2>
-        <p className="text-muted-foreground">NFT #{nftId} was not found for your address.</p>
+      <div className="flex flex-col items-center justify-center py-40 text-center gap-4">
+        <AlertCircle className="w-10 h-10 text-red-400" />
+        <h2 className="text-xl font-bold">Position not found</h2>
+        <p className="text-white/30 text-sm">NFT #{nftId} was not found for your address.</p>
         <Link href="/positions">
-          <Button variant="outline">Back to Positions</Button>
+          <button className="mt-2 text-xs font-mono text-primary/70 hover:text-primary border border-primary/20 rounded px-4 py-2 transition-colors">
+            ← Back to Positions
+          </button>
         </Link>
       </div>
     );
   }
 
-  const handleGetAdvice = async () => {
-    setAdvisorOpen(true);
-    await fetchAdvice();
-  };
+  const handleGetAdvice = async () => { setAdvisorOpen(true); await fetchAdvice(); };
 
   const handlePreviewRemove = () => {
     if (!position || !address) return;
     removeParamsMutation.mutate(
-      {
-        data: {
-          nftId: position.nftId,
-          userAddress: address,
-          poolAddress: position.poolAddress,
-          withdrawPercent: removePercent,
-        },
-      },
-      {
-        onSuccess: (data) => {
-          setTxPreview(data);
-        },
-      }
+      { data: { nftId: position.nftId, userAddress: address, poolAddress: position.poolAddress, withdrawPercent: removePercent } },
+      { onSuccess: (data) => setTxPreview(data) }
     );
   };
 
   return (
     <div className="flex flex-col gap-8 animate-in fade-in duration-500">
-      <div className="flex items-center gap-3">
+      {/* Breadcrumb */}
+      <div>
         <Link href="/positions">
-          <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-4 h-4" />
-            Positions
-          </Button>
+          <button className="flex items-center gap-1.5 text-xs font-mono text-white/30 hover:text-white/70 transition-colors mb-5">
+            <ArrowLeft className="w-3 h-3" /> [03] Positions
+          </button>
         </Link>
-        <span className="text-muted-foreground">/</span>
-        <span className="font-mono text-sm">NFT #{position.nftId}</span>
-      </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            {position.tokenASymbol}-{position.tokenBSymbol}
-          </h1>
-          <p className="text-muted-foreground font-mono text-sm mt-1">
-            {truncateAddress(position.poolAddress)}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="bg-card border border-card-border rounded-lg px-5 py-2.5 text-right">
-            <div className="text-xs text-muted-foreground uppercase tracking-wider">Position Value</div>
-            <div className="text-2xl font-mono font-bold text-primary">{formatUsd(position.valueUsd)}</div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+          <div>
+            <h1 className="text-4xl font-black tracking-tight">
+              {position.tokenASymbol}
+              <span className="text-white/20 mx-2">/</span>
+              {position.tokenBSymbol}
+            </h1>
+            <div className="flex items-center gap-3 mt-2">
+              <span className="font-mono text-[10px] text-white/20">NFT #{position.nftId}</span>
+              <span className="font-mono text-[10px] text-white/15">·</span>
+              <span className="font-mono text-[10px] text-white/20">{truncateAddress(position.poolAddress)}</span>
+            </div>
           </div>
-          <Button
-            onClick={handleGetAdvice}
-            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(0,255,255,0.2)] hover:shadow-[0_0_25px_rgba(0,255,255,0.35)] transition-all"
-          >
-            <Bot className="w-4 h-4" />
-            Get AI Advice
-          </Button>
+
+          <div className="flex items-center gap-3">
+            <div className="glass-card rounded-xl px-5 py-3 text-right">
+              <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-1">Position Value</div>
+              <div className="text-2xl font-mono font-bold text-primary">{formatUsd(position.valueUsd)}</div>
+            </div>
+            <button
+              onClick={handleGetAdvice}
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground glow-green hover:glow-green-lg transition-all"
+            >
+              <Bot className="w-4 h-4" />
+              Get AI Advice
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Stats row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: position.tokenASymbol, value: formatCrypto(position.amountA, 6), sub: "Amount A" },
-          { label: position.tokenBSymbol, value: formatCrypto(position.amountB, 6), sub: "Amount B" },
-          { label: "Active Bins", value: position.binIds.length.toString(), sub: "Liquidity bins" },
-        ].map(({ label, value, sub }) => (
-          <Card key={label} className="bg-card border-card-border">
-            <CardContent className="p-5">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">{sub}</p>
-              <p className="text-2xl font-mono font-bold">{value}</p>
-              <p className="text-sm text-muted-foreground mt-0.5">{label}</p>
-            </CardContent>
-          </Card>
+          { label: "Amount " + position.tokenASymbol, value: formatCrypto(position.amountA, 6) },
+          { label: "Amount " + position.tokenBSymbol, value: formatCrypto(position.amountB, 6) },
+          { label: "Active Bins", value: position.binIds.length.toString() },
+        ].map(({ label, value }) => (
+          <div key={label} className="glass-card rounded-xl p-5">
+            <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-2">{label}</div>
+            <div className="text-2xl font-mono font-bold">{value}</div>
+          </div>
         ))}
       </div>
 
+      {/* Detail panels */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-card border-card-border">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Pool State</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <div className="glass-card rounded-xl p-6">
+          <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Pool State</div>
+          <div className="space-y-3">
             {[
-              { label: "Active Tick", value: position.poolState.activeTick },
-              { label: "Current Price", value: position.poolState.currentPrice?.toFixed(6) ?? "—" },
-              { label: "Tick Spacing", value: position.poolState.tickSpacing },
-              { label: "Bin Counter", value: position.poolState.binCounter },
-              { label: "Fee A→B", value: `${(Number(position.poolState.feeAIn) / 1e18 * 100).toFixed(4)}%` },
-              { label: "Fee B→A", value: `${(Number(position.poolState.feeBIn) / 1e18 * 100).toFixed(4)}%` },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex justify-between items-center text-sm border-b border-border/30 pb-2 last:border-0">
-                <span className="text-muted-foreground">{label}</span>
-                <span className="font-mono">{value}</span>
+              ["Active Tick", position.poolState.activeTick],
+              ["Current Price", position.poolState.currentPrice?.toFixed(6) ?? "—"],
+              ["Tick Spacing", position.poolState.tickSpacing],
+              ["Bin Counter", position.poolState.binCounter],
+              ["Fee A→B", `${(Number(position.poolState.feeAIn) / 1e18 * 100).toFixed(4)}%`],
+              ["Fee B→A", `${(Number(position.poolState.feeBIn) / 1e18 * 100).toFixed(4)}%`],
+            ].map(([label, value]) => (
+              <div key={label as string}
+                className="flex justify-between items-center text-xs pb-2 border-b border-white/[0.04] last:border-0">
+                <span className="text-white/30">{label}</span>
+                <span className="font-mono text-white/70">{value}</span>
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="bg-card border-card-border">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Active Bin IDs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
-              {position.binIds.map((id) => (
-                <Badge key={id} variant="outline" className="font-mono text-xs bg-muted/30 border-border/50">
-                  {id}
-                </Badge>
-              ))}
-              {position.binIds.length === 0 && (
-                <p className="text-muted-foreground text-sm">No active bins</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="glass-card rounded-xl p-6">
+          <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">
+            Active Bin IDs
+            <span className="text-white/20 ml-2 font-mono normal-case">({position.binIds.length})</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5 max-h-52 overflow-y-auto">
+            {position.binIds.map((id) => (
+              <span key={id}
+                className="font-mono text-[10px] text-white/40 border border-white/[0.06] rounded px-2 py-0.5 bg-white/[0.02]">
+                {id}
+              </span>
+            ))}
+            {position.binIds.length === 0 && (
+              <p className="text-white/20 text-xs font-mono">No active bins</p>
+            )}
+          </div>
+        </div>
       </div>
 
+      {/* AI Advisor panel */}
       {advisorOpen && (
-        <Card className="bg-card border-card-border border-primary/20 shadow-[0_0_30px_rgba(0,255,255,0.08)] animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <CardHeader className="pb-3 border-b border-border/30">
-            <div className="flex items-center gap-2">
-              <Bot className="w-5 h-5 text-primary" />
-              <CardTitle>AI Recommendation</CardTitle>
-              {adviceLoading && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground ml-auto" />}
+        <div className="glass-card rounded-xl overflow-hidden border border-primary/10 glow-green-sm animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.06]">
+            <div className="w-7 h-7 rounded border border-primary/30 bg-primary/5 flex items-center justify-center">
+              <Bot className="w-4 h-4 text-primary" />
             </div>
-          </CardHeader>
-          <CardContent className="pt-5 space-y-5">
+            <span className="font-bold text-sm">AI Recommendation</span>
+            {adviceLoading && <Loader2 className="w-4 h-4 animate-spin text-white/30 ml-auto" />}
+          </div>
+
+          <div className="p-6 space-y-5">
             {adviceLoading ? (
               <div className="space-y-3 animate-pulse">
-                <div className="h-4 bg-muted/40 rounded w-3/4" />
-                <div className="h-4 bg-muted/40 rounded w-1/2" />
-                <div className="h-4 bg-muted/40 rounded w-2/3" />
+                {[3/4, 1/2, 2/3].map((w, i) => (
+                  <div key={i} className="h-3 bg-white/5 rounded" style={{ width: `${w * 100}%` }} />
+                ))}
               </div>
             ) : advice && "summary" in advice ? (
               <>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <Badge className={`${RISK_COLORS[advice.riskLevel]} border font-semibold px-3 py-1`}>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded border text-xs font-mono font-bold ${RISK_STYLES[advice.riskLevel]}`}>
                     {advice.riskLevel.toUpperCase()} RISK
-                  </Badge>
-                  <Badge variant="outline" className="gap-1.5 border-border/50">
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded border border-white/[0.08] text-xs font-mono text-white/50">
                     {ACTION_ICONS[advice.recommendation.action]}
                     {advice.recommendation.action.replace(/_/g, " ").toUpperCase()}
-                  </Badge>
+                  </span>
                   {advice.recommendation.suggestedMode && (
-                    <Badge
-                      className={`${BIN_MODE_LABELS[[1, 2, 4, 8].find(k => ["static","right","left","both"][Math.log2(k)] === advice.recommendation.suggestedMode) ?? 8]?.color ?? ""} border`}
-                    >
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded border border-primary/20 text-xs font-mono text-primary/70">
                       {advice.recommendation.suggestedMode} mode
-                    </Badge>
+                    </span>
                   )}
                 </div>
 
                 <div>
-                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-semibold mb-2">Summary</p>
-                  <p className="text-sm leading-relaxed">{advice.summary}</p>
+                  <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-2">Summary</div>
+                  <p className="text-sm text-white/70 leading-relaxed">{advice.summary}</p>
                 </div>
 
                 <div>
-                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-semibold mb-2">Reasoning</p>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{advice.recommendation.reasoning}</p>
+                  <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-2">Reasoning</div>
+                  <p className="text-sm text-white/40 leading-relaxed">{advice.recommendation.reasoning}</p>
                 </div>
 
                 {advice.recommendation.suggestedBinRange && (
-                  <div className="bg-muted/20 rounded-lg p-4 border border-border/40">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Suggested Bin Range</p>
-                    <div className="flex gap-6">
-                      <div>
-                        <p className="text-xs text-muted-foreground">Lower Tick</p>
-                        <p className="font-mono font-bold">{advice.recommendation.suggestedBinRange.lowerTick}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Upper Tick</p>
-                        <p className="font-mono font-bold">{advice.recommendation.suggestedBinRange.upperTick}</p>
-                      </div>
+                  <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-[10px] text-white/20 font-mono mb-1">Lower Tick</div>
+                      <div className="font-mono font-bold">{advice.recommendation.suggestedBinRange.lowerTick}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-white/20 font-mono mb-1">Upper Tick</div>
+                      <div className="font-mono font-bold">{advice.recommendation.suggestedBinRange.upperTick}</div>
                     </div>
                   </div>
                 )}
 
                 {advice.recommendation.suggestedWithdrawPercent > 0 && (
-                  <div className="bg-muted/20 rounded-lg p-4 border border-border/40 space-y-3">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                      Suggested Withdraw: {advice.recommendation.suggestedWithdrawPercent}%
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="range"
-                        min={1}
-                        max={100}
-                        value={removePercent}
-                        onChange={(e) => setRemovePercent(Number(e.target.value))}
-                        className="flex-1 accent-primary"
-                      />
-                      <span className="font-mono text-sm w-10 text-right">{removePercent}%</span>
+                  <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono">
+                        Suggested Withdraw
+                      </div>
+                      <span className="font-mono text-xs text-primary/70 border border-primary/20 rounded px-2 py-0.5">
+                        {advice.recommendation.suggestedWithdrawPercent}%
+                      </span>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
+                    <div className="flex items-center gap-3">
+                      <input type="range" min={1} max={100} value={removePercent}
+                        onChange={(e) => setRemovePercent(Number(e.target.value))}
+                        className="flex-1 accent-primary" />
+                      <span className="font-mono text-xs text-white/50 w-9 text-right">{removePercent}%</span>
+                    </div>
+                    <button
                       onClick={handlePreviewRemove}
                       disabled={removeParamsMutation.isPending}
-                      className="gap-2"
+                      className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono border border-white/[0.08] rounded-lg text-white/50 hover:border-primary/30 hover:text-primary/70 transition-all disabled:opacity-50"
                     >
                       {removeParamsMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
                       Preview Transaction
-                    </Button>
+                    </button>
 
                     {txPreview && (
-                      <div className="bg-background/50 rounded p-3 border border-border/30 text-xs font-mono space-y-1">
-                        <p className="text-muted-foreground">Transaction Preview</p>
-                        <p>Est. {position.tokenASymbol}: {formatCrypto(txPreview.estimatedTokenA, 6)}</p>
-                        <p>Est. {position.tokenBSymbol}: {formatCrypto(txPreview.estimatedTokenB, 6)}</p>
-                        <p className="text-muted-foreground mt-2">Bins: {txPreview.binIds.length}</p>
+                      <div className="font-mono text-xs space-y-1.5 p-3 rounded border border-white/[0.06] bg-black/30">
+                        <div className="text-[10px] text-white/20 mb-2 uppercase tracking-widest">TX Parameters</div>
+                        <div className="flex justify-between"><span className="text-white/30">Est. {position.tokenASymbol}</span><span>{formatCrypto(txPreview.estimatedTokenA, 6)}</span></div>
+                        <div className="flex justify-between"><span className="text-white/30">Est. {position.tokenBSymbol}</span><span>{formatCrypto(txPreview.estimatedTokenB, 6)}</span></div>
+                        <div className="flex justify-between"><span className="text-white/30">Bins</span><span>{txPreview.binIds.length}</span></div>
                       </div>
                     )}
 
-                    <p className="text-xs text-muted-foreground">
-                      Review parameters above, then sign with your wallet. GlidePool never holds your funds.
+                    <p className="text-[10px] text-white/20 font-mono">
+                      GlidePool never holds funds. All writes require your wallet signature.
                     </p>
                   </div>
                 )}
               </>
             ) : (
-              <div className="flex items-center gap-3 text-destructive">
-                <AlertCircle className="w-5 h-5" />
-                <p className="text-sm">Failed to load recommendation. Please try again.</p>
+              <div className="flex items-center gap-3 text-red-400 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                Failed to load recommendation. Please try again.
               </div>
             )}
-          </CardContent>
-        </Card>
-      )}
-
-      <Card className="bg-card border-card-border">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Bin Movement Modes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {Object.entries(BIN_MODE_LABELS).map(([kind, { label, color }]) => (
-              <div key={kind} className={`rounded-lg p-3 border text-center ${color}`}>
-                <p className="font-semibold text-sm">{label}</p>
-                <p className="text-xs opacity-70 mt-0.5">Kind {kind}</p>
-              </div>
-            ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      )}
     </div>
   );
 }

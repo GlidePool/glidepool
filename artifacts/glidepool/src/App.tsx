@@ -56,7 +56,8 @@ function Router() {
   return (
     <Layout>
       <Switch>
-        <Route path="/" component={Dashboard} />
+        <Route path="/" component={Landing} />
+        <Route path="/dashboard" component={Dashboard} />
         <Route path="/pools" component={Pools} />
         <Route path="/pools/:poolAddress" component={PoolDetail} />
         <Route path="/positions" component={Positions} />
@@ -65,7 +66,6 @@ function Router() {
         <Route path="/monitor" component={Monitor} />
         <Route path="/cli" component={CliGuide} />
         <Route path="/settings" component={Settings} />
-        <Route path="/landing" component={Landing} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

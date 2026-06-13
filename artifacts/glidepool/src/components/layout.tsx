@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/",            label: "Dashboard",   icon: LayoutDashboard },
+  { href: "/dashboard",   label: "Dashboard",   icon: LayoutDashboard },
   { href: "/agent/setup", label: "Setup Agent", icon: Bot },
   { href: "/monitor",     label: "Monitor",     icon: Activity },
   { href: "/pools",       label: "Pools",       icon: Layers },

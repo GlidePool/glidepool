@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { Terminal, Copy, CheckCheck, ChevronRight, Package, Key, Cpu, Zap } from "lucide-react";
+import { Terminal, Copy, CheckCheck, ChevronRight, ChevronLeft, Package, Key, Cpu, Zap } from "lucide-react";
 
 function CodeBlock({ code, lang = "bash" }: { code: string; lang?: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="rounded-lg border border-white/[0.07] bg-black/60 overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
-        <span className="text-[10px] text-white/20 font-mono">{lang}</span>
+    <div className="border border-white/[0.08] bg-black/60">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06]">
+        <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{lang}</span>
         <button
           onClick={() => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-          className="text-[10px] text-white/25 hover:text-white/70 font-mono flex items-center gap-1 transition-colors"
+          className="font-mono text-[9px] text-white/25 hover:text-white/70 flex items-center gap-1 transition-colors uppercase tracking-widest"
         >
           {copied ? <><CheckCheck className="w-3 h-3 text-primary" /> copied</> : <><Copy className="w-3 h-3" /> copy</>}
         </button>
       </div>
-      <pre className="p-4 text-xs font-mono text-white/60 overflow-x-auto leading-relaxed whitespace-pre">{code}</pre>
+      <pre className="p-4 font-mono text-xs text-white/60 overflow-x-auto leading-relaxed whitespace-pre">{code}</pre>
     </div>
   );
 }
@@ -63,59 +63,70 @@ export default function CliGuide() {
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto animate-in fade-in duration-400">
 
-      <div>
+      {/* Page header */}
+      <div className="border-b border-white/[0.06] pb-5">
+        <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">CLI / SDK</div>
         <h1 className="text-lg sm:text-xl font-bold tracking-tight">CLI / SDK Guide</h1>
-        <p className="text-xs text-white/35 font-mono mt-0.5">Deploy and manage DLMM agents from your terminal.</p>
+        <p className="font-mono text-[10px] text-white/35 mt-0.5">Deploy and manage DLMM agents from your terminal.</p>
       </div>
 
       {/* Prerequisites */}
-      <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 sm:px-5 py-4 flex items-start gap-3">
-        <Terminal className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-        <div className="space-y-1 min-w-0">
-          <div className="text-xs font-bold text-white/60">Prerequisites</div>
-          <div className="text-xs text-white/30 leading-relaxed font-mono space-y-0.5">
-            <div>· Node.js 18+ (<span className="text-primary/60">node --version</span>)</div>
-            <div>· Base Mainnet ETH (gas) + USDC (~0.05 / LLM query)</div>
-            <div>· Account at <span className="text-primary/60">glidepool.com</span></div>
+      <div className="border border-white/[0.10] flex items-start gap-0">
+        <div className="border-r border-white/[0.10] p-4 flex items-center justify-center shrink-0">
+          <Terminal className="w-4 h-4 text-primary" />
+        </div>
+        <div className="p-4 space-y-1.5 min-w-0">
+          <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-2.5">Prerequisites</div>
+          <div className="font-mono text-[10px] text-white/30 leading-relaxed space-y-1">
+            <div>› Node.js 18+ (<span className="text-primary/60">node --version</span>)</div>
+            <div>› Base Mainnet ETH (gas) + USDC (~0.05 / LLM query)</div>
+            <div>› Account at <span className="text-primary/60">glidepool.com</span></div>
           </div>
         </div>
       </div>
 
-      {/* Step tabs */}
-      <div className="flex gap-1.5 flex-wrap">
+      {/* Step tabs — flat bordered */}
+      <div className="border border-white/[0.10] flex divide-x divide-white/[0.10] overflow-x-auto">
         {STEPS.map((s, i) => (
           <button key={i} onClick={() => setActive(i)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono transition-all ${
+            className={`flex-1 px-4 py-3 font-mono text-[10px] transition-colors whitespace-nowrap text-left ${
               active === i
-                ? "bg-primary/10 text-primary border border-primary/20"
-                : "border border-white/[0.07] text-white/35 hover:text-white/70"
+                ? "bg-primary/[0.06] text-primary border-b-2 border-b-primary/60"
+                : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
             }`}>
-            <span className="text-white/20">[{s.num}]</span>
-            <span className="hidden sm:inline">{s.title}</span>
-            <span className="sm:hidden">{s.num}</span>
+            <div className="text-[9px] text-white/20 mb-0.5">[{s.num}]</div>
+            <div className="font-bold">{s.title}</div>
           </button>
         ))}
       </div>
 
-      {/* Active step */}
+      {/* Active step content */}
       {STEPS.map((s, i) => active === i && (
         <div key={i} className="flex flex-col gap-4 animate-in fade-in duration-200">
-          <div className="flex items-start sm:items-center gap-3">
-            <div className="shrink-0 mt-0.5 sm:mt-0">{s.icon}</div>
-            <div>
+          {/* Step header */}
+          <div className="border border-white/[0.10] flex items-stretch gap-0">
+            <div className="border-r border-white/[0.10] p-4 flex items-center justify-center shrink-0">
+              {s.icon}
+            </div>
+            <div className="p-4">
+              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">Step {s.num}</div>
               <h2 className="font-bold text-base tracking-tight">{s.title}</h2>
-              <p className="text-xs text-white/35 leading-relaxed mt-0.5">{s.desc}</p>
+              <p className="font-mono text-[10px] text-white/35 leading-relaxed mt-1">{s.desc}</p>
             </div>
           </div>
+
           {s.blocks.map((b, j) => <CodeBlock key={j} code={b.code} lang={b.lang} />)}
+
           <div className="flex justify-between items-center pt-1">
             {i > 0
-              ? <button onClick={() => setActive(i - 1)} className="text-xs text-white/30 hover:text-white/60 font-mono transition-colors">← Previous</button>
+              ? <button onClick={() => setActive(i - 1)} className="font-mono text-[10px] text-white/30 hover:text-white/60 transition-colors inline-flex items-center gap-1">
+                  <ChevronLeft className="w-3 h-3" /> Previous
+                </button>
               : <span />
             }
             {i < STEPS.length - 1 && (
               <button onClick={() => setActive(i + 1)}
-                className="inline-flex items-center gap-1.5 text-xs text-primary/70 hover:text-primary font-mono transition-colors">
+                className="inline-flex items-center gap-1 font-mono text-[10px] text-primary/70 hover:text-primary transition-colors">
                 Next <ChevronRight className="w-3 h-3" />
               </button>
             )}
@@ -123,11 +134,14 @@ export default function CliGuide() {
         </div>
       ))}
 
-      <p className="text-[10px] text-white/20 font-mono leading-relaxed border border-white/[0.05] rounded-lg p-4">
-        GlidePool CLI is open-source (MIT). All wallet operations happen locally — no keys are sent to GlidePool servers.
-        Each LLM call to <span className="text-white/40">/api/advisor</span> costs ~0.05 USDC via x402 on Base Mainnet.
-        You sign every on-chain action.
-      </p>
+      {/* Footer note */}
+      <div className="border border-white/[0.06] px-5 py-4">
+        <p className="font-mono text-[10px] text-white/20 leading-relaxed">
+          GlidePool CLI is open-source (MIT). All wallet operations happen locally — no keys are sent to GlidePool servers.
+          Each LLM call to <span className="text-white/35">/api/advisor</span> costs ~0.05 USDC via x402 on Base Mainnet.
+          You sign every on-chain action.
+        </p>
+      </div>
     </div>
   );
 }

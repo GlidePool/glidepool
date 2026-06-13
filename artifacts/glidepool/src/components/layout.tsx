@@ -48,10 +48,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
               const active = isActive(href);
               return (
                 <Link key={href} href={href}>
-                  <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[11px] font-mono tracking-wide cursor-pointer whitespace-nowrap transition-all ${
+                  <div className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-mono tracking-wide cursor-pointer whitespace-nowrap transition-all ${
                     active
-                      ? "text-primary bg-primary/8 border border-primary/20"
-                      : "text-white/45 hover:text-white/85 hover:bg-white/[0.05] border border-transparent"
+                      ? "text-primary bg-primary/[0.07] border border-primary/20"
+                      : "text-white/45 hover:text-white/85 hover:bg-white/[0.04] border border-transparent"
                   }`}>
                     <Icon className={`w-3 h-3 shrink-0 ${active ? "text-primary" : "text-white/30"}`} />
                     {label}
@@ -70,7 +70,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="none" />
             </div>
             <button
-              className="lg:hidden p-1.5 rounded border border-white/[0.08] text-white/40 hover:text-white/80 transition-colors"
+              className="lg:hidden p-1.5 border border-white/[0.08] text-white/40 hover:text-white/80 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -136,7 +136,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 ].map(({ href, label, svg }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"
                     aria-label={label}
-                    className="w-8 h-8 rounded-lg border border-white/[0.07] bg-white/[0.02] flex items-center justify-center text-white/30 hover:text-white/80 hover:border-white/15 transition-all">
+                    className="w-8 h-8 border border-white/[0.07] bg-white/[0.02] flex items-center justify-center text-white/30 hover:text-white/80 hover:border-white/15 transition-all">
                     {svg}
                   </a>
                 ))}
@@ -217,8 +217,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <span className="font-mono text-[10px] text-white/18">Built on Base Mainnet · Maverick V2 DLMM</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-primary/15 bg-primary/5">
-                <span className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 border border-primary/15 bg-primary/[0.05]">
+                <span className="w-1.5 h-1.5 bg-primary animate-pulse" />
                 <span className="font-mono text-[10px] text-primary/60">Base Mainnet</span>
               </span>
               <span className="font-mono text-[10px] text-white/20">glidepool.com</span>

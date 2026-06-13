@@ -21,6 +21,7 @@ import Pools from "@/pages/pools";
 import PoolDetail from "@/pages/pool-detail";
 import Positions from "@/pages/positions";
 import PositionDetail from "@/pages/position-detail";
+import Advisor from "@/pages/advisor";
 import CliGuide from "@/pages/cli-guide";
 import Settings from "@/pages/settings";
 import { Layout } from "@/components/layout";
@@ -47,8 +48,8 @@ const wagmiConfig = getDefaultConfig({
 const glideTheme = darkTheme({
   accentColor: 'hsl(145 100% 48%)',
   accentColorForeground: 'hsl(222 47% 6%)',
-  borderRadius: 'medium',
-  fontStack: 'system',
+  borderRadius: 'none',
+  fontStack: 'mono',
   overlayBlur: 'small',
 });
 
@@ -62,6 +63,7 @@ function Router() {
         <Route path="/pools/:poolAddress" component={PoolDetail} />
         <Route path="/positions" component={Positions} />
         <Route path="/positions/:nftId" component={PositionDetail} />
+        <Route path="/advisor" component={Advisor} />
         <Route path="/agent/setup" component={AgentSetup} />
         <Route path="/monitor" component={Monitor} />
         <Route path="/cli" component={CliGuide} />
@@ -79,6 +81,7 @@ function App() {
         <RainbowKitProvider
           theme={glideTheme}
           locale="en-US"
+          initialChain={base}
           appInfo={{
             appName: 'GlidePool',
             disclaimer: Disclaimer,

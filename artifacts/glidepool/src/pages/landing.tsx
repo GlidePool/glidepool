@@ -51,7 +51,7 @@ export default function Landing() {
       </div>
 
       {/* ─── HERO ───────────────────────────────── */}
-      <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-4 sm:px-6 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">
+      <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">
         {/* ── Background image ── */}
         <div className="pointer-events-none absolute inset-0">
           <img

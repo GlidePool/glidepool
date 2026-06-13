@@ -26,19 +26,19 @@ const LEVEL_PREFIX: Record<LogLevel, string> = {
 const SEED: LogEntry[] = [
   { id: 1,  ts: "03:14:22", level: "info",     agent: "agent-001", message: "Scanning WETH/USDC pool state on Base Mainnet…" },
   { id: 2,  ts: "03:14:23", level: "info",     agent: "agent-001", message: "Pool fetched: activeTick=2047, currentPrice=2,481.33 USDC/WETH" },
-  { id: 3,  ts: "03:14:24", level: "decision", agent: "agent-001", message: "LLM: price moved +2.1% from center, approaching upper bin boundary", detail: "Recommendation: REBALANCE — shift right 3 ticks. Risk: LOW. Confidence: 0.87" },
+  { id: 3,  ts: "03:14:24", level: "decision", agent: "agent-001", message: "LLM: price moved +2.1% from center, approaching upper bin boundary", detail: "Recommendation: REBALANCE - shift right 3 ticks. Risk: LOW. Confidence: 0.87" },
   { id: 4,  ts: "03:14:25", level: "tx",       agent: "agent-001", message: "Requesting wallet signature for RemoveLiquidity (binIds: [2044–2047])" },
   { id: 5,  ts: "03:14:30", level: "tx",       agent: "agent-001", message: "Signed by user · AddLiquidity submitted · hash: 0xabcd…ef12" },
   { id: 6,  ts: "03:14:31", level: "info",     agent: "agent-001", message: "Rebalanced. New center tick: 2050. Next cycle in 5m." },
-  { id: 7,  ts: "03:19:22", level: "info",     agent: "agent-001", message: "Cycle #2 — fetching pool state…" },
+  { id: 7,  ts: "03:19:22", level: "info",     agent: "agent-001", message: "Cycle #2 - fetching pool state…" },
   { id: 8,  ts: "03:19:23", level: "decision", agent: "agent-001", message: "LLM: price stable within range. No action needed.", detail: "Action: HOLD. Tick 2050 centered in range [2047, 2053]. IL minimal." },
-  { id: 9,  ts: "03:19:24", level: "info",     agent: "agent-002", message: "WETH/cbETH paused by user — idle mode." },
-  { id: 10, ts: "03:24:22", level: "warning",  agent: "agent-001", message: "Volatility spike — ATR 1h +34%. Strategy: Balanced." },
+  { id: 9,  ts: "03:19:24", level: "info",     agent: "agent-002", message: "WETH/cbETH paused by user - idle mode." },
+  { id: 10, ts: "03:24:22", level: "warning",  agent: "agent-001", message: "Volatility spike - ATR 1h +34%. Strategy: Balanced." },
   { id: 11, ts: "03:24:23", level: "decision", agent: "agent-001", message: "LLM: widen range to absorb volatility. Action: REBALANCE", detail: "suggestedBinRange: lowerTick=2040, upperTick=2060. withdrawPercent=100." },
 ];
 
 const LIVE: Omit<LogEntry, "id" | "ts">[] = [
-  { level: "info",     agent: "agent-001", message: "Cycle check — fetching pool state from Maverick V2…" },
+  { level: "info",     agent: "agent-001", message: "Cycle check - fetching pool state from Maverick V2…" },
   { level: "decision", agent: "agent-001", message: "LLM: HOLD. Price within optimal range.", detail: "Confidence: 0.91. No rebalance needed." },
   { level: "info",     agent: "agent-001", message: "Fee accrued: +0.0031 USDC since last cycle." },
   { level: "warning",  agent: "agent-001", message: "Gas elevated (42 gwei). Deferring non-urgent rebalance." },
@@ -112,7 +112,7 @@ export default function Monitor() {
         </div>
       </div>
 
-      {/* Agent status — flat bordered cells */}
+      {/* Agent status - flat bordered cells */}
       <div className="border border-white/[0.10] flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
         {[
           { pool: "WETH/USDC",  status: "running", cycles: 12, pnl: "+2.34 USDC" },
@@ -133,7 +133,7 @@ export default function Monitor() {
         ))}
       </div>
 
-      {/* Filter bar — grid so buttons never overflow */}
+      {/* Filter bar - grid so buttons never overflow */}
       <div className="border border-white/[0.10] overflow-hidden">
         <div className="grid grid-cols-5">
           {(["all", "decision", "tx", "warning", "info"] as const).map((f) => (
@@ -155,7 +155,7 @@ export default function Monitor() {
         </div>
       </div>
 
-      {/* Terminal — flat bordered */}
+      {/* Terminal - flat bordered */}
       <div className="border border-white/[0.10] bg-black/55">
         {/* Titlebar */}
         <div className="px-4 py-2.5 border-b border-white/[0.08] flex items-center gap-3">

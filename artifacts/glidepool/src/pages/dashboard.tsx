@@ -21,7 +21,7 @@ const STATUS_COLOR: Record<AgentStatus, { text: string; dot: string; border: str
 
 const MOCK_AGENTS: MockAgent[] = [
   { id: "agent-001", pool: "WETH/USDC",  strategy: "Balanced (Both)",       status: "running", pnl: 2.34, actions: 17, lastAction: "Rebalanced bin range 2m ago" },
-  { id: "agent-002", pool: "WETH/cbETH", strategy: "Conservative (Static)", status: "paused",  pnl: 0.81, actions:  5, lastAction: "Paused — low volatility" },
+  { id: "agent-002", pool: "WETH/cbETH", strategy: "Conservative (Static)", status: "paused",  pnl: 0.81, actions:  5, lastAction: "Paused - low volatility" },
 ];
 
 function EmptyWallet() {
@@ -75,7 +75,7 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Stats — overflow-hidden grid: each cell carries its own right+bottom border */}
+      {/* Stats - overflow-hidden grid: each cell carries its own right+bottom border */}
       <div className="border border-white/[0.10] grid grid-cols-2 sm:grid-cols-4 overflow-hidden">
         {stats.map((s, i) => (
           <div key={s.label} className={[

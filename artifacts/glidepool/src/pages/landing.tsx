@@ -25,21 +25,21 @@ const FAQS = [
   { q: "What is GlidePool?", a: "GlidePool deploys Claude Opus 4–driven agents that monitor Maverick V2 DLMM pools on Base Mainnet, propose rebalances, and wait for your wallet signature before doing anything on-chain. Fully non-custodial." },
   { q: "Does GlidePool hold my funds?", a: "Never. The API server only reads on-chain data and produces transaction calldata. Every write requires your explicit signature via RainbowKit. No private keys, no custody." },
   { q: "How does x402 micropayment work?", a: "The advisor endpoint returns HTTP 402 with a treasury address + 0.05 USDC amount. The agent pays on Base, the server verifies the tx on-chain, then unlocks Claude Opus 4. ~2s end-to-end. No API keys, no subscriptions." },
-  { q: "What strategies are available?", a: "Conservative (Static bins), Balanced (Both — follows price both ways), Aggressive (Right/Left — follows trend). Claude Opus 4 picks the mode based on volatility and your stated risk tolerance." },
-  { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet — WETH/USDC, WETH/cbETH, WETH/wstETH initially. The allowlist can be extended." },
-  { q: "Can I use the CLI?", a: "Yes — the CLI covers agent deploy, monitoring, and management. All features in the web UI are available via CLI. See the CLI Guide page." },
-  { q: "Is the code open-source?", a: "Yes. Full monorepo on GitHub: API server, frontend, chain readers, LLM integration, x402 middleware, Drizzle schema — all MIT-licensed." },
+  { q: "What strategies are available?", a: "Conservative (Static bins), Balanced (Both - follows price both ways), Aggressive (Right/Left - follows trend). Claude Opus 4 picks the mode based on volatility and your stated risk tolerance." },
+  { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet - WETH/USDC, WETH/cbETH, WETH/wstETH initially. The allowlist can be extended." },
+  { q: "Can I use the CLI?", a: "Yes - the CLI covers agent deploy, monitoring, and management. All features in the web UI are available via CLI. See the CLI Guide page." },
+  { q: "Is the code open-source?", a: "Yes. Full monorepo on GitHub: API server, frontend, chain readers, LLM integration, x402 middleware, Drizzle schema - all MIT-licensed." },
 ];
 
 /* ══════════════════════════════════════════════════════════════
    MAIN
 ══════════════════════════════════════════════════════════════ */
 const LIFECYCLE_STEPS = [
-  { icon: Eye,        label: "Observe",      sub: "pool state / block",    desc: "Agent reads Maverick V2 pool every ~2s block — activeTick, TVL, price, fee rate via viem on Base Mainnet.", color: "primary" },
+  { icon: Eye,        label: "Observe",      sub: "pool state / block",    desc: "Agent reads Maverick V2 pool every ~2s block - activeTick, TVL, price, fee rate via viem on Base Mainnet.", color: "primary" },
   { icon: Cpu,        label: "Analyze",      sub: "detect bin drift",      desc: "Compares current tick to optimal bin range. If drift exceeds threshold, triggers the rebalance pipeline.", color: "primary" },
   { icon: Zap,        label: "Pay x402",     sub: "0.05 USDC on Base",    desc: "Agent autonomously pays 0.05 USDC via HTTP 402. USDC transfer confirmed on-chain in ~2s. No user action needed.", color: "amber" },
   { icon: Bot,        label: "Claude Opus 4",sub: "get recommendation",    desc: "Sends pool snapshot + user goal to Claude Opus 4. Returns action, risk level, bin range, and reasoning chain.", color: "primary" },
-  { icon: GitBranch,  label: "Propose TX",   sub: "build calldata",        desc: "Agent server assembles transaction calldata — removeLiquidity + addLiquidity — and surfaces it in Monitor.", color: "primary" },
+  { icon: GitBranch,  label: "Propose TX",   sub: "build calldata",        desc: "Agent server assembles transaction calldata - removeLiquidity + addLiquidity - and surfaces it in Monitor.", color: "primary" },
   { icon: ShieldCheck,label: "You Sign",     sub: "approve or reject",     desc: "You review the full proposal in Monitor. One RainbowKit signature executes on-chain. You can reject at any time.", color: "green" },
 ] as const;
 
@@ -74,7 +74,7 @@ export default function Landing() {
             className="absolute inset-0 w-full h-full object-cover object-left"
             style={{ opacity: 0.55 }}
           />
-          {/* Dark overlay — more opaque on right so text is readable */}
+          {/* Dark overlay - more opaque on right so text is readable */}
           <div className="absolute inset-0" style={{
             background: "linear-gradient(to right, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.45) 40%, rgba(8,8,8,0.88) 70%, rgba(8,8,8,0.98) 100%)",
           }} />
@@ -84,7 +84,7 @@ export default function Landing() {
           }} />
         </div>
 
-        {/* Top row — status badge */}
+        {/* Top row - status badge */}
         <div className="flex items-start justify-between gap-4 relative">
           <div className="flex items-center gap-1.5 border border-primary/25 bg-primary/[0.06] px-3 py-1.5">
             <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
@@ -95,7 +95,7 @@ export default function Landing() {
           </p>
         </div>
 
-        {/* H1 — clean stacked lines, no inline button */}
+        {/* H1 - clean stacked lines, no inline button */}
         <div className="relative mt-8">
           <h1 className="font-black uppercase tracking-tighter leading-[0.88] text-white select-none" style={{ fontSize: "clamp(30px,9.5vw,118px)" }}>
             <span className="block">AUTONOMOUS</span>
@@ -185,12 +185,12 @@ export default function Landing() {
             WHAT IS<br /><span className="text-primary">GLIDEPOOL?</span>
           </h2>
           <p className="text-sm text-white/40 mt-4 max-w-lg leading-relaxed">
-            An autonomous agent platform that manages your Maverick V2 DLMM liquidity positions on Base Mainnet —
+            An autonomous agent platform that manages your Maverick V2 DLMM liquidity positions on Base Mainnet -
             powered by Claude Opus 4, gated by x402 micropayments, and fully non-custodial.
           </p>
         </div>
 
-        {/* Why GlidePool — Promise-style bordered table */}
+        {/* Why GlidePool - Promise-style bordered table */}
         <div className="border border-white/[0.12] mb-10">
           <div className="flex flex-col lg:flex-row">
             {/* Left title column */}
@@ -208,7 +208,7 @@ export default function Landing() {
                 {
                   icon: <BarChart2 className="w-4 h-4" />,
                   title: "DLMM Pool Reader",
-                  body: "Reads Maverick V2 pool state — activeTick, TWA price, TVL, fee rate — directly from Base Mainnet via viem. No third-party data providers.",
+                  body: "Reads Maverick V2 pool state - activeTick, TWA price, TVL, fee rate - directly from Base Mainnet via viem. No third-party data providers.",
                 },
                 {
                   icon: <Zap className="w-4 h-4 text-amber-400" />,
@@ -218,7 +218,7 @@ export default function Landing() {
                 {
                   icon: <ShieldCheck className="w-4 h-4" />,
                   title: "Non-Custodial",
-                  body: "The server never holds keys or funds. Every on-chain action — rebalance, add, remove — requires your explicit RainbowKit wallet signature.",
+                  body: "The server never holds keys or funds. Every on-chain action - rebalance, add, remove - requires your explicit RainbowKit wallet signature.",
                 },
               ].map(({ icon, title, body }, i) => (
                 <div key={title}
@@ -232,7 +232,7 @@ export default function Landing() {
                     i > 0 ? "border-t sm:border-t-0" : "",
                     i >= 2 ? "sm:border-t" : "",
                   ].filter(Boolean).join(" ")}>
-                  {/* Icon — small outlined square */}
+                  {/* Icon - small outlined square */}
                   <div className="w-8 h-8 border border-primary/35 flex items-center justify-center text-primary/70 shrink-0">
                     {icon}
                   </div>
@@ -244,18 +244,18 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Agent lifecycle — large animated visual table */}
+        {/* Agent lifecycle - large animated visual table */}
         <div className="border border-white/[0.10]">
           {/* Header row */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-white/[0.10]">
-            <span className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Agent lifecycle — per position</span>
+            <span className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Agent lifecycle - per position</span>
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
               <span className="font-mono text-[9px] text-primary/40 tracking-widest">running</span>
             </div>
           </div>
 
-          {/* 6-cell step table — 2 col mobile, 3 col sm, 6 col lg */}
+          {/* 6-cell step table - 2 col mobile, 3 col sm, 6 col lg */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 overflow-hidden">
             {LIFECYCLE_STEPS.map((step, i) => {
               const Icon = step.icon;
@@ -374,7 +374,7 @@ export default function Landing() {
           </h2>
         </div>
 
-        {/* 3×2 component grid — 1 col mobile, 3 col sm+ */}
+        {/* 3×2 component grid - 1 col mobile, 3 col sm+ */}
         <div className="border border-white/[0.10] overflow-hidden">
           {/* Row 1 */}
           <div className="grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
@@ -399,7 +399,7 @@ export default function Landing() {
               </div>
             ))}
           </div>
-          {/* Divider row — hidden on mobile */}
+          {/* Divider row - hidden on mobile */}
           <div className="hidden sm:grid border-t border-white/[0.10] grid-cols-3 overflow-hidden">
             <div className="px-6 py-2 flex items-center gap-2 border-r border-white/[0.10]">
               <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
@@ -502,10 +502,10 @@ export default function Landing() {
               <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-4">Why x402 vs API keys</div>
               {[
                 "No API keys to rotate or leak",
-                "No monthly invoice — pay per inference",
+                "No monthly invoice - pay per inference",
                 "Payments on-chain, verifiable by anyone",
                 "Agents pay autonomously, no human needed",
-                "Standard HTTP — any client can implement",
+                "Standard HTTP - any client can implement",
               ].map(t => (
                 <div key={t} className="flex items-start gap-2 font-mono text-[10px] text-white/35 py-1.5 border-b border-white/[0.05] last:border-0">
                   <span className="text-primary/60 shrink-0">✓</span>{t}
@@ -527,7 +527,7 @@ export default function Landing() {
           </h2>
         </div>
 
-        {/* 5-step bordered grid — 1 col mobile, 2 col sm, 5 col lg */}
+        {/* 5-step bordered grid - 1 col mobile, 2 col sm, 5 col lg */}
         <div className="border border-white/[0.10] overflow-hidden">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 overflow-hidden">
             {[

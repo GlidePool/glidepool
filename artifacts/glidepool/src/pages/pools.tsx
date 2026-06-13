@@ -95,12 +95,12 @@ export default function Pools() {
                       <div>
                         <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest block mb-0.5">Price</span>
                         <span className="font-mono text-xs text-white/60">
-                          {pool.currentPrice ? pool.currentPrice.toFixed(4) : "—"}
+                          {pool.currentPrice ? pool.currentPrice.toFixed(4) : "-"}
                         </span>
                       </div>
                       <div>
                         <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest block mb-0.5">Active Tick</span>
-                        <span className="font-mono text-xs text-white/60">{pool.activeTick ?? "—"}</span>
+                        <span className="font-mono text-xs text-white/60">{pool.activeTick ?? "-"}</span>
                       </div>
                     </div>
 

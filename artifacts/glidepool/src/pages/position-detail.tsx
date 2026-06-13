@@ -138,7 +138,7 @@ export default function PositionDetail() {
         </button>
       </div>
 
-      {/* Stats — flat bordered grid */}
+      {/* Stats - flat bordered grid */}
       <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
         {[
           { label: `Amount ${position.tokenASymbol}`, value: formatCrypto(position.amountA, 6) },
@@ -163,7 +163,7 @@ export default function PositionDetail() {
           <div className="divide-y divide-white/[0.05]">
             {[
               ["Active Tick",   position.poolState.activeTick],
-              ["Current Price", position.poolState.currentPrice?.toFixed(6) ?? "—"],
+              ["Current Price", position.poolState.currentPrice?.toFixed(6) ?? "-"],
               ["Tick Spacing",  position.poolState.tickSpacing],
               ["Bin Counter",   position.poolState.binCounter],
               ["Fee A→B",       `${(Number(position.poolState.feeAIn) / 1e18 * 100).toFixed(4)}%`],

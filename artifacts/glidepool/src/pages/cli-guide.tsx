@@ -40,7 +40,7 @@ glidepool --version`,
   {
     num: "02", icon: <Key className="w-5 h-5 text-primary" />,
     title: "Configure wallet",
-    desc: "Initialize the CLI with your wallet and Base Mainnet RPC. Keys are stored locally — never transmitted.",
+    desc: "Initialize the CLI with your wallet and Base Mainnet RPC. Keys are stored locally - never transmitted.",
     blocks: [
       {
         lang: "bash", code:
@@ -126,7 +126,7 @@ glidepool agent stop   agent-001`,
 [03:14:30] TX       agent-001
   Confirmed 0xabcd…ef12
 [03:19:23] DECISION agent-001
-  LLM: HOLD — price in range`,
+  LLM: HOLD - price in range`,
       },
     ],
   },
@@ -160,7 +160,7 @@ export default function CliGuide() {
         </div>
       </div>
 
-      {/* Step tabs — 2 col mobile, 4 col sm+ */}
+      {/* Step tabs - 2 col mobile, 4 col sm+ */}
       <div className="border border-white/[0.10] grid grid-cols-2 sm:grid-cols-4 overflow-hidden">
         {STEPS.map((s, i) => (
           <button key={i} onClick={() => setActive(i)}
@@ -214,7 +214,7 @@ export default function CliGuide() {
       <div className="border border-white/[0.06] px-5 py-4">
         <p className="font-mono text-[10px] text-white/20 leading-relaxed">
           GlidePool CLI is open-source (MIT). All wallet operations happen
-          locally — no keys are sent to GlidePool servers.
+          locally - no keys are sent to GlidePool servers.
           Each LLM call to <span className="text-white/35">/api/advisor</span> costs
           ~0.05 USDC via x402 on Base Mainnet. You sign every on-chain action.
         </p>

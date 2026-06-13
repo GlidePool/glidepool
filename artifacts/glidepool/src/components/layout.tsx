@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <span className="font-bold text-sm sm:text-base tracking-tight">GlidePool</span>
           </Link>
 
-          {/* Desktop nav — only on lg+ */}
+          {/* Desktop nav - only on lg+ */}
           <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
               const active = isActive(href);
@@ -67,7 +67,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Wallet connect button — always visible in header */}
+          {/* Wallet connect button - always visible in header */}
           <div className="shrink-0">
             <w3m-button balance="hide" />
           </div>
@@ -86,7 +86,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      {/* ── Mobile bottom tab bar — hidden on lg+ ──────────── */}
+      {/* ── Mobile bottom tab bar - hidden on lg+ ──────────── */}
       <nav
         className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.08]"
         style={{ background: "rgba(8,8,8,0.97)", backdropFilter: "blur(20px)" }}

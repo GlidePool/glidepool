@@ -4,7 +4,7 @@ import { useParams, Link } from "wouter";
 import { ArrowLeft, BarChart3, Settings2 } from "lucide-react";
 
 const BIN_MODES = [
-  { code: "01", label: "Static", icon: "—", badge: "border-white/[0.10] text-white/40",     desc: "Concentrated liquidity that does not move with price." },
+  { code: "01", label: "Static", icon: "-", badge: "border-white/[0.10] text-white/40",     desc: "Concentrated liquidity that does not move with price." },
   { code: "02", label: "Right",  icon: "→", badge: "border-primary/20 text-primary",         desc: "Follows price moving up. Best for bullish bias." },
   { code: "04", label: "Left",   icon: "←", badge: "border-amber-500/20 text-amber-400",     desc: "Follows price moving down. Best for bearish bias." },
   { code: "08", label: "Both",   icon: "↔", badge: "border-blue-500/20 text-blue-400",       desc: "Follows price both directions. Maximum fees, highest IL." },
@@ -23,7 +23,7 @@ export default function PoolDetail() {
       <div className="flex flex-col gap-6 animate-pulse">
         <div className="h-3 bg-white/[0.05] w-20" />
         <div className="h-7 bg-white/[0.05] w-48" />
-        {/* Stat cards skeleton — responsive: 1 col mobile, 3 col sm+ */}
+        {/* Stat cards skeleton - responsive: 1 col mobile, 3 col sm+ */}
         <div className="border border-white/[0.07] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-20 bg-white/[0.02] border-b sm:border-b-0 sm:border-r border-white/[0.07] last:border-b-0 last:border-r-0" />
@@ -83,18 +83,18 @@ export default function PoolDetail() {
         <div className="border-t sm:border-t-0 sm:border-l border-white/[0.10] px-6 py-5 flex flex-col justify-center sm:min-w-[200px]">
           <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">Current Price</div>
           <div className="text-2xl font-mono font-bold text-primary">
-            {pool.currentPrice?.toFixed(6) ?? "—"}
+            {pool.currentPrice?.toFixed(6) ?? "-"}
             <span className="text-sm text-white/25 ml-1.5 font-normal">{pool.tokenBSymbol}</span>
           </div>
         </div>
       </div>
 
-      {/* Stat cards — overflow-hidden trick: each cell has border-r + border-b, container clips outer edges */}
+      {/* Stat cards - overflow-hidden trick: each cell has border-r + border-b, container clips outer edges */}
       <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
         {[
           { label: "TVL",         value: tvlNum > 0.01 ? formatUsd(tvlNum) : "$0.00", note: "Reserves from chain" },
-          { label: "Fee Rate",    value: `${feeRatePct}%`,                             note: `Tick spacing: ${pool.tickSpacing ?? "—"}` },
-          { label: "Active Tick", value: pool.activeTick?.toString() ?? "—",           note: `Bin counter: ${pool.binCounter ?? 0}` },
+          { label: "Fee Rate",    value: `${feeRatePct}%`,                             note: `Tick spacing: ${pool.tickSpacing ?? "-"}` },
+          { label: "Active Tick", value: pool.activeTick?.toString() ?? "-",           note: `Bin counter: ${pool.binCounter ?? 0}` },
         ].map(({ label, value, note }, i) => (
           <div key={label} className={[
             "p-5",

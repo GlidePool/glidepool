@@ -74,7 +74,7 @@ export default function AgentSetup() {
           <div className="font-mono text-[9px] text-primary/40 uppercase tracking-widest mb-2">Deployed</div>
           <h1 className="text-xl font-bold tracking-tight mb-2">Agent Deployed</h1>
           <p className="text-sm text-white/40 leading-relaxed max-w-xs font-mono">
-            Initializing — scanning Maverick V2 pools, running LLM analysis, prompting wallet signatures.
+            Initializing - scanning Maverick V2 pools, running LLM analysis, prompting wallet signatures.
           </p>
         </div>
         <div className="w-full border border-white/[0.10] divide-y divide-white/[0.08]">
@@ -110,10 +110,10 @@ export default function AgentSetup() {
       <div className="border-b border-white/[0.06] pb-5">
         <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">Setup</div>
         <h1 className="text-lg sm:text-xl font-bold tracking-tight">Setup Agent</h1>
-        <p className="font-mono text-[10px] text-white/35 mt-0.5">Configure an autonomous DLMM agent — LLM selects actions. You sign all transactions.</p>
+        <p className="font-mono text-[10px] text-white/35 mt-0.5">Configure an autonomous DLMM agent - LLM selects actions. You sign all transactions.</p>
       </div>
 
-      {/* Step indicator — flat squares */}
+      {/* Step indicator - flat squares */}
       <div className="flex items-center gap-0 border border-white/[0.10]">
         {[
           { n: 1, label: "Pool" },
@@ -141,16 +141,16 @@ export default function AgentSetup() {
       {step === 1 && (
         <div className="border border-white/[0.10] animate-in fade-in duration-200">
           <div className="px-5 py-3 border-b border-white/[0.10]">
-            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Step 1 — Choose Pool</span>
+            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Step 1 - Choose Pool</span>
           </div>
           <div className="p-5 space-y-4">
             <p className="font-mono text-[10px] text-white/30 leading-relaxed">
-              Select a Maverick V2 DLMM pool on Base, or leave on <span className="text-primary/70">Auto-select</span> — the LLM picks the best pool based on current conditions.
+              Select a Maverick V2 DLMM pool on Base, or leave on <span className="text-primary/70">Auto-select</span> - the LLM picks the best pool based on current conditions.
             </p>
             <div>
               <label className="font-mono text-[9px] text-white/20 uppercase tracking-widest block mb-1.5">Pool Target</label>
               <select value={cfg.poolAddress} onChange={(e) => setCfg({ ...cfg, poolAddress: e.target.value })} className={selectCls}>
-                <option value="">Auto-select (recommended — LLM picks best pool)</option>
+                <option value="">Auto-select (recommended - LLM picks best pool)</option>
                 {pools?.map((p) => (
                   <option key={p.poolAddress} value={p.poolAddress}>
                     {p.tokenASymbol}/{p.tokenBSymbol} · {truncateAddress(p.poolAddress)}
@@ -178,7 +178,7 @@ export default function AgentSetup() {
       {step === 2 && (
         <div className="border border-white/[0.10] animate-in fade-in duration-200">
           <div className="px-5 py-3 border-b border-white/[0.10]">
-            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Step 2 — Strategy & Budget</span>
+            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Step 2 - Strategy & Budget</span>
           </div>
           <div className="p-5 space-y-5">
             {/* Strategy cards */}
@@ -221,12 +221,12 @@ export default function AgentSetup() {
                   <option value="USDC">USDC</option>
                 </select>
               </div>
-              <p className="font-mono text-[9px] text-white/20 mt-1">Budget stays in your wallet — agent only requests signatures.</p>
+              <p className="font-mono text-[9px] text-white/20 mt-1">Budget stays in your wallet - agent only requests signatures.</p>
             </div>
 
             {/* Advanced */}
             <div className="border-t border-white/[0.08] pt-4 space-y-3">
-              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Advanced — defaults are safe</div>
+              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Advanced - defaults are safe</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="font-mono text-[9px] text-white/20 block mb-1.5">Rebalance Threshold (%)</label>
@@ -275,7 +275,7 @@ export default function AgentSetup() {
       {step === 3 && (
         <div className="border border-white/[0.10] animate-in fade-in duration-200">
           <div className="px-5 py-3 border-b border-white/[0.10]">
-            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Step 3 — Review & Deploy</span>
+            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Step 3 - Review & Deploy</span>
           </div>
           <div className="p-5 space-y-4">
             <div className="border border-white/[0.08] divide-y divide-white/[0.06]">

@@ -83,7 +83,7 @@ export default function Settings() {
               <div className="flex items-center gap-2">
                 <div className={`w-1.5 h-1.5 shrink-0 ${chainId === 8453 ? "bg-primary animate-pulse" : "bg-red-500"}`} />
                 <span className="font-mono text-[10px] text-white/35">
-                  {chainId === 8453 ? "Base Mainnet (chain 8453)" : "Wrong network — switch to Base Mainnet"}
+                  {chainId === 8453 ? "Base Mainnet (chain 8453)" : "Wrong network - switch to Base Mainnet"}
                 </span>
               </div>
             </>

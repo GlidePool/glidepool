@@ -90,7 +90,7 @@ export default function Advisor() {
         <div>
           <h1 className="text-xl font-bold tracking-tight mb-2">Connect your wallet</h1>
           <p className="text-sm text-white/40 max-w-xs leading-relaxed font-mono">
-            Connect to access the GlidePool AI Advisor — analyze pools and get on-chain recommendations.
+            Connect to access the GlidePool AI Advisor - analyze pools and get on-chain recommendations.
           </p>
         </div>
         <w3m-button />
@@ -136,10 +136,10 @@ export default function Advisor() {
             <div>
               <label className="font-mono text-[9px] text-white/20 uppercase tracking-widest block mb-1.5">My Position (optional)</label>
               <select value={selectedNft} onChange={(e) => { setSelectedNft(e.target.value); setHasRequested(false); }} className={selectCls}>
-                <option value="">None — analyzing for new entry</option>
+                <option value="">None - analyzing for new entry</option>
                 {positions.filter((p) => !selectedPool || p.poolAddress === selectedPool).map((p) => (
                   <option key={p.nftId} value={p.nftId}>
-                    NFT #{p.nftId} — {p.tokenASymbol}/{p.tokenBSymbol} ({formatUsd(p.valueUsd)})
+                    NFT #{p.nftId} - {p.tokenASymbol}/{p.tokenBSymbol} ({formatUsd(p.valueUsd)})
                   </option>
                 ))}
               </select>

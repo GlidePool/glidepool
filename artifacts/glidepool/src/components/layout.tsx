@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Wallet connect button - always visible in header */}
           <div className="shrink-0">
-            <w3m-button balance="hide" />
+            <w3m-button balance="hide" size="sm" />
           </div>
         </div>
       </header>

@@ -104,16 +104,17 @@ export default function Landing() {
             <span className="block">LIQUIDITY</span>
             <span className="block">AGENTS</span>
           </h1>
-          <div className="mt-8 flex items-center gap-4">
-            <Link href="/dashboard">
-              <div className="inline-flex items-center gap-2 bg-primary text-[#080808] font-bold font-mono uppercase tracking-widest cursor-pointer hover:opacity-90 active:opacity-75 transition-opacity glow-green px-6 py-3 text-sm">
-                LAUNCH APP <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
-              </div>
+          <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+            <Link href="/dashboard" className="block">
+              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-primary text-[#080808] font-bold font-mono text-sm tracking-wider px-7 py-3.5 hover:brightness-110 active:brightness-90 transition-all glow-green">
+                Launch App
+                <ArrowRight className="w-4 h-4 shrink-0" strokeWidth={2.5} />
+              </button>
             </Link>
-            <Link href="/pools">
-              <div className="inline-flex items-center gap-2 border border-white/15 text-white/50 hover:text-white/80 hover:border-white/30 font-mono text-sm uppercase tracking-widest cursor-pointer transition-all px-6 py-3">
-                BROWSE POOLS
-              </div>
+            <Link href="/pools" className="block">
+              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/[0.18] text-white/60 hover:text-white hover:border-white/40 hover:bg-white/[0.03] font-mono text-sm tracking-wide px-7 py-3.5 transition-all">
+                Browse Pools
+              </button>
             </Link>
           </div>
         </div>

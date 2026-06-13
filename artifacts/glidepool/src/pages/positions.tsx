@@ -49,9 +49,9 @@ export default function Positions() {
 
       {/* States */}
       {isLoading ? (
-        <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-x divide-white/[0.10]">
+        <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="p-5 space-y-3 animate-pulse">
+            <div key={i} className="p-5 space-y-3 animate-pulse border-b border-r border-white/[0.10]">
               <div className="h-2.5 bg-white/[0.05] w-1/3" />
               <div className="h-6 bg-white/[0.05] w-1/2" />
               <div className="h-2 bg-white/[0.05] w-1/4" />
@@ -79,22 +79,23 @@ export default function Positions() {
           </Link>
         </div>
       ) : (
-        <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
+        /* overflow-hidden + border-r + border-b per card = clean grid separators */
+        <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
           {positions.map((pos, idx) => (
             <Link key={pos.nftId} href={`/positions/${pos.nftId}`}>
               <div
-                className="p-5 cursor-pointer group hover:bg-white/[0.02] transition-all duration-200 animate-in fade-in slide-in-from-bottom-2 h-full flex flex-col gap-4"
+                className="p-5 cursor-pointer group hover:bg-white/[0.02] transition-all duration-200 animate-in fade-in slide-in-from-bottom-2 h-full flex flex-col gap-4 border-b border-r border-white/[0.10]"
                 style={{ animationDelay: `${idx * 40}ms`, animationFillMode: "both" }}
               >
                 {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
                     <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">NFT #{pos.nftId}</div>
-                    <div className="font-bold text-sm group-hover:text-primary transition-colors">
+                    <div className="font-bold text-sm group-hover:text-primary transition-colors truncate">
                       {pos.tokenASymbol}/{pos.tokenBSymbol}
                     </div>
                   </div>
-                  <span className="font-mono text-[9px] text-white/25 border border-white/[0.08] px-2 py-0.5">
+                  <span className="font-mono text-[9px] text-white/25 border border-white/[0.08] px-2 py-0.5 shrink-0">
                     {pos.binCount} bins
                   </span>
                 </div>

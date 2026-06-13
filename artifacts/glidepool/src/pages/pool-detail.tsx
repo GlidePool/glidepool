@@ -23,8 +23,11 @@ export default function PoolDetail() {
       <div className="flex flex-col gap-6 animate-pulse">
         <div className="h-3 bg-white/[0.05] w-20" />
         <div className="h-7 bg-white/[0.05] w-48" />
-        <div className="border border-white/[0.07] grid grid-cols-3 divide-x divide-white/[0.07]">
-          {[1, 2, 3].map((i) => <div key={i} className="h-20 bg-white/[0.02]" />)}
+        {/* Stat cards skeleton — responsive: 1 col mobile, 3 col sm+ */}
+        <div className="border border-white/[0.07] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-20 bg-white/[0.02] border-b sm:border-b-0 sm:border-r border-white/[0.07] last:border-b-0 last:border-r-0" />
+          ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {[1, 2].map((i) => <div key={i} className="h-56 border border-white/[0.07] bg-white/[0.02]" />)}
@@ -47,6 +50,11 @@ export default function PoolDetail() {
     );
   }
 
+  const feeRatePct = ((Number(pool.feeAIn || 0) / 1e18) * 100).toFixed(4);
+  const tvlNum = pool.currentPrice > 0
+    ? Number(pool.reserveA || 0) / 1e18 * pool.currentPrice + Number(pool.reserveB || 0) / 1e6
+    : 0;
+
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-400">
 
@@ -59,12 +67,12 @@ export default function PoolDetail() {
 
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-stretch justify-between gap-0 border border-white/[0.10]">
-        <div className="p-5 flex flex-col justify-center flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="font-mono text-[9px] text-primary/60 border border-primary/20 px-2 py-0.5 bg-primary/[0.04]">
+        <div className="p-5 flex flex-col justify-center flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="font-mono text-[9px] text-primary/60 border border-primary/20 px-2 py-0.5 bg-primary/[0.04] shrink-0">
               Maverick V2
             </span>
-            <span className="font-mono text-[10px] text-white/20">{truncateAddress(poolAddress)}</span>
+            <span className="font-mono text-[10px] text-white/20 truncate">{truncateAddress(poolAddress)}</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
             {pool.tokenASymbol}
@@ -81,20 +89,18 @@ export default function PoolDetail() {
         </div>
       </div>
 
-      {/* Stat cards — flat bordered grid */}
-      <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
-        {(() => {
-          const feeRatePct = ((Number(pool.feeAIn || 0) / 1e18) * 100).toFixed(4);
-          const tvlNum = pool.currentPrice > 0
-            ? Number(pool.reserveA || 0) / 1e18 * pool.currentPrice + Number(pool.reserveB || 0) / 1e6
-            : 0;
-          return [
-            { label: "TVL",         value: tvlNum > 0.01 ? formatUsd(tvlNum) : "$0.00",      note: `Reserves from chain` },
-            { label: "Fee Rate",    value: `${feeRatePct}%`,                                  note: `Tick spacing: ${pool.tickSpacing ?? "—"}` },
-            { label: "Active Tick", value: pool.activeTick?.toString() ?? "—",                note: `Bin counter: ${pool.binCounter ?? 0}` },
-          ];
-        })().map(({ label, value, note }) => (
-          <div key={label} className="p-5">
+      {/* Stat cards — overflow-hidden trick: each cell has border-r + border-b, container clips outer edges */}
+      <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
+        {[
+          { label: "TVL",         value: tvlNum > 0.01 ? formatUsd(tvlNum) : "$0.00", note: "Reserves from chain" },
+          { label: "Fee Rate",    value: `${feeRatePct}%`,                             note: `Tick spacing: ${pool.tickSpacing ?? "—"}` },
+          { label: "Active Tick", value: pool.activeTick?.toString() ?? "—",           note: `Bin counter: ${pool.binCounter ?? 0}` },
+        ].map(({ label, value, note }, i) => (
+          <div key={label} className={[
+            "p-5",
+            /* right border on all but last; bottom border on all but last on mobile */
+            i < 2 ? "border-b sm:border-b-0 sm:border-r border-white/[0.10]" : "",
+          ].join(" ")}>
             <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-2">{label}</div>
             <div className="text-xl font-mono font-bold">{value}</div>
             {note && <div className="font-mono text-[9px] text-white/20 mt-1">{note}</div>}
@@ -155,7 +161,7 @@ export default function PoolDetail() {
                   <span>{m.icon}</span>
                   <span>{m.label}</span>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="font-mono text-[9px] text-white/20 mb-0.5">Mode {m.code}</div>
                   <div className="font-mono text-[10px] text-white/40 leading-relaxed">{m.desc}</div>
                 </div>

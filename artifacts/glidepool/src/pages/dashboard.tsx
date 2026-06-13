@@ -52,6 +52,13 @@ export default function Dashboard() {
   const totalPnl     = MOCK_AGENTS.reduce((s, a) => s + a.pnl, 0);
   const totalActions = MOCK_AGENTS.reduce((s, a) => s + a.actions, 0);
 
+  const stats = [
+    { label: "Active Agents", value: String(runningCount),            icon: <Bot className="w-4 h-4" />,        color: "text-primary" },
+    { label: "Est. P&L",      value: `+${totalPnl.toFixed(2)} USDC`, icon: <TrendingUp className="w-4 h-4" />, color: "text-primary" },
+    { label: "LLM Actions",   value: String(totalActions),            icon: <Activity className="w-4 h-4" />,   color: "text-white/70" },
+    { label: "Positions",     value: String(positions?.length ?? 0),  icon: <Wallet2 className="w-4 h-4" />,    color: "text-white/70" },
+  ];
+
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-400">
 
@@ -69,15 +76,19 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Stats — flat grid */}
-      <div className="border border-white/[0.10] grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/[0.10]">
-        {[
-          { label: "Active Agents", value: String(runningCount),            icon: <Bot className="w-4 h-4" />,        color: "text-primary" },
-          { label: "Est. P&L",      value: `+${totalPnl.toFixed(2)} USDC`, icon: <TrendingUp className="w-4 h-4" />, color: "text-primary" },
-          { label: "LLM Actions",   value: String(totalActions),            icon: <Activity className="w-4 h-4" />,   color: "text-white/70" },
-          { label: "Positions",     value: String(positions?.length ?? 0),  icon: <Wallet2 className="w-4 h-4" />,    color: "text-white/70" },
-        ].map((s) => (
-          <div key={s.label} className="p-4 sm:p-5 flex flex-col gap-2">
+      {/* Stats — overflow-hidden grid: each cell carries its own right+bottom border */}
+      <div className="border border-white/[0.10] grid grid-cols-2 sm:grid-cols-4 overflow-hidden">
+        {stats.map((s, i) => (
+          <div key={s.label} className={[
+            "p-4 sm:p-5 flex flex-col gap-2",
+            /* right border on all items */
+            "border-r border-white/[0.10]",
+            /* bottom border on first row of 2-col mobile (items 0 & 1) */
+            i < 2 ? "border-b border-white/[0.10]" : "",
+            /* on sm+ remove bottom border, last item has no right border */
+            "sm:border-b-0",
+            i === 3 ? "sm:border-r-0" : "",
+          ].join(" ")}>
             <div className="flex items-center justify-between">
               <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{s.label}</span>
               <span className="text-white/20">{s.icon}</span>
@@ -141,14 +152,18 @@ export default function Dashboard() {
       </div>
 
       {/* Quick links */}
-      <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
+      <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
         {[
           { href: "/agent/setup", icon: <Bot className="w-5 h-5 text-primary" />,      label: "SERVER LAYER", title: "Setup Agent",   desc: "Configure strategy, risk level, and budget for a new autonomous agent." },
           { href: "/monitor",     icon: <Activity className="w-5 h-5 text-primary" />, label: "LIVE FEED",    title: "Monitor",       desc: "Live feed of agent decisions, LLM reasoning, and on-chain actions." },
           { href: "/pools",       icon: <Layers className="w-5 h-5 text-primary" />,   label: "CHAIN LAYER",  title: "Explore Pools", desc: "Browse Maverick V2 DLMM pools on Base Mainnet with live data." },
-        ].map((card) => (
+        ].map((card, i) => (
           <Link key={card.href} href={card.href}>
-            <div className="p-5 sm:p-6 hover:bg-white/[0.02] transition-colors cursor-pointer group h-full flex flex-col gap-4">
+            <div className={[
+              "p-5 sm:p-6 hover:bg-white/[0.02] transition-colors cursor-pointer group h-full flex flex-col gap-4",
+              "border-b border-r border-white/[0.10]",
+              i === 2 ? "sm:border-r-0" : "",
+            ].join(" ")}>
               <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest">{card.label}</div>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 border border-white/[0.10] group-hover:border-primary/30 flex items-center justify-center transition-colors">

@@ -63,24 +63,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Right side */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Wallet button — only on sm+ in header */}
             <div className="hidden sm:block">
               <ConnectButton showBalance={false} />
             </div>
-            <div className="sm:hidden">
-              <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="none" />
-            </div>
+            {/* Hamburger — shown below lg */}
             <button
               className="lg:hidden p-1.5 border border-white/[0.08] text-white/40 hover:text-white/80 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle navigation"
             >
               {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile drawer */}
+        {/* Mobile / tablet drawer */}
         {mobileOpen && (
           <div className="lg:hidden border-t border-white/[0.06] bg-[#080808]">
+            {/* Wallet connect inside drawer on mobile */}
+            <div className="sm:hidden px-5 py-4 border-b border-white/[0.06]">
+              <ConnectButton showBalance={false} />
+            </div>
+
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
               const active = isActive(href);
               return (
@@ -147,12 +152,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col gap-3">
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Product</div>
               {[
-                { label: "Dashboard",   href: "/dashboard",   ext: false },
-                { label: "Pools",       href: "/pools",       ext: false },
-                { label: "Positions",   href: "/positions",   ext: false },
-                { label: "AI Advisor",  href: "/advisor",     ext: false },
-                { label: "Monitor",     href: "/monitor",     ext: false },
-                { label: "Setup Agent", href: "/agent/setup", ext: false },
+                { label: "Dashboard",   href: "/dashboard" },
+                { label: "Pools",       href: "/pools" },
+                { label: "Positions",   href: "/positions" },
+                { label: "AI Advisor",  href: "/advisor" },
+                { label: "Monitor",     href: "/monitor" },
+                { label: "Setup Agent", href: "/agent/setup" },
               ].map(({ label, href }) => (
                 <Link key={href} href={href}>
                   <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">{label}</span>

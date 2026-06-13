@@ -40,9 +40,9 @@ export default function Pools() {
 
       {/* Pool grid */}
       {isLoading ? (
-        <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0">
+        <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="p-5 animate-pulse space-y-3 border-b sm:border-b-0 sm:border-r border-white/[0.10] last:border-r-0">
+            <div key={i} className="p-5 animate-pulse space-y-3 border-b border-r border-white/[0.10]">
               <div className="h-2.5 bg-white/[0.05] w-1/3" />
               <div className="h-6 bg-white/[0.05] w-1/2" />
               <div className="h-2 bg-white/[0.05] w-1/4" />
@@ -52,25 +52,22 @@ export default function Pools() {
       ) : (
         <>
           {filtered && filtered.length > 0 ? (
-            <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0">
+            /* overflow-hidden on container + border-r + border-b on each card = clean grid without double borders */
+            <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
               {filtered.map((pool, idx) => (
                 <Link key={pool.poolAddress} href={`/pools/${pool.poolAddress}`}>
                   <div
                     className={[
                       "p-5 cursor-pointer group hover:bg-white/[0.02] transition-all duration-200 h-full flex flex-col gap-4",
                       "animate-in fade-in slide-in-from-bottom-2",
-                      /* right border on non-last in each row */
-                      "border-b lg:border-b-0 border-white/[0.10]",
-                      "sm:border-r border-white/[0.10]",
-                      idx % 2 === 1 ? "sm:border-r-0" : "",
-                      idx % 3 === 2 ? "lg:border-r-0" : "",
+                      "border-b border-r border-white/[0.10]",
                     ].join(" ")}
                     style={{ animationDelay: `${idx * 40}ms`, animationFillMode: "both" }}
                   >
                     {/* Token pair + fee */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex -space-x-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex -space-x-1 shrink-0">
                           <div className="w-6 h-6 border border-white/[0.12] bg-white/[0.06] flex items-center justify-center text-[9px] font-bold text-white/60 z-10">
                             {pool.tokenASymbol[0]}
                           </div>
@@ -78,11 +75,11 @@ export default function Pools() {
                             {pool.tokenBSymbol[0]}
                           </div>
                         </div>
-                        <span className="font-bold text-sm group-hover:text-primary transition-colors">
+                        <span className="font-bold text-sm group-hover:text-primary transition-colors truncate">
                           {pool.tokenASymbol}/{pool.tokenBSymbol}
                         </span>
                       </div>
-                      <span className="font-mono text-[9px] text-white/30 border border-white/[0.08] px-2 py-0.5 group-hover:border-primary/20 group-hover:text-primary/60 transition-all">
+                      <span className="font-mono text-[9px] text-white/30 border border-white/[0.08] px-2 py-0.5 group-hover:border-primary/20 group-hover:text-primary/60 transition-all shrink-0">
                         {formatPercent(pool.feeRate || 0)}
                       </span>
                     </div>
@@ -109,8 +106,8 @@ export default function Pools() {
 
                     {/* Address + arrow */}
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] text-white/15">{truncateAddress(pool.poolAddress)}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-white/15 group-hover:text-primary transition-colors" />
+                      <span className="font-mono text-[10px] text-white/15 truncate mr-2">{truncateAddress(pool.poolAddress)}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-white/15 group-hover:text-primary transition-colors shrink-0" />
                     </div>
                   </div>
                 </Link>

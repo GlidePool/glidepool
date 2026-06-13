@@ -98,7 +98,7 @@ export default function Landing() {
 
         {/* H1 — clean stacked lines, no inline button */}
         <div className="relative mt-8">
-          <h1 className="font-black uppercase tracking-tighter leading-[0.88] text-white select-none" style={{ fontSize: "clamp(52px,9.5vw,118px)" }}>
+          <h1 className="font-black uppercase tracking-tighter leading-[0.88] text-white select-none" style={{ fontSize: "clamp(30px,9.5vw,118px)" }}>
             <span className="block">AUTONOMOUS</span>
             <span className="block text-primary" style={{ textShadow: "0 0 60px rgba(0,245,100,0.5), 0 0 120px rgba(0,245,100,0.25)" }}>DLMM</span>
             <span className="block">LIQUIDITY</span>

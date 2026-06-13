@@ -17,7 +17,20 @@ function PageBackground() {
       <div className="absolute" style={{ width: 500, height: 400, bottom: "0%", right: "-5%", background: "radial-gradient(ellipse at center, rgba(0,245,100,0.07) 0%, transparent 70%)", animation: "orb-drift-b 30s ease-in-out infinite", filter: "blur(50px)" }} />
       <div className="absolute" style={{ width: 350, height: 280, top: "45%", left: "40%", background: "radial-gradient(ellipse at center, rgba(0,245,100,0.04) 0%, transparent 70%)", animation: "orb-drift-c 38s ease-in-out infinite", filter: "blur(60px)" }} />
       <div className="absolute inset-0 opacity-[0.016]" style={{ backgroundImage: "radial-gradient(rgba(0,245,100,1) 1px, transparent 1px)", backgroundSize: "44px 44px" }} />
-      <div className="absolute left-0 right-0 h-[1px] opacity-[0.08]" style={{ background: "linear-gradient(90deg,transparent,rgba(0,245,100,0.9) 40%,rgba(0,245,100,0.9) 60%,transparent)", animation: "scanline-scroll 9s linear infinite", top: 0 }} />
+      {/* Radar ping — top left */}
+      <div style={{ position: "absolute", top: "18%", left: "10%", width: 420, height: 420 }}>
+        <div className="radar-ring" style={{ width: 420, height: 420, left: "50%", top: "50%" }} />
+        <div className="radar-ring" style={{ width: 420, height: 420, left: "50%", top: "50%" }} />
+        <div className="radar-ring" style={{ width: 420, height: 420, left: "50%", top: "50%" }} />
+        <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: 6, height: 6, borderRadius: "50%", background: "rgba(0,245,100,0.5)", boxShadow: "0 0 10px rgba(0,245,100,0.6)" }} />
+      </div>
+      {/* Radar ping — bottom right */}
+      <div style={{ position: "absolute", bottom: "12%", right: "8%", width: 320, height: 320 }}>
+        <div className="radar-ring" style={{ width: 320, height: 320, left: "50%", top: "50%", animationDelay: "2s" }} />
+        <div className="radar-ring" style={{ width: 320, height: 320, left: "50%", top: "50%", animationDelay: "3.33s" }} />
+        <div className="radar-ring" style={{ width: 320, height: 320, left: "50%", top: "50%", animationDelay: "4.66s" }} />
+        <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: 5, height: 5, borderRadius: "50%", background: "rgba(0,245,100,0.4)", boxShadow: "0 0 8px rgba(0,245,100,0.5)" }} />
+      </div>
     </div>
   );
 }

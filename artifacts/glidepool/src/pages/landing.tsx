@@ -51,74 +51,57 @@ export default function Landing() {
       </div>
 
       {/* ─── HERO ───────────────────────────────── */}
-      <section className="relative pt-10 sm:pt-14 pb-4 overflow-hidden">
-        {/* ── Vertical light beams (reference image, green) ── */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {/* Stripe field — glow applied to the whole layer */}
+      <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-4 sm:px-6 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">
+        {/* ── Background image ── */}
+        <div className="pointer-events-none absolute inset-0">
+          <img
+            src="/hero-bg.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-left"
+            style={{ opacity: 0.55 }}
+          />
+          {/* Dark overlay — more opaque on right so text is readable */}
           <div className="absolute inset-0" style={{
-            filter: "blur(0.5px) drop-shadow(0 0 6px rgba(0,245,100,0.8))",
-            backgroundImage: [
-              "linear-gradient(180deg, rgba(0,245,100,0.90) 0%, rgba(0,245,100,1.00) 45%, rgba(0,245,100,0.90) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.55) 0%, rgba(0,245,100,0.80) 45%, rgba(0,245,100,0.55) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.30) 0%, rgba(0,245,100,0.50) 45%, rgba(0,245,100,0.30) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.18) 0%, rgba(0,245,100,0.32) 45%, rgba(0,245,100,0.18) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.45) 0%, rgba(0,245,100,0.70) 45%, rgba(0,245,100,0.45) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.14) 0%, rgba(0,245,100,0.24) 45%, rgba(0,245,100,0.14) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.22) 0%, rgba(0,245,100,0.38) 45%, rgba(0,245,100,0.22) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.60) 0%, rgba(0,245,100,0.85) 45%, rgba(0,245,100,0.60) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.10) 0%, rgba(0,245,100,0.18) 45%, rgba(0,245,100,0.10) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.18) 0%, rgba(0,245,100,0.30) 45%, rgba(0,245,100,0.18) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.25) 0%, rgba(0,245,100,0.42) 45%, rgba(0,245,100,0.25) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.07) 0%, rgba(0,245,100,0.12) 45%, rgba(0,245,100,0.07) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.12) 0%, rgba(0,245,100,0.20) 45%, rgba(0,245,100,0.12) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.05) 0%, rgba(0,245,100,0.08) 45%, rgba(0,245,100,0.05) 100%)",
-              "linear-gradient(180deg, rgba(0,245,100,0.08) 0%, rgba(0,245,100,0.14) 45%, rgba(0,245,100,0.08) 100%)",
-            ].join(","),
-            backgroundRepeat: "no-repeat",
-            backgroundSize: [
-              "4px 100%","2.5px 100%","1.5px 100%","2px 100%","2px 100%",
-              "1px 100%","2.5px 100%","3px 100%","1px 100%","2px 100%",
-              "1.5px 100%","2px 100%","1px 100%","2px 100%","1px 100%",
-            ].join(","),
-            backgroundPosition: [
-              "14% 0","10% 0","7% 0","5% 0","18% 0",
-              "22% 0","26% 0","30% 0","34% 0","38% 0",
-              "43% 0","49% 0","56% 0","65% 0","76% 0",
-            ].join(","),
-            maskImage: "radial-gradient(ellipse 60% 100% at 28% 50%, black 0%, rgba(0,0,0,0.6) 45%, transparent 75%)",
-            WebkitMaskImage: "radial-gradient(ellipse 60% 100% at 28% 50%, black 0%, rgba(0,0,0,0.6) 45%, transparent 75%)",
+            background: "linear-gradient(to right, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.45) 40%, rgba(8,8,8,0.88) 70%, rgba(8,8,8,0.98) 100%)",
           }} />
-          {/* Wide ambient bloom — soft green light from left-center */}
-          <div className="absolute inset-0" style={{
-            background: "radial-gradient(ellipse 50% 90% at 20% 50%, rgba(0,245,100,0.20) 0%, rgba(0,245,100,0.06) 50%, transparent 72%)",
-            filter: "blur(24px)",
-          }} />
-          {/* Vignette — keeps text readable */}
-          <div className="absolute inset-0" style={{
-            background: "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 25%, rgba(8,8,8,0.65) 100%)",
+          {/* Bottom fade into page */}
+          <div className="absolute bottom-0 left-0 right-0 h-32" style={{
+            background: "linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.95) 100%)",
           }} />
         </div>
-        <div className="pointer-events-none absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(rgba(0,245,100,1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,100,1) 1px,transparent 1px)", backgroundSize: "80px 80px" }} />
-        <div className="flex items-start justify-between gap-4 mb-8 relative">
-          <div className="flex items-center">
-            <div className="w-9 h-9 rounded-full border-2 border-white/15 bg-white/[0.03] flex items-center justify-center"><Plus className="w-4 h-4 text-primary" strokeWidth={2.5} /></div>
-            <div className="w-9 h-9 rounded-full border-2 border-primary/50 bg-primary/10 flex items-center justify-center -ml-3"><div className="w-3 h-3 rounded-full bg-primary animate-pulse" /></div>
+
+        {/* Top row — status badge */}
+        <div className="flex items-start justify-between gap-4 relative">
+          <div className="flex items-center gap-1.5 border border-primary/25 bg-primary/[0.06] px-3 py-1.5">
+            <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
+            <span className="font-mono text-[10px] text-primary/70 uppercase tracking-widest">Live on Base Mainnet</span>
           </div>
-          <p className="hidden sm:block text-[11px] text-white/25 leading-relaxed max-w-[180px] text-right font-mono">Claude Opus 4 · Maverick V2 · x402 on Base · non-custodial LP</p>
+          <p className="hidden sm:block text-[11px] text-white/30 leading-relaxed max-w-[200px] text-right font-mono">
+            Claude Opus 4 · Maverick V2<br />x402 on Base · non-custodial
+          </p>
         </div>
-        <h1 className="relative font-black uppercase tracking-tighter leading-[0.87] text-white select-none" style={{ fontSize: "clamp(48px,10vw,122px)" }}>
-          <span className="block">AUTONOMOUS</span>
-          <span className="block text-primary" style={{ textShadow: "0 0 80px rgba(0,245,100,0.45),0 0 160px rgba(0,245,100,0.2)" }}>DLMM</span>
-          <span className="block">LIQUIDITY</span>
-          <span className="flex flex-wrap items-center gap-3 sm:gap-5">
-            <span>AGENTS</span>
+
+        {/* H1 — clean stacked lines, no inline button */}
+        <div className="relative mt-8">
+          <h1 className="font-black uppercase tracking-tighter leading-[0.88] text-white select-none" style={{ fontSize: "clamp(52px,9.5vw,118px)" }}>
+            <span className="block">AUTONOMOUS</span>
+            <span className="block text-primary" style={{ textShadow: "0 0 60px rgba(0,245,100,0.5), 0 0 120px rgba(0,245,100,0.25)" }}>DLMM</span>
+            <span className="block">LIQUIDITY</span>
+            <span className="block">AGENTS</span>
+          </h1>
+          <div className="mt-8 flex items-center gap-4">
             <Link href="/dashboard">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary text-[#080808] font-bold font-sans uppercase tracking-widest cursor-pointer hover:scale-105 active:scale-95 transition-transform glow-green shrink-0" style={{ fontSize: "clamp(9px,1.1vw,13px)", padding: "clamp(10px,1.8vw,16px) clamp(14px,2.5vw,28px)" }}>
-                LAUNCH APP <ArrowRight strokeWidth={2.5} style={{ width: "clamp(11px,1.3vw,16px)", height: "clamp(11px,1.3vw,16px)" }} />
+              <div className="inline-flex items-center gap-2 bg-primary text-[#080808] font-bold font-mono uppercase tracking-widest cursor-pointer hover:opacity-90 active:opacity-75 transition-opacity glow-green px-6 py-3 text-sm">
+                LAUNCH APP <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
               </div>
             </Link>
-          </span>
-        </h1>
+            <Link href="/pools">
+              <div className="inline-flex items-center gap-2 border border-white/15 text-white/50 hover:text-white/80 hover:border-white/30 font-mono text-sm uppercase tracking-widest cursor-pointer transition-all px-6 py-3">
+                BROWSE POOLS
+              </div>
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* ─── STATS BAR ──────────────────────────── */}

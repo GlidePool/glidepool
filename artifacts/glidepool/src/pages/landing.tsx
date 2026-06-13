@@ -255,79 +255,77 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* 6-cell step table */}
-          <div className="overflow-x-auto">
-            <div className="grid grid-cols-6 divide-x divide-white/[0.10] min-w-[640px]">
-              {LIFECYCLE_STEPS.map((step, i) => {
-                const Icon = step.icon;
-                const isActive = activeStep === i;
-                const isPast   = i < activeStep;
-                const isAmber  = step.color === "amber";
-                return (
-                  <button
-                    key={step.label}
-                    onClick={() => setActiveStep(i)}
-                    className="text-left flex flex-col transition-all duration-500 cursor-pointer"
-                    style={{
-                      background: isActive
-                        ? isAmber ? "rgba(251,191,36,0.06)" : "rgba(0,245,100,0.05)"
-                        : "transparent",
-                    }}
-                  >
-                    {/* Step number + status dot */}
-                    <div className="flex items-center justify-between px-4 pt-4 pb-0">
-                      <span
-                        className="font-mono text-[9px] transition-colors duration-300"
-                        style={{ color: isActive ? (isAmber ? "rgba(251,191,36,0.7)" : "rgba(0,245,100,0.7)") : "rgba(255,255,255,0.12)" }}
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div
-                        className="w-1.5 h-1.5 transition-all duration-300"
-                        style={{
-                          background: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : isPast ? "rgba(0,245,100,0.25)" : "rgba(255,255,255,0.08)",
-                          boxShadow: isActive ? (isAmber ? "0 0 6px #fbbf24" : "0 0 6px rgb(0,245,100)") : "none",
-                        }}
-                      />
-                    </div>
-
-                    {/* Icon */}
-                    <div className="px-4 py-4">
-                      <div
-                        className="w-11 h-11 border flex items-center justify-center transition-all duration-300"
-                        style={{
-                          borderColor: isActive ? (isAmber ? "rgba(251,191,36,0.5)" : "rgba(0,245,100,0.5)") : "rgba(255,255,255,0.08)",
-                          color: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "rgba(255,255,255,0.25)",
-                          boxShadow: isActive ? (isAmber ? "0 0 16px rgba(251,191,36,0.15)" : "0 0 16px rgba(0,245,100,0.12)") : "none",
-                        }}
-                      >
-                        <Icon className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    {/* Labels */}
-                    <div className="px-4 pb-2">
-                      <div
-                        className="font-bold text-xs leading-tight mb-1 transition-colors duration-300"
-                        style={{ color: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "rgba(255,255,255,0.55)" }}
-                      >
-                        {step.label}
-                      </div>
-                      <div className="font-mono text-[9px] text-white/20 leading-tight">{step.sub}</div>
-                    </div>
-
-                    {/* Active bottom bar */}
+          {/* 6-cell step table — 2 col mobile, 3 col sm, 6 col lg */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 overflow-hidden">
+            {LIFECYCLE_STEPS.map((step, i) => {
+              const Icon = step.icon;
+              const isActive = activeStep === i;
+              const isPast   = i < activeStep;
+              const isAmber  = step.color === "amber";
+              return (
+                <button
+                  key={step.label}
+                  onClick={() => setActiveStep(i)}
+                  className="text-left flex flex-col transition-all duration-500 cursor-pointer border-b border-r border-white/[0.10]"
+                  style={{
+                    background: isActive
+                      ? isAmber ? "rgba(251,191,36,0.06)" : "rgba(0,245,100,0.05)"
+                      : "transparent",
+                  }}
+                >
+                  {/* Step number + status dot */}
+                  <div className="flex items-center justify-between px-4 pt-4 pb-0">
+                    <span
+                      className="font-mono text-[9px] transition-colors duration-300"
+                      style={{ color: isActive ? (isAmber ? "rgba(251,191,36,0.7)" : "rgba(0,245,100,0.7)") : "rgba(255,255,255,0.12)" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <div
-                      className="mt-auto h-[2px] transition-all duration-500"
+                      className="w-1.5 h-1.5 transition-all duration-300"
                       style={{
-                        background: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "transparent",
-                        opacity: isActive ? 0.7 : 0,
+                        background: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : isPast ? "rgba(0,245,100,0.25)" : "rgba(255,255,255,0.08)",
+                        boxShadow: isActive ? (isAmber ? "0 0 6px #fbbf24" : "0 0 6px rgb(0,245,100)") : "none",
                       }}
                     />
-                  </button>
-                );
-              })}
-            </div>
+                  </div>
+
+                  {/* Icon */}
+                  <div className="px-4 py-4">
+                    <div
+                      className="w-9 h-9 sm:w-11 sm:h-11 border flex items-center justify-center transition-all duration-300"
+                      style={{
+                        borderColor: isActive ? (isAmber ? "rgba(251,191,36,0.5)" : "rgba(0,245,100,0.5)") : "rgba(255,255,255,0.08)",
+                        color: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "rgba(255,255,255,0.25)",
+                        boxShadow: isActive ? (isAmber ? "0 0 16px rgba(251,191,36,0.15)" : "0 0 16px rgba(0,245,100,0.12)") : "none",
+                      }}
+                    >
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
+                  </div>
+
+                  {/* Labels */}
+                  <div className="px-4 pb-3">
+                    <div
+                      className="font-bold text-xs leading-tight mb-1 transition-colors duration-300"
+                      style={{ color: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "rgba(255,255,255,0.55)" }}
+                    >
+                      {step.label}
+                    </div>
+                    <div className="font-mono text-[9px] text-white/20 leading-tight hidden sm:block">{step.sub}</div>
+                  </div>
+
+                  {/* Active bottom bar */}
+                  <div
+                    className="mt-auto h-[2px] transition-all duration-500"
+                    style={{
+                      background: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "transparent",
+                      opacity: isActive ? 0.7 : 0,
+                    }}
+                  />
+                </button>
+              );
+            })}
           </div>
 
           {/* Active step detail panel */}
@@ -376,58 +374,59 @@ export default function Landing() {
           </h2>
         </div>
 
-        {/* 3×2 component grid */}
-        <div className="border border-white/[0.10] overflow-x-auto">
-          <div className="min-w-[560px]">
-            {/* Row 1 */}
-            <div className="grid grid-cols-3 divide-x divide-white/[0.10]">
-              {[
-                { label: "CLIENT LAYER", icon: <Wallet className="w-5 h-5 text-white/50" />, title: "User Wallet", lines: ["RainbowKit connect", "Signs all transactions", "Base Mainnet"], foot: "wagmi v2" },
-                { label: "SERVER LAYER", icon: <Bot className="w-5 h-5 text-primary/80" />, title: "Agent Server", lines: ["Poll pool / block", "Detect bin drift", "Trigger x402 flow"], foot: "Express 5 · Node.js", accent: true },
-                { label: "PAYMENT LAYER", icon: <Zap className="w-5 h-5 text-amber-400/80" />, title: "x402 Gate", lines: ["HTTP 402 response", "Pay 0.05 USDC on Base", "Verify on-chain"], foot: "Base Mainnet" },
-              ].map(({ label, icon, title, lines, foot, accent }) => (
-                <div key={title} className={`p-6 flex flex-col gap-4 ${accent ? "bg-primary/[0.03]" : ""}`}>
-                  <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 border flex items-center justify-center shrink-0 ${accent ? "border-primary/30" : "border-white/[0.12]"}`}>{icon}</div>
-                    <span className="font-bold text-sm tracking-wide">{title}</span>
-                  </div>
-                  <ul className="space-y-1">
-                    {lines.map(l => <li key={l} className="font-mono text-[10px] text-white/30">› {l}</li>)}
-                  </ul>
-                  <div className={`font-mono text-[9px] pt-3 border-t ${accent ? "border-primary/[0.10] text-primary/30" : "border-white/[0.06] text-white/15"}`}>{foot}</div>
+        {/* 3×2 component grid — 1 col mobile, 3 col sm+ */}
+        <div className="border border-white/[0.10] overflow-hidden">
+          {/* Row 1 */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
+            {[
+              { label: "CLIENT LAYER",  icon: <Wallet className="w-5 h-5 text-white/50" />,       title: "User Wallet",   lines: ["RainbowKit connect", "Signs all transactions", "Base Mainnet"], foot: "wagmi v2" },
+              { label: "SERVER LAYER",  icon: <Bot className="w-5 h-5 text-primary/80" />,         title: "Agent Server",  lines: ["Poll pool / block", "Detect bin drift", "Trigger x402 flow"], foot: "Express 5 · Node.js", accent: true },
+              { label: "PAYMENT LAYER", icon: <Zap className="w-5 h-5 text-amber-400/80" />,      title: "x402 Gate",     lines: ["HTTP 402 response", "Pay 0.05 USDC on Base", "Verify on-chain"], foot: "Base Mainnet" },
+            ].map(({ label, icon, title, lines, foot, accent }, i) => (
+              <div key={title} className={[
+                "p-6 flex flex-col gap-4 border-b border-r border-white/[0.10]",
+                accent ? "bg-primary/[0.03]" : "",
+              ].join(" ")}>
+                <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 border flex items-center justify-center shrink-0 ${accent ? "border-primary/30" : "border-white/[0.12]"}`}>{icon}</div>
+                  <span className="font-bold text-sm tracking-wide">{title}</span>
                 </div>
-              ))}
-            </div>
-            {/* Divider row */}
-            <div className="border-t border-white/[0.10] grid grid-cols-3 divide-x divide-white/[0.10]">
-              <div className="px-6 py-2 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
-                <span className="font-mono text-[9px] text-primary/40 tracking-widest">~2s block time</span>
+                <ul className="space-y-1">
+                  {lines.map(l => <li key={l} className="font-mono text-[10px] text-white/30">› {l}</li>)}
+                </ul>
+                <div className={`font-mono text-[9px] pt-3 border-t ${accent ? "border-primary/[0.10] text-primary/30" : "border-white/[0.06] text-white/15"}`}>{foot}</div>
               </div>
-              <div className="px-6 py-2 font-mono text-[9px] text-white/15 flex items-center">real-time data flow</div>
-              <div className="px-6 py-2 font-mono text-[9px] text-white/15 flex items-center">chain id 8453</div>
+            ))}
+          </div>
+          {/* Divider row — hidden on mobile */}
+          <div className="hidden sm:grid border-t border-white/[0.10] grid-cols-3 overflow-hidden">
+            <div className="px-6 py-2 flex items-center gap-2 border-r border-white/[0.10]">
+              <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
+              <span className="font-mono text-[9px] text-primary/40 tracking-widest">~2s block time</span>
             </div>
-            {/* Row 2 */}
-            <div className="border-t border-white/[0.10] grid grid-cols-3 divide-x divide-white/[0.10]">
-              {[
-                { label: "AI LAYER", icon: <Cpu className="w-5 h-5 text-blue-400/80" />, title: "Claude Opus 4", lines: ["Receives pool snapshot", "Action + reasoning", "Bin range + mode"], foot: "Anthropic API" },
-                { label: "CHAIN LAYER", icon: <Layers className="w-5 h-5 text-white/50" />, title: "Maverick V2 Pool", lines: ["Read: activeTick, TVL, price", "Write: add/remove liquidity", "DLMM bin management"], foot: "Base Mainnet · viem" },
-                { label: "OUTPUT LAYER", icon: <GitBranch className="w-5 h-5 text-primary/60" />, title: "TX Proposal", lines: ["Built by agent server", "Reviewed in Monitor", "Signed by your wallet"], foot: "RainbowKit sign" },
-              ].map(({ label, icon, title, lines, foot }) => (
-                <div key={title} className="p-6 flex flex-col gap-4">
-                  <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 border border-white/[0.12] flex items-center justify-center shrink-0">{icon}</div>
-                    <span className="font-bold text-sm tracking-wide">{title}</span>
-                  </div>
-                  <ul className="space-y-1">
-                    {lines.map(l => <li key={l} className="font-mono text-[10px] text-white/30">› {l}</li>)}
-                  </ul>
-                  <div className="font-mono text-[9px] pt-3 border-t border-white/[0.06] text-white/15">{foot}</div>
+            <div className="px-6 py-2 font-mono text-[9px] text-white/15 flex items-center border-r border-white/[0.10]">real-time data flow</div>
+            <div className="px-6 py-2 font-mono text-[9px] text-white/15 flex items-center">chain id 8453</div>
+          </div>
+          {/* Row 2 */}
+          <div className="border-t border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
+            {[
+              { label: "AI LAYER",     icon: <Cpu className="w-5 h-5 text-blue-400/80" />,        title: "Claude Opus 4",    lines: ["Receives pool snapshot", "Action + reasoning", "Bin range + mode"], foot: "Anthropic API" },
+              { label: "CHAIN LAYER",  icon: <Layers className="w-5 h-5 text-white/50" />,        title: "Maverick V2 Pool", lines: ["Read: activeTick, TVL, price", "Write: add/remove liquidity", "DLMM bin management"], foot: "Base Mainnet · viem" },
+              { label: "OUTPUT LAYER", icon: <GitBranch className="w-5 h-5 text-primary/60" />,   title: "TX Proposal",      lines: ["Built by agent server", "Reviewed in Monitor", "Signed by your wallet"], foot: "RainbowKit sign" },
+            ].map(({ label, icon, title, lines, foot }) => (
+              <div key={title} className="p-6 flex flex-col gap-4 border-b border-r border-white/[0.10]">
+                <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 border border-white/[0.12] flex items-center justify-center shrink-0">{icon}</div>
+                  <span className="font-bold text-sm tracking-wide">{title}</span>
                 </div>
-              ))}
-            </div>
+                <ul className="space-y-1">
+                  {lines.map(l => <li key={l} className="font-mono text-[10px] text-white/30">› {l}</li>)}
+                </ul>
+                <div className="font-mono text-[9px] pt-3 border-t border-white/[0.06] text-white/15">{foot}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -528,17 +527,20 @@ export default function Landing() {
           </h2>
         </div>
 
-        {/* 5-step bordered grid */}
-        <div className="border border-white/[0.10] overflow-x-auto">
-          <div className="grid grid-cols-5 divide-x divide-white/[0.10] min-w-[560px]">
+        {/* 5-step bordered grid — 1 col mobile, 2 col sm, 5 col lg */}
+        <div className="border border-white/[0.10] overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 overflow-hidden">
             {[
-              { n: "01", icon: <Wallet className="w-5 h-5" />,     title: "Connect Wallet",  body: "Base Mainnet via RainbowKit. MetaMask, Coinbase, WalletConnect." },
-              { n: "02", icon: <Layers className="w-5 h-5" />,     title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check TVL, tick, fee rate." },
-              { n: "03", icon: <Bot className="w-5 h-5" />,        title: "Setup Agent",     body: "Choose strategy + budget. One wallet signature to deploy." },
-              { n: "04", icon: <RefreshCw className="w-5 h-5" />,  title: "Agent Monitors",  body: "Polls every block. Pays 0.05 USDC via x402 for each AI call." },
-              { n: "05", icon: <ShieldCheck className="w-5 h-5" />,title: "You Sign",        body: "Review in Monitor. Approve or reject. Your keys, your control." },
+              { n: "01", icon: <Wallet className="w-5 h-5" />,      title: "Connect Wallet",  body: "Base Mainnet via RainbowKit. MetaMask, Coinbase, WalletConnect." },
+              { n: "02", icon: <Layers className="w-5 h-5" />,      title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check TVL, tick, fee rate." },
+              { n: "03", icon: <Bot className="w-5 h-5" />,         title: "Setup Agent",     body: "Choose strategy + budget. One wallet signature to deploy." },
+              { n: "04", icon: <RefreshCw className="w-5 h-5" />,   title: "Agent Monitors",  body: "Polls every block. Pays 0.05 USDC via x402 for each AI call." },
+              { n: "05", icon: <ShieldCheck className="w-5 h-5" />, title: "You Sign",        body: "Review in Monitor. Approve or reject. Your keys, your control." },
             ].map(({ n, icon, title, body }, i) => (
-              <div key={n} className={`p-6 flex flex-col gap-4 ${i === 4 ? "bg-primary/[0.03]" : ""}`}>
+              <div key={n} className={[
+                "p-6 flex flex-col gap-4 border-b border-r border-white/[0.10]",
+                i === 4 ? "bg-primary/[0.03]" : "",
+              ].join(" ")}>
                 <div className="flex items-start justify-between">
                   <div className={`w-9 h-9 border flex items-center justify-center ${i === 4 ? "border-primary/40 text-primary/80" : "border-white/[0.12] text-white/40"}`}>{icon}</div>
                   <span className="font-mono text-[10px] text-white/15">{n}</span>

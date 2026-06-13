@@ -3,7 +3,6 @@ import { formatUsd, formatCrypto, truncateAddress } from "@/lib/format";
 import { Link } from "wouter";
 import { ArrowRight, Wallet2, AlertCircle } from "lucide-react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Positions() {
   const { address, isConnected } = useAccount();
@@ -24,7 +23,7 @@ export default function Positions() {
             Connect to view your Maverick V2 liquidity positions on Base.
           </p>
         </div>
-        <ConnectButton />
+        <w3m-button />
       </div>
     );
   }

@@ -1,17 +1,11 @@
-import { WagmiProvider, http } from 'wagmi';
-import { base } from 'wagmi/chains';
-import {
-  RainbowKitProvider,
-  getDefaultConfig,
-  darkTheme,
-  type DisclaimerComponent,
-} from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { createAppKit } from '@reown/appkit/react';
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+import { base } from '@reown/appkit/networks';
+import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
 
 import Landing from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
@@ -28,28 +22,37 @@ import { Layout } from "@/components/layout";
 
 const queryClient = new QueryClient();
 
-const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
-  <Text>
-    By connecting, you agree to GlidePool&apos;s{' '}
-    <Link href="https://glidepool.com/terms">Terms of Service</Link>.
-    GlidePool is non-custodial — your keys, your assets.
-  </Text>
-);
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
 
-const wagmiConfig = getDefaultConfig({
-  appName: 'GlidePool',
-  appDescription: 'Autonomous DLMM agent platform for Maverick V2 liquidity on Base mainnet',
-  appUrl: 'https://glidepool.com',
-  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? '',
-  chains: [base],
-  transports: { [base.id]: http('https://mainnet.base.org') },
+export const wagmiAdapter = new WagmiAdapter({
+  networks: [base],
+  projectId,
 });
 
-const glideTheme = darkTheme({
-  accentColor: 'hsl(145 100% 48%)',
-  accentColorForeground: 'hsl(222 47% 6%)',
-  borderRadius: 'none',
-  overlayBlur: 'small',
+createAppKit({
+  adapters: [wagmiAdapter],
+  networks: [base],
+  defaultNetwork: base,
+  projectId,
+  metadata: {
+    name: 'GlidePool',
+    description: 'Autonomous DLMM agent platform for Maverick V2 liquidity on Base mainnet',
+    url: 'https://glidepool.com',
+    icons: ['https://glidepool.com/logo.png'],
+  },
+  themeMode: 'dark',
+  features: {
+    analytics: false,
+    email: false,
+    socials: false,
+    swaps: false,
+    onramp: false,
+  },
+  themeVariables: {
+    '--w3m-accent': '#00f564',
+    '--w3m-border-radius-master': '0px',
+    '--w3m-font-family': 'monospace',
+  },
 });
 
 function Router() {
@@ -67,7 +70,6 @@ function Router() {
         <Route path="/monitor" component={Monitor} />
         <Route path="/cli" component={CliGuide} />
         <Route path="/settings" component={Settings} />
-        <Route component={NotFound} />
       </Switch>
     </Layout>
   );
@@ -76,23 +78,13 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <WagmiProvider config={wagmiConfig}>
-        <RainbowKitProvider
-          theme={glideTheme}
-          locale="en-US"
-          initialChain={base}
-          appInfo={{
-            appName: 'GlidePool',
-            disclaimer: Disclaimer,
-          }}
-        >
-          <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </TooltipProvider>
-        </RainbowKitProvider>
+      <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
       </WagmiProvider>
     </QueryClientProvider>
   );

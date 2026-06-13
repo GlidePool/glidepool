@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useListPools } from "@workspace/api-client-react";
 import { truncateAddress } from "@/lib/format";
 import {
@@ -48,7 +47,7 @@ function WalletGate() {
         <h1 className="text-xl font-bold tracking-tight mb-2">Connect your wallet</h1>
         <p className="text-sm text-white/40 max-w-xs leading-relaxed font-mono">A connected Base Mainnet wallet is required to deploy an agent.</p>
       </div>
-      <ConnectButton />
+      <w3m-button />
     </div>
   );
 }

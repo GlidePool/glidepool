@@ -1,5 +1,4 @@
 import { Link, useLocation } from "wouter";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   LayoutDashboard, Bot, Activity, Layers, Wallet2,
   Terminal, Settings, ExternalLink,
@@ -70,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Wallet connect button — always visible in header */}
           <div className="shrink-0">
-            <ConnectButton showBalance={false} />
+            <w3m-button balance="hide" />
           </div>
         </div>
       </header>

@@ -1,5 +1,4 @@
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Link } from "wouter";
 import { useListPools, useGetUserPositions } from "@workspace/api-client-react";
 import { truncateAddress } from "@/lib/format";
@@ -37,7 +36,7 @@ function EmptyWallet() {
           Connect a Base Mainnet wallet to deploy and monitor your DLMM agents.
         </p>
       </div>
-      <ConnectButton />
+      <w3m-button />
     </div>
   );
 }

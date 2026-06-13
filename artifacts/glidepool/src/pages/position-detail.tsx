@@ -1,6 +1,5 @@
 import { useRoute, Link } from "wouter";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   useGetPositionDetail, getGetPositionDetailQueryKey,
   useGetAdvice, getGetAdviceQueryKey,
@@ -55,7 +54,7 @@ export default function PositionDetail() {
           <h1 className="text-xl font-bold tracking-tight mb-2">Connect your wallet</h1>
           <p className="text-sm text-white/40 max-w-xs leading-relaxed font-mono">Connect to view your position details.</p>
         </div>
-        <ConnectButton />
+        <w3m-button />
       </div>
     );
   }

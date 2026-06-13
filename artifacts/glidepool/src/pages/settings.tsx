@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAccount, useDisconnect, useChainId } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { truncateAddress } from "@/lib/format";
 import { Settings as SettingsIcon, Wallet2, Bell, Shield, ExternalLink, AlertTriangle, CheckCircle2 } from "lucide-react";
 
@@ -91,7 +90,7 @@ export default function Settings() {
           ) : (
             <div className="flex flex-col gap-3">
               <p className="font-mono text-[10px] text-white/40">No wallet connected.</p>
-              <ConnectButton />
+              <w3m-button />
             </div>
           )}
         </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Activity, Bot, CheckCircle2, AlertTriangle, Info, RefreshCw, Pause, Play } from "lucide-react";
 
 type LogLevel = "info" | "decision" | "warning" | "tx";
@@ -58,7 +57,7 @@ function WalletGate() {
         <h1 className="text-xl font-bold tracking-tight mb-2">Connect your wallet</h1>
         <p className="text-sm text-white/40 max-w-xs leading-relaxed font-mono">Connect to monitor your live agent activity.</p>
       </div>
-      <ConnectButton />
+      <w3m-button />
     </div>
   );
 }

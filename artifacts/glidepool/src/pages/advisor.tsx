@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   useListPools, getListPoolsQueryKey,
   useGetUserPositions, getGetUserPositionsQueryKey,
@@ -94,7 +93,7 @@ export default function Advisor() {
             Connect to access the GlidePool AI Advisor — analyze pools and get on-chain recommendations.
           </p>
         </div>
-        <ConnectButton />
+        <w3m-button />
       </div>
     );
   }

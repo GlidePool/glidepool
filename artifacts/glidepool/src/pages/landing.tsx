@@ -259,8 +259,8 @@ export default function Landing() {
                 animation: "logo-ring-spin 9s linear infinite reverse",
               }} />
             {/* Logo circle */}
-            <div className="relative w-16 h-16 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm flex items-center justify-center glow-green-sm">
-              <span className="font-mono font-black text-2xl text-primary">G</span>
+            <div className="relative w-16 h-16 rounded-full border border-primary/40 bg-black/40 backdrop-blur-sm flex items-center justify-center glow-green-sm">
+              <img src="/logo.png" alt="GlidePool" className="w-11 h-11 object-contain" />
             </div>
           </div>
 

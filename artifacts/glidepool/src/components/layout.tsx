@@ -37,9 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-6 h-14 flex items-center justify-between gap-8">
           <div className="flex items-center gap-10">
             <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-              <div className="w-7 h-7 rounded border border-primary/40 flex items-center justify-center font-mono font-black text-sm text-primary glow-green-sm transition-all group-hover:glow-green">
-                G
-              </div>
+              <img src="/logo.png" alt="GlidePool" className="w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(0,245,100,0.5)] transition-all group-hover:drop-shadow-[0_0_10px_rgba(0,245,100,0.8)]" />
               <span className="font-bold text-base tracking-tight">GlidePool</span>
             </Link>
 

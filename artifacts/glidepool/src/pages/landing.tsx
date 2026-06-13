@@ -66,66 +66,46 @@ export default function Landing() {
 
       {/* ─── HERO ───────────────────────────────── */}
       <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">
-        {/* ── Background image ── */}
-        <div className="pointer-events-none absolute inset-0">
-          <img
-            src="/hero-bg.png"
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover object-left"
-            style={{ opacity: 0.65 }}
-          />
-
-          {/* Main breathing orb - top left cluster */}
+        {/* ── Background lights ── */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          {/* Primary orb - large, slow breathe */}
           <div className="absolute animate-hero-breathe" style={{
-            top: "-15%", left: "-5%",
-            width: "55%", height: "100%",
-            background: "radial-gradient(ellipse at 40% 40%, rgba(0,245,100,0.22) 0%, rgba(0,245,100,0.08) 40%, transparent 70%)",
-            filter: "blur(48px)",
+            top: "-20%", left: "-10%",
+            width: "65%", height: "130%",
+            background: "radial-gradient(ellipse at 45% 45%, rgba(0,245,100,0.28) 0%, rgba(0,245,100,0.10) 35%, rgba(0,245,100,0.03) 60%, transparent 75%)",
+            filter: "blur(60px)",
           }} />
 
-          {/* Secondary orb - offset phase */}
+          {/* Secondary orb - offset phase, slightly lower */}
           <div className="absolute" style={{
-            top: "10%", left: "10%",
-            width: "40%", height: "70%",
-            background: "radial-gradient(ellipse at center, rgba(0,245,100,0.14) 0%, transparent 60%)",
-            filter: "blur(36px)",
-            animation: "hero-breathe 7s ease-in-out infinite 3s",
+            top: "15%", left: "5%",
+            width: "50%", height: "80%",
+            background: "radial-gradient(ellipse at center, rgba(0,245,100,0.16) 0%, rgba(0,245,100,0.05) 45%, transparent 68%)",
+            filter: "blur(45px)",
+            animation: "hero-breathe 8s ease-in-out infinite 3.5s",
           }} />
 
-          {/* Vertical beam 1 - slow flicker */}
-          <div className="absolute top-0 bottom-0 animate-beam" style={{
-            left: "16%", width: "2px",
-            background: "linear-gradient(to bottom, transparent 0%, rgba(0,245,100,0.55) 30%, rgba(0,245,100,0.7) 50%, rgba(0,245,100,0.55) 70%, transparent 100%)",
-            filter: "blur(2px)",
+          {/* Accent orb - tight bright core */}
+          <div className="absolute" style={{
+            top: "5%", left: "8%",
+            width: "28%", height: "55%",
+            background: "radial-gradient(ellipse at center, rgba(0,245,100,0.20) 0%, transparent 55%)",
+            filter: "blur(28px)",
+            animation: "hero-breathe 5s ease-in-out infinite 1s",
           }} />
 
-          {/* Vertical beam 2 - different timing */}
-          <div className="absolute top-0 bottom-0" style={{
-            left: "26%", width: "1px",
-            background: "linear-gradient(to bottom, transparent 0%, rgba(0,245,100,0.35) 40%, rgba(0,245,100,0.5) 55%, rgba(0,245,100,0.35) 70%, transparent 100%)",
-            filter: "blur(1px)",
-            animation: "beam-flicker 9s ease-in-out infinite 4s",
-          }} />
-
-          {/* Ground reflection / floor glow */}
+          {/* Ground reflection */}
           <div className="absolute bottom-0 animate-ground-pulse" style={{
-            left: "5%", width: "45%", height: "80px",
-            background: "radial-gradient(ellipse at center bottom, rgba(0,245,100,0.35) 0%, rgba(0,245,100,0.12) 50%, transparent 75%)",
-            filter: "blur(16px)",
+            left: "0%", width: "50%", height: "90px",
+            background: "radial-gradient(ellipse at 40% 100%, rgba(0,245,100,0.30) 0%, rgba(0,245,100,0.08) 55%, transparent 80%)",
+            filter: "blur(22px)",
           }} />
 
-          {/* Horizontal scan sweep - slow */}
-          <div className="absolute left-0 right-0" style={{
-            height: "1px",
-            background: "linear-gradient(to right, transparent 0%, rgba(0,245,100,0.45) 20%, rgba(0,245,100,0.6) 40%, transparent 70%)",
-            animation: "scan-sweep 8s ease-in-out infinite",
-          }} />
-
-          {/* Dark overlay - more opaque on right so text is readable */}
+          {/* Right-side dark fade so text stays readable */}
           <div className="absolute inset-0" style={{
-            background: "linear-gradient(to right, rgba(8,8,8,0.08) 0%, rgba(8,8,8,0.40) 40%, rgba(8,8,8,0.88) 70%, rgba(8,8,8,0.98) 100%)",
+            background: "linear-gradient(to right, transparent 0%, rgba(8,8,8,0.55) 45%, rgba(8,8,8,0.92) 70%, rgba(8,8,8,0.99) 100%)",
           }} />
-          {/* Bottom fade into page */}
+          {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-32" style={{
             background: "linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.95) 100%)",
           }} />

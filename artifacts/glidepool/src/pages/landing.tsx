@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   ArrowRight, ArrowUpRight, ChevronDown, ChevronUp,
   Zap, ShieldCheck, Eye, RefreshCw, Bot, BarChart2,
@@ -554,14 +553,16 @@ export default function Landing() {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-4 mt-5">
+        <div className="flex flex-wrap gap-2 mt-5">
           {[
             { label: "CLI Guide",    href: "/cli" },
             { label: "Setup Agent",  href: "/agent/setup" },
             { label: "Browse Pools", href: "/pools" },
           ].map(({ label, href }) => (
             <Link key={href} href={href}>
-              <span className="font-mono text-[11px] text-white/35 hover:text-white/70 border border-white/[0.08] hover:border-white/20 px-4 py-2 transition-all cursor-pointer">→ {label}</span>
+              <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-white/40 hover:text-white/75 hover:border-white/20 border border-white/[0.10] px-4 py-2 transition-all cursor-pointer">
+                <ArrowRight className="w-3 h-3" /> {label}
+              </span>
             </Link>
           ))}
         </div>
@@ -616,15 +617,17 @@ export default function Landing() {
           ECOSYSTEM STRIP
       ══════════════════════════════════════════ */}
       <section className="-mx-4 sm:-mx-6 border-t border-white/[0.05]">
-        <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08]">
-          <div className="px-6 py-4 flex items-center shrink-0">
-            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Built with</span>
-          </div>
-          {["Base", "Maverick V2", "x402", "RainbowKit", "Anthropic", "viem", "Drizzle ORM"].map(l => (
-            <div key={l} className="px-6 py-4 flex items-center">
-              <span className="font-mono text-[11px] text-white/20">{l}</span>
+        <div className="overflow-hidden">
+          <div className="flex flex-wrap border-b border-white/[0.05]">
+            <div className="px-6 py-3 border-r border-white/[0.07] flex items-center shrink-0">
+              <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Built with</span>
             </div>
-          ))}
+            {["Base", "Maverick V2", "x402", "RainbowKit", "Anthropic", "viem", "Drizzle ORM"].map(l => (
+              <div key={l} className="px-5 py-3 border-r border-white/[0.05] flex items-center">
+                <span className="font-mono text-[11px] text-white/20">{l}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -632,36 +635,62 @@ export default function Landing() {
           CTA
       ══════════════════════════════════════════ */}
       <section className="-mx-4 sm:-mx-6 border-t border-white/[0.10]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.10]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
           {/* Left: headline */}
-          <div className="p-10 sm:p-16 flex flex-col justify-between gap-10">
+          <div className="p-8 sm:p-14 flex flex-col gap-8 border-b lg:border-b-0 lg:border-r border-white/[0.10]">
             <div>
-              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">Deploy</div>
-              <h2 className="font-black uppercase tracking-tighter leading-[0.88]" style={{ fontSize: "clamp(40px,6vw,80px)" }}>
+              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-5">Deploy</div>
+              <h2 className="font-black uppercase tracking-tighter leading-[0.88]" style={{ fontSize: "clamp(32px,5.5vw,72px)" }}>
                 DEPLOY YOUR<br /><span className="text-primary">FIRST AGENT</span><br />TODAY
               </h2>
             </div>
             <p className="text-sm text-white/35 max-w-sm leading-relaxed font-mono">
               Connect your Base wallet, pick a Maverick V2 pool, and deploy an autonomous DLMM agent in under 2 minutes.
             </p>
-          </div>
-          {/* Right: actions + links */}
-          <div className="p-10 sm:p-16 flex flex-col justify-between gap-10">
-            <div className="space-y-3">
-              <ConnectButton />
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/dashboard">
-                <div className="inline-flex items-center gap-2 border border-primary/30 px-6 py-3 font-mono text-sm text-primary/70 hover:bg-primary/5 hover:border-primary/50 transition-all cursor-pointer w-full sm:w-auto justify-center sm:justify-start">
-                  Go to Dashboard <ArrowRight className="w-4 h-4" />
-                </div>
+                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary text-[#080808] font-bold font-mono text-sm tracking-wider px-7 py-3.5 hover:brightness-110 transition-all">
+                  Launch App <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+              <Link href="/agent/setup">
+                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/[0.18] text-white/60 hover:text-white hover:border-white/40 font-mono text-sm tracking-wide px-7 py-3.5 transition-all">
+                  Setup Agent
+                </button>
               </Link>
             </div>
-            <div className="border-t border-white/[0.08] pt-6">
-              <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest mb-4">Resources</div>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                {[["GitHub","https://github.com/glidepool"],["Docs","https://docs.glidepool.com"],["Whitepaper","https://docs.glidepool.com/whitepaper"],["Roadmap","https://github.com/glidepool/roadmap"]].map(([l,h]) => (
+          </div>
+
+          {/* Right: stats + resources */}
+          <div className="p-8 sm:p-14 flex flex-col gap-8">
+            {/* Mini stats */}
+            <div className="grid grid-cols-2 overflow-hidden border border-white/[0.08]">
+              {[
+                { val: "0.05 USDC", label: "Per AI query" },
+                { val: "~2s",       label: "Payment confirm" },
+                { val: "100%",      label: "Non-custodial" },
+                { val: "HTTP 402",  label: "Payment protocol" },
+              ].map(({ val, label }, i) => (
+                <div key={label} className="p-4 border-b border-r border-white/[0.08]">
+                  <div className="font-mono text-base font-bold text-primary/80">{val}</div>
+                  <div className="font-mono text-[10px] text-white/25 mt-0.5">{label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Resources */}
+            <div>
+              <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest mb-3">Resources</div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                {[
+                  ["GitHub",     "https://github.com/glidepool"],
+                  ["Docs",       "https://docs.glidepool.com"],
+                  ["Whitepaper", "https://docs.glidepool.com/whitepaper"],
+                  ["Roadmap",    "https://github.com/glidepool/roadmap"],
+                ].map(([l, h]) => (
                   <a key={l} href={h} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-mono text-[11px] text-white/25 hover:text-white/60 transition-colors py-1">
-                    {l} <ArrowUpRight className="w-2.5 h-2.5" />
+                    className="inline-flex items-center gap-1 font-mono text-[11px] text-white/30 hover:text-white/65 transition-colors py-1">
+                    {l} <ArrowUpRight className="w-2.5 h-2.5 shrink-0" />
                   </a>
                 ))}
               </div>

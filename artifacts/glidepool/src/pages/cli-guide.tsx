@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Terminal, Copy, CheckCheck, ChevronRight, ChevronLeft, Package, Key, Cpu, Zap } from "lucide-react";
+import { Terminal, Copy, CheckCheck, ChevronRight, ChevronLeft, Globe, Key, Cpu, Zap } from "lucide-react";
 
 function CodeBlock({ code, lang = "bash" }: { code: string; lang?: string }) {
   const [copied, setCopied] = useState(false);
@@ -21,112 +21,127 @@ function CodeBlock({ code, lang = "bash" }: { code: string; lang?: string }) {
 
 const STEPS = [
   {
-    num: "01", icon: <Package className="w-5 h-5 text-primary" />,
-    title: "Install CLI",
-    desc: "Install the GlidePool CLI globally. Requires Node.js 18+ and a Base Mainnet wallet.",
+    num: "01", icon: <Globe className="w-5 h-5 text-primary" />,
+    title: "Connect Wallet",
+    desc: "Open the GlidePool web app and connect your Base Mainnet wallet via Reown AppKit. No account needed — your wallet address is your identity.",
     blocks: [
       {
-        lang: "bash", code:
-`npm install -g @glidepool/cli
+        lang: "info", code:
+`Supported wallets:
+  MetaMask, Coinbase Wallet, WalletConnect-compatible
 
-# pnpm alternative
-pnpm add -g @glidepool/cli
+Required:
+  › Base Mainnet (chain ID 8453)
+  › ETH for gas
+  › USDC if x402 payment gating is enabled server-side
 
-# verify install
-glidepool --version`,
+Steps:
+  1. Click "Connect Wallet" in the top nav
+  2. Select your wallet provider
+  3. Switch to Base Mainnet if prompted`,
       },
     ],
   },
   {
     num: "02", icon: <Key className="w-5 h-5 text-primary" />,
-    title: "Configure wallet",
-    desc: "Initialize the CLI with your wallet and Base Mainnet RPC. Keys are stored locally - never transmitted.",
+    title: "Create Agent via API",
+    desc: "Agents are created through the web UI (Setup Agent page) or directly via the REST API. Your wallet address links the agent to you — no private keys are sent.",
     blocks: [
       {
         lang: "bash", code:
-`glidepool init
-
-# Prompts:
-# - Wallet private key
-# - Base RPC URL
-# - API endpoint URL`,
+`# Create an agent via API
+curl -X POST https://<your-domain>/api/agents \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "userAddress": "0xYourWalletAddress",
+    "poolAddress": "0x3d70b2f31f75dc84acdd5e1588695221959b2d37",
+    "strategy": "balanced",
+    "budgetUsdc": 100,
+    "analysisIntervalSec": 60
+  }'`,
       },
       {
         lang: "json", code:
-`// ~/.glidepool/config.json
+`// Response
 {
-  "rpc": "https://mainnet.base.org",
-  "chain": "base",
-  "x402PaymentEnabled": true
+  "id": "uuid-of-agent",
+  "userAddress": "0xYour...",
+  "poolAddress": "0x3d70...",
+  "strategy": "balanced",
+  "budgetUsdc": "100",
+  "status": "active",
+  "createdAt": "2026-06-13T..."
 }`,
       },
     ],
   },
   {
     num: "03", icon: <Cpu className="w-5 h-5 text-primary" />,
-    title: "Deploy agent",
-    desc: "Launch an autonomous DLMM agent. The LLM queries are billed via x402 micropayments (~0.05 USDC each).",
+    title: "Agent Loop (automatic)",
+    desc: "Once created, the agent loop runs automatically on the server every ~30 seconds. Each analysis cycle calls Claude Opus 4 and stores the result in the database.",
     blocks: [
       {
         lang: "bash", code:
-`# Auto-select best pool
-glidepool agent deploy \\
-  --strategy balanced \\
-  --budget 0.1eth
+`# Check agent status
+curl https://<your-domain>/api/agents?userAddress=0xYour...
 
-# Target a specific pool
-glidepool agent deploy \\
-  --pool 0x8bB5...3CB4 \\
-  --strategy conservative \\
-  --budget 200usdc \\
-  --rebalance-threshold 5 \\
-  --max-slippage 0.5`,
+# Get LLM decisions for an agent
+curl https://<your-domain>/api/agents/<agentId>/actions`,
       },
       {
-        lang: "bash", code:
-`# Strategies:
-# conservative
-#   Static, tight range, low risk
-# balanced
-#   LLM auto-range, medium risk
-# aggressive
-#   Wide range, high risk
-
-glidepool strategies list`,
+        lang: "json", code:
+`// Example action response
+{
+  "id": "...",
+  "actionType": "hold",
+  "status": "completed",
+  "llmReasoning": "Pool reserves are low, price is stable...",
+  "llmRecommendation": {
+    "action": "hold",
+    "riskLevel": "low",
+    "summary": "Hold current position..."
+  },
+  "createdAt": "2026-06-13T..."
+}`,
       },
     ],
   },
   {
     num: "04", icon: <Zap className="w-5 h-5 text-primary" />,
     title: "Monitor & manage",
-    desc: "Stream live agent logs, pause/resume, or stop agents from the terminal.",
+    desc: "Use the Dashboard and Monitor pages to review LLM decisions, pause/resume agents, and sign pending transactions. All on-chain actions require your wallet signature.",
     blocks: [
       {
         lang: "bash", code:
-`# Stream all agents
-glidepool agent logs --follow
+`# Pause an agent
+curl -X PUT https://<your-domain>/api/agents/<agentId>/status \\
+  -H "Content-Type: application/json" \\
+  -d '{"status": "paused"}'
 
-# Specific agent
-glidepool agent logs \\
-  --agent agent-001 --follow
+# Resume
+curl -X PUT https://<your-domain>/api/agents/<agentId>/status \\
+  -H "Content-Type: application/json" \\
+  -d '{"status": "active"}'
 
-# List / pause / resume / stop
-glidepool agent list
-glidepool agent pause  agent-001
-glidepool agent resume agent-001
-glidepool agent stop   agent-001`,
+# Stop permanently
+curl -X PUT https://<your-domain>/api/agents/<agentId>/status \\
+  -H "Content-Type: application/json" \\
+  -d '{"status": "stopped"}'`,
       },
       {
-        lang: "bash", code:
-`# Example log output:
-[03:14:24] DECISION agent-001
-  LLM: rebalance +3 ticks
-[03:14:25] TX       agent-001
-  Awaiting wallet signature…
-[03:14:30] TX       agent-001
-  Confirmed 0xabcd…ef12
-[03:19:23] DECISION agent-001
-  LLM: HOLD - price in range`,
+        lang: "text", code:
+`// Example monitor log output:
+[23:31:28] DECISION agent-4df9...
+  LLM: hold - pool reserves uninitialized
+  riskLevel: high
+
+[23:32:00] DECISION agent-54d7...
+  LLM: hold - price in range
+  riskLevel: low
+
+[23:32:05] PENDING_SIGNATURE agent-54d7...
+  TX: rebalance proposal ready
+  Action needed: sign in Monitor page`,
       },
     ],
   },
@@ -140,9 +155,9 @@ export default function CliGuide() {
 
       {/* Page header */}
       <div className="border-b border-white/[0.06] pb-5">
-        <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">CLI / SDK</div>
-        <h1 className="text-lg sm:text-xl font-bold tracking-tight">CLI / SDK Guide</h1>
-        <p className="font-mono text-[10px] text-white/35 mt-0.5">Deploy and manage DLMM agents from your terminal.</p>
+        <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">API / Web Guide</div>
+        <h1 className="text-lg sm:text-xl font-bold tracking-tight">API & Setup Guide</h1>
+        <p className="font-mono text-[10px] text-white/35 mt-0.5">Deploy and manage DLMM agents via the web UI or REST API.</p>
       </div>
 
       {/* Prerequisites */}
@@ -153,9 +168,9 @@ export default function CliGuide() {
         <div className="p-4 space-y-1.5 min-w-0">
           <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-2.5">Prerequisites</div>
           <div className="font-mono text-[10px] text-white/30 leading-relaxed space-y-1">
-            <div>› Node.js 18+ (<span className="text-primary/60">node --version</span>)</div>
-            <div>› Base ETH (gas) + USDC (~0.05 / query)</div>
-            <div>› Account at <span className="text-primary/60">glidepool.com</span></div>
+            <div>› Base ETH (gas fees)</div>
+            <div>› USDC on Base (if x402 payment gating is enabled)</div>
+            <div>› MetaMask, Coinbase Wallet, or WalletConnect wallet</div>
           </div>
         </div>
       </div>
@@ -213,10 +228,9 @@ export default function CliGuide() {
       {/* Footer note */}
       <div className="border border-white/[0.06] px-5 py-4">
         <p className="font-mono text-[10px] text-white/20 leading-relaxed">
-          GlidePool CLI is open-source (MIT). All wallet operations happen
-          locally - no keys are sent to GlidePool servers.
-          Each LLM call to <span className="text-white/35">/api/advisor</span> costs
-          ~0.05 USDC via x402 on Base Mainnet. You sign every on-chain action.
+          GlidePool is non-custodial - the server never holds your private keys or funds.
+          Every on-chain action (rebalance, add/remove liquidity) requires your explicit wallet signature.
+          x402 micropayments are optional and must be enabled server-side via <span className="text-white/35">X402_ENABLED=true</span>.
         </p>
       </div>
     </div>

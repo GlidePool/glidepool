@@ -165,7 +165,7 @@ export default function Advisor() {
           </button>
 
           <p className="font-mono text-[9px] text-white/20 text-center">
-            ~0.05 USDC per query via x402 on Base · GlidePool never holds your funds
+            x402 payment optional (server-side) · GlidePool never holds your funds
           </p>
         </div>
       </div>

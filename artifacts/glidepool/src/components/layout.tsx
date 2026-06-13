@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: "/monitor",     label: "Monitor",     icon: Activity },
   { href: "/pools",       label: "Pools",       icon: Layers },
   { href: "/positions",   label: "Positions",   icon: Wallet2 },
-  { href: "/cli",         label: "CLI Guide",   icon: Terminal },
+  { href: "/cli",         label: "API Guide",   icon: Terminal },
   { href: "/settings",    label: "Settings",    icon: Settings },
 ];
 
@@ -171,7 +171,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col gap-3">
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Developers</div>
               {[
-                { label: "CLI Guide",  href: "/cli",                                    ext: false },
+                { label: "API Guide",  href: "/cli",                                    ext: false },
                 { label: "SDK",        href: "https://docs.glidepool.com/sdk",          ext: true },
                 { label: "API Docs",   href: "https://docs.glidepool.com/api",          ext: true },
                 { label: "GitHub",     href: "https://github.com/GlidePool",            ext: true },

@@ -23,24 +23,24 @@ function SectionChip({ label }: { label: string }) {
 
 const FAQS = [
   { q: "What is GlidePool?", a: "GlidePool deploys Claude Opus 4–driven agents that monitor Maverick V2 DLMM pools on Base Mainnet, propose rebalances, and wait for your wallet signature before doing anything on-chain. Fully non-custodial." },
-  { q: "Does GlidePool hold my funds?", a: "Never. The API server only reads on-chain data and produces transaction calldata. Every write requires your explicit signature via RainbowKit. No private keys, no custody." },
-  { q: "How does x402 micropayment work?", a: "The advisor endpoint returns HTTP 402 with a treasury address + 0.05 USDC amount. The agent pays on Base, the server verifies the tx on-chain, then unlocks Claude Opus 4. ~2s end-to-end. No API keys, no subscriptions." },
-  { q: "What strategies are available?", a: "Conservative (Static bins), Balanced (Both - follows price both ways), Aggressive (Right/Left - follows trend). Claude Opus 4 picks the mode based on volatility and your stated risk tolerance." },
-  { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet - WETH/USDC, WETH/cbETH, WETH/wstETH initially. The allowlist can be extended." },
-  { q: "Can I use the CLI?", a: "Yes - the CLI covers agent deploy, monitoring, and management. All features in the web UI are available via CLI. See the CLI Guide page." },
-  { q: "Is the code open-source?", a: "Yes. Full monorepo on GitHub: API server, frontend, chain readers, LLM integration, x402 middleware, Drizzle schema - all MIT-licensed." },
+  { q: "Does GlidePool hold my funds?", a: "Never. The API server only reads on-chain data and produces transaction calldata. Every write requires your explicit wallet signature. No private keys, no custody." },
+  { q: "How does x402 micropayment work?", a: "When X402_ENABLED=true on the server, the advisor endpoint returns HTTP 402 with a treasury address + 0.05 USDC amount. The server verifies the USDC transfer on-chain via Base RPC, then unlocks Claude Opus 4. x402 is disabled by default — LLM queries run freely without it." },
+  { q: "What strategies are available?", a: "Conservative (Static bins, tight range), Balanced (Both mode - follows price both ways), Aggressive (Right/Left mode - follows trend). Claude Opus 4 analyzes pool state and your goal each cycle, then recommends the action (hold, rebalance, withdraw, add liquidity)." },
+  { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet: WETH/USDC, WETH/USDbC, DAI/USDC, cbETH/WETH, and others. The pool allowlist is configured in the API server and can be extended." },
+  { q: "How often does the agent analyze?", a: "The agent loop runs every 30 seconds on the server. Each active agent checks if it's due for analysis based on its analysisIntervalSec setting (default: 60s). LLM decisions are stored in the database and visible in the Monitor page." },
+  { q: "Is a CLI available?", a: "No standalone CLI package exists. All agent management is done via the web UI (Dashboard, Monitor, Setup Agent pages) or directly via the REST API. See the API Guide page for curl examples." },
 ];
 
 /* ══════════════════════════════════════════════════════════════
    MAIN
 ══════════════════════════════════════════════════════════════ */
 const LIFECYCLE_STEPS = [
-  { icon: Eye,        label: "Observe",      sub: "pool state / block",    desc: "Agent reads Maverick V2 pool every ~2s block - activeTick, TVL, price, fee rate via viem on Base Mainnet.", color: "primary" },
-  { icon: Cpu,        label: "Analyze",      sub: "detect bin drift",      desc: "Compares current tick to optimal bin range. If drift exceeds threshold, triggers the rebalance pipeline.", color: "primary" },
-  { icon: Zap,        label: "Pay x402",     sub: "0.05 USDC on Base",    desc: "Agent autonomously pays 0.05 USDC via HTTP 402. USDC transfer confirmed on-chain in ~2s. No user action needed.", color: "amber" },
-  { icon: Bot,        label: "Claude Opus 4",sub: "get recommendation",    desc: "Sends pool snapshot + user goal to Claude Opus 4. Returns action, risk level, bin range, and reasoning chain.", color: "primary" },
-  { icon: GitBranch,  label: "Propose TX",   sub: "build calldata",        desc: "Agent server assembles transaction calldata - removeLiquidity + addLiquidity - and surfaces it in Monitor.", color: "primary" },
-  { icon: ShieldCheck,label: "You Sign",     sub: "approve or reject",     desc: "You review the full proposal in Monitor. One RainbowKit signature executes on-chain. You can reject at any time.", color: "green" },
+  { icon: Eye,        label: "Observe",      sub: "pool state / ~30s",     desc: "Agent checks Maverick V2 pool state every ~30 seconds - activeTick, TVL, price, fee rate, reserves - via viem on Base Mainnet.", color: "primary" },
+  { icon: Cpu,        label: "Analyze",      sub: "detect bin drift",      desc: "Compares current tick to optimal bin range. If drift exceeds threshold or conditions change, triggers the LLM analysis pipeline.", color: "primary" },
+  { icon: Zap,        label: "x402 (opt.)",  sub: "0.05 USDC on Base",    desc: "If X402_ENABLED is set server-side, agent pays 0.05 USDC via HTTP 402 before the LLM call. Verified on-chain via Base RPC. Disabled by default.", color: "amber" },
+  { icon: Bot,        label: "Claude Opus 4",sub: "get recommendation",    desc: "Sends pool snapshot + user goal to Claude Opus 4. Returns action, risk level, bin range, withdraw %, and full reasoning chain.", color: "primary" },
+  { icon: GitBranch,  label: "Propose TX",   sub: "build calldata",        desc: "For rebalance/withdraw actions, the agent server assembles transaction calldata and stores it as pending_signature in the database.", color: "primary" },
+  { icon: ShieldCheck,label: "You Sign",     sub: "approve or reject",     desc: "You review the full proposal in the Monitor page. One wallet signature executes on-chain. You can reject or ignore any proposal.", color: "green" },
 ] as const;
 
 export default function Landing() {
@@ -147,7 +147,7 @@ export default function Landing() {
           { name: "x402",           desc: "HTTP 402 Payments" },
           { name: "Base Mainnet",   desc: "Chain ID 8453" },
           { name: "Claude Opus 4",  desc: "Anthropic AI" },
-          { name: "RainbowKit",     desc: "Wallet Connect" },
+          { name: "Reown AppKit",   desc: "Wallet Connect" },
           { name: "wagmi v2",       desc: "React Hooks" },
           { name: "viem",           desc: "Ethereum Client" },
           { name: "Express 5",      desc: "API Server" },
@@ -168,7 +168,7 @@ export default function Landing() {
           { val: "8453",      label: "chain ID",         amber: false },
           { val: "MIT",       label: "open source",      green: true  },
           { val: "no keys",   label: "x402 gated",       amber: true  },
-          { val: "per block", label: "pool scan rate",   amber: false },
+          { val: "~30s",      label: "agent scan interval", amber: false },
           { val: "claude-opus-4-8", label: "model",      green: true  },
         ];
         const stackStr = [...STACK, ...STACK].map(s => `  ${s.name}  ·  ${s.desc}  ·`).join("");
@@ -239,7 +239,7 @@ export default function Landing() {
                 {
                   icon: <ShieldCheck className="w-4 h-4" />,
                   title: "Non-Custodial",
-                  body: "The server never holds keys or funds. Every on-chain action - rebalance, add, remove - requires your explicit RainbowKit wallet signature.",
+                  body: "The server never holds keys or funds. Every on-chain action - rebalance, add, remove - requires your explicit wallet signature via Reown AppKit.",
                 },
               ].map(({ icon, title, body }, i) => (
                 <div key={title}
@@ -400,8 +400,8 @@ export default function Landing() {
           {/* Row 1 */}
           <div className="grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
             {[
-              { label: "CLIENT LAYER",  icon: <Wallet className="w-5 h-5 text-white/50" />,       title: "User Wallet",   lines: ["RainbowKit connect", "Signs all transactions", "Base Mainnet"], foot: "wagmi v2" },
-              { label: "SERVER LAYER",  icon: <Bot className="w-5 h-5 text-primary/80" />,         title: "Agent Server",  lines: ["Poll pool / block", "Detect bin drift", "Trigger x402 flow"], foot: "Express 5 · Node.js", accent: true },
+              { label: "CLIENT LAYER",  icon: <Wallet className="w-5 h-5 text-white/50" />,       title: "User Wallet",   lines: ["Reown AppKit connect", "Signs all transactions", "Base Mainnet"], foot: "wagmi v2" },
+              { label: "SERVER LAYER",  icon: <Bot className="w-5 h-5 text-primary/80" />,         title: "Agent Server",  lines: ["Analyze pool every ~30s", "Store LLM decisions in DB", "x402 verify (if enabled)"], foot: "Express 5 · Node.js", accent: true },
               { label: "PAYMENT LAYER", icon: <Zap className="w-5 h-5 text-amber-400/80" />,      title: "x402 Gate",     lines: ["HTTP 402 response", "Pay 0.05 USDC on Base", "Verify on-chain"], foot: "Base Mainnet" },
             ].map(({ label, icon, title, lines, foot, accent }, i) => (
               <div key={title} className={[
@@ -434,7 +434,7 @@ export default function Landing() {
             {[
               { label: "AI LAYER",     icon: <Cpu className="w-5 h-5 text-blue-400/80" />,        title: "Claude Opus 4",    lines: ["Receives pool snapshot", "Action + reasoning", "Bin range + mode"], foot: "Anthropic API" },
               { label: "CHAIN LAYER",  icon: <Layers className="w-5 h-5 text-white/50" />,        title: "Maverick V2 Pool", lines: ["Read: activeTick, TVL, price", "Write: add/remove liquidity", "DLMM bin management"], foot: "Base Mainnet · viem" },
-              { label: "OUTPUT LAYER", icon: <GitBranch className="w-5 h-5 text-primary/60" />,   title: "TX Proposal",      lines: ["Built by agent server", "Reviewed in Monitor", "Signed by your wallet"], foot: "RainbowKit sign" },
+              { label: "OUTPUT LAYER", icon: <GitBranch className="w-5 h-5 text-primary/60" />,   title: "TX Proposal",      lines: ["Built by agent server", "Reviewed in Monitor", "Signed by your wallet"], foot: "wallet sign · wagmi" },
             ].map(({ label, icon, title, lines, foot }) => (
               <div key={title} className="p-6 flex flex-col gap-4 border-b border-r border-white/[0.10]">
                 <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
@@ -552,11 +552,11 @@ export default function Landing() {
         <div className="border border-white/[0.10] overflow-hidden">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 overflow-hidden">
             {[
-              { n: "01", icon: <Wallet className="w-5 h-5" />,      title: "Connect Wallet",  body: "Base Mainnet via RainbowKit. MetaMask, Coinbase, WalletConnect." },
-              { n: "02", icon: <Layers className="w-5 h-5" />,      title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check TVL, tick, fee rate." },
-              { n: "03", icon: <Bot className="w-5 h-5" />,         title: "Setup Agent",     body: "Choose strategy + budget. One wallet signature to deploy." },
-              { n: "04", icon: <RefreshCw className="w-5 h-5" />,   title: "Agent Monitors",  body: "Polls every block. Pays 0.05 USDC via x402 for each AI call." },
-              { n: "05", icon: <ShieldCheck className="w-5 h-5" />, title: "You Sign",        body: "Review in Monitor. Approve or reject. Your keys, your control." },
+              { n: "01", icon: <Wallet className="w-5 h-5" />,      title: "Connect Wallet",  body: "Base Mainnet via Reown AppKit. MetaMask, Coinbase Wallet, or WalletConnect." },
+              { n: "02", icon: <Layers className="w-5 h-5" />,      title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check real TVL, active tick, and fee rate." },
+              { n: "03", icon: <Bot className="w-5 h-5" />,         title: "Setup Agent",     body: "Choose strategy, budget, and analysis interval. Agent starts automatically." },
+              { n: "04", icon: <RefreshCw className="w-5 h-5" />,   title: "Agent Monitors",  body: "Analyzes pool state every ~30–60s. Claude Opus 4 decides: hold, rebalance, or withdraw." },
+              { n: "05", icon: <ShieldCheck className="w-5 h-5" />, title: "You Sign",        body: "Review in Monitor. Approve or reject any proposed on-chain action. Your keys, your control." },
             ].map(({ n, icon, title, body }, i) => (
               <div key={n} className={[
                 "p-6 flex flex-col gap-4 border-b border-r border-white/[0.10]",
@@ -576,7 +576,7 @@ export default function Landing() {
         </div>
         <div className="flex flex-wrap gap-2 mt-5">
           {[
-            { label: "CLI Guide",    href: "/cli" },
+            { label: "API Guide",    href: "/cli" },
             { label: "Setup Agent",  href: "/agent/setup" },
             { label: "Browse Pools", href: "/pools" },
           ].map(({ label, href }) => (
@@ -627,9 +627,9 @@ export default function Landing() {
           })}
         </div>
         <div className="mt-5">
-          <a href="https://docs.glidepool.com" target="_blank" rel="noopener noreferrer"
+          <a href="/cli"
             className="inline-flex items-center gap-1.5 font-mono text-[11px] text-white/35 hover:text-white/70 border border-white/[0.08] hover:border-white/20 px-4 py-2 transition-all">
-            Full Docs <ArrowUpRight className="w-3 h-3" />
+            API Guide <ArrowUpRight className="w-3 h-3" />
           </a>
         </div>
       </section>
@@ -643,7 +643,7 @@ export default function Landing() {
             <div className="px-6 py-3 border-r border-white/[0.07] flex items-center shrink-0">
               <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Built with</span>
             </div>
-            {["Base", "Maverick V2", "x402", "RainbowKit", "Anthropic", "viem", "Drizzle ORM"].map(l => (
+            {["Base", "Maverick V2", "x402", "Reown AppKit", "Anthropic", "viem", "Drizzle ORM"].map(l => (
               <div key={l} className="px-5 py-3 border-r border-white/[0.05] flex items-center">
                 <span className="font-mono text-[11px] text-white/20">{l}</span>
               </div>
@@ -701,17 +701,17 @@ export default function Landing() {
 
             {/* Resources */}
             <div>
-              <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest mb-3">Resources</div>
+              <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest mb-3">Quick Links</div>
               <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
                 {[
-                  ["GitHub",     "https://github.com/GlidePool"],
-                  ["Docs",       "https://docs.glidepool.com"],
-                  ["Whitepaper", "https://docs.glidepool.com/whitepaper"],
-                  ["Roadmap",    "https://github.com/GlidePool/roadmap"],
-                ].map(([l, h]) => (
-                  <a key={l} href={h} target="_blank" rel="noopener noreferrer"
+                  { label: "Browse Pools",  href: "/pools" },
+                  { label: "Setup Agent",   href: "/agent/setup" },
+                  { label: "Dashboard",     href: "/dashboard" },
+                  { label: "API Guide",     href: "/cli" },
+                ].map(({ label, href }) => (
+                  <a key={label} href={href}
                     className="inline-flex items-center gap-1 font-mono text-[11px] text-white/30 hover:text-white/65 transition-colors py-1">
-                    {l} <ArrowUpRight className="w-2.5 h-2.5 shrink-0" />
+                    {label} <ArrowUpRight className="w-2.5 h-2.5 shrink-0" />
                   </a>
                 ))}
               </div>

@@ -280,7 +280,7 @@ export default function Monitor() {
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="text-white/15 text-[10px] py-4">
-                  No actions yet. Agent will analyze pools every {agents[0]?.analysisIntervalSec ?? 60}s.
+                  No actions yet. Agent will analyze pools every ~60s.
                   {agents.every((a) => a.status !== "active") && (
                     <span className="text-amber-400/60"> All agents paused — resume to start analysis.</span>
                   )}

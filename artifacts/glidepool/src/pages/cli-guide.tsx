@@ -14,7 +14,7 @@ function CodeBlock({ code, lang = "bash" }: { code: string; lang?: string }) {
           {copied ? <><CheckCheck className="w-3 h-3 text-primary" /> copied</> : <><Copy className="w-3 h-3" /> copy</>}
         </button>
       </div>
-      <pre className="p-4 font-mono text-xs text-white/60 leading-relaxed whitespace-pre-wrap break-words">{code}</pre>
+      <pre className="p-4 font-mono text-xs text-white/60 leading-relaxed whitespace-pre-wrap break-all">{code}</pre>
     </div>
   );
 }
@@ -25,7 +25,16 @@ const STEPS = [
     title: "Install CLI",
     desc: "Install the GlidePool CLI globally. Requires Node.js 18+ and a Base Mainnet wallet.",
     blocks: [
-      { lang: "bash", code: `npm install -g @glidepool/cli\n\n# or with pnpm\npnpm add -g @glidepool/cli\n\n# verify\nglidepool --version` },
+      {
+        lang: "bash", code:
+`npm install -g @glidepool/cli
+
+# pnpm alternative
+pnpm add -g @glidepool/cli
+
+# verify install
+glidepool --version`,
+      },
     ],
   },
   {
@@ -33,8 +42,24 @@ const STEPS = [
     title: "Configure wallet",
     desc: "Initialize the CLI with your wallet and Base Mainnet RPC. Keys are stored locally — never transmitted.",
     blocks: [
-      { lang: "bash", code: `glidepool init\n\n# Prompts:\n# Wallet private key (stored in ~/.glidepool/config.json)\n# Base RPC URL (default: https://mainnet.base.org)\n# API endpoint (default: https://glidepool.com/api)` },
-      { lang: "json", code: `// ~/.glidepool/config.json (auto-generated)\n{\n  "rpc": "https://mainnet.base.org",\n  "apiEndpoint": "https://glidepool.com/api",\n  "chain": "base",\n  "x402PaymentEnabled": true\n}` },
+      {
+        lang: "bash", code:
+`glidepool init
+
+# Prompts:
+# - Wallet private key
+# - Base RPC URL
+# - API endpoint URL`,
+      },
+      {
+        lang: "json", code:
+`// ~/.glidepool/config.json
+{
+  "rpc": "https://mainnet.base.org",
+  "chain": "base",
+  "x402PaymentEnabled": true
+}`,
+      },
     ],
   },
   {
@@ -42,8 +67,33 @@ const STEPS = [
     title: "Deploy agent",
     desc: "Launch an autonomous DLMM agent. The LLM queries are billed via x402 micropayments (~0.05 USDC each).",
     blocks: [
-      { lang: "bash", code: `# Auto-select best pool (recommended)\nglidepool agent deploy --strategy balanced --budget 0.1eth\n\n# Target a specific pool\nglidepool agent deploy \\\n  --pool 0x8bB5...3CB4 \\\n  --strategy conservative \\\n  --budget 200usdc \\\n  --rebalance-threshold 5 \\\n  --max-slippage 0.5` },
-      { lang: "bash", code: `# Available strategies:\n# conservative — Static mode, tight range, low risk\n# balanced     — Both mode, LLM auto-range, medium risk\n# aggressive   — Right/Left mode, wide range, high risk\nglidepool strategies list` },
+      {
+        lang: "bash", code:
+`# Auto-select best pool
+glidepool agent deploy \\
+  --strategy balanced \\
+  --budget 0.1eth
+
+# Target a specific pool
+glidepool agent deploy \\
+  --pool 0x8bB5...3CB4 \\
+  --strategy conservative \\
+  --budget 200usdc \\
+  --rebalance-threshold 5 \\
+  --max-slippage 0.5`,
+      },
+      {
+        lang: "bash", code:
+`# Strategies:
+# conservative
+#   Static, tight range, low risk
+# balanced
+#   LLM auto-range, medium risk
+# aggressive
+#   Wide range, high risk
+
+glidepool strategies list`,
+      },
     ],
   },
   {
@@ -51,8 +101,33 @@ const STEPS = [
     title: "Monitor & manage",
     desc: "Stream live agent logs, pause/resume, or stop agents from the terminal.",
     blocks: [
-      { lang: "bash", code: `# Stream all agents live\nglidepool agent logs --follow\n\n# Specific agent\nglidepool agent logs --agent agent-001 --follow\n\n# List agents\nglidepool agent list\n\n# Pause / resume / stop\nglidepool agent pause  agent-001\nglidepool agent resume agent-001\nglidepool agent stop   agent-001 --confirm` },
-      { lang: "bash", code: `# Example output:\n[03:14:24] DECISION  agent-001  LLM: rebalance — shift right 3 ticks\n[03:14:25] TX        agent-001  Awaiting wallet signature…\n[03:14:30] TX        agent-001  Confirmed · 0xabcd…ef12\n[03:19:23] DECISION  agent-001  LLM: HOLD — price stable in range` },
+      {
+        lang: "bash", code:
+`# Stream all agents
+glidepool agent logs --follow
+
+# Specific agent
+glidepool agent logs \\
+  --agent agent-001 --follow
+
+# List / pause / resume / stop
+glidepool agent list
+glidepool agent pause  agent-001
+glidepool agent resume agent-001
+glidepool agent stop   agent-001`,
+      },
+      {
+        lang: "bash", code:
+`# Example log output:
+[03:14:24] DECISION agent-001
+  LLM: rebalance +3 ticks
+[03:14:25] TX       agent-001
+  Awaiting wallet signature…
+[03:14:30] TX       agent-001
+  Confirmed 0xabcd…ef12
+[03:19:23] DECISION agent-001
+  LLM: HOLD — price in range`,
+      },
     ],
   },
 ];
@@ -79,7 +154,7 @@ export default function CliGuide() {
           <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-2.5">Prerequisites</div>
           <div className="font-mono text-[10px] text-white/30 leading-relaxed space-y-1">
             <div>› Node.js 18+ (<span className="text-primary/60">node --version</span>)</div>
-            <div>› Base Mainnet ETH (gas) + USDC (~0.05 / LLM query)</div>
+            <div>› Base ETH (gas) + USDC (~0.05 / query)</div>
             <div>› Account at <span className="text-primary/60">glidepool.com</span></div>
           </div>
         </div>
@@ -92,7 +167,7 @@ export default function CliGuide() {
             className={[
               "px-4 py-3 font-mono text-[10px] transition-colors text-left border-b border-r border-white/[0.10]",
               active === i
-                ? "bg-primary/[0.06] text-primary border-b-primary/60"
+                ? "bg-primary/[0.06] text-primary"
                 : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]",
             ].join(" ")}>
             <div className={`text-[9px] mb-0.5 ${active === i ? "text-primary/50" : "text-white/20"}`}>[{s.num}]</div>
@@ -109,7 +184,7 @@ export default function CliGuide() {
             <div className="border-r border-white/[0.10] p-4 flex items-center justify-center shrink-0">
               {s.icon}
             </div>
-            <div className="p-4">
+            <div className="p-4 min-w-0">
               <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-1">Step {s.num}</div>
               <h2 className="font-bold text-base tracking-tight">{s.title}</h2>
               <p className="font-mono text-[10px] text-white/35 leading-relaxed mt-1">{s.desc}</p>
@@ -138,9 +213,10 @@ export default function CliGuide() {
       {/* Footer note */}
       <div className="border border-white/[0.06] px-5 py-4">
         <p className="font-mono text-[10px] text-white/20 leading-relaxed">
-          GlidePool CLI is open-source (MIT). All wallet operations happen locally — no keys are sent to GlidePool servers.
-          Each LLM call to <span className="text-white/35">/api/advisor</span> costs ~0.05 USDC via x402 on Base Mainnet.
-          You sign every on-chain action.
+          GlidePool CLI is open-source (MIT). All wallet operations happen
+          locally — no keys are sent to GlidePool servers.
+          Each LLM call to <span className="text-white/35">/api/advisor</span> costs
+          ~0.05 USDC via x402 on Base Mainnet. You sign every on-chain action.
         </p>
       </div>
     </div>

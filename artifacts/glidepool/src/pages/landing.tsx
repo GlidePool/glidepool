@@ -139,82 +139,101 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           ABOUT
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05] relative overflow-hidden"
-        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 110%, rgba(0,245,100,0.06) 0%, transparent 70%)" }}>
-        <div className="text-center mb-12">
+      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05] relative">
+        <div className="mb-10">
           <SectionChip label="About" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
             WHAT IS<br /><span className="text-primary">GLIDEPOOL?</span>
           </h2>
-          <p className="text-sm text-white/40 mt-5 max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm text-white/40 mt-4 max-w-lg leading-relaxed">
             An autonomous agent platform that manages your Maverick V2 DLMM liquidity positions on Base Mainnet —
             powered by Claude Opus 4, gated by x402 micropayments, and fully non-custodial.
           </p>
         </div>
 
-        {/* 4 feature cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
-          {[
-            {
-              icon: <Bot className="w-7 h-7" />, title: "AI Agent Loop",
-              body: "Claude Opus 4–driven agent monitors every block. When pool state drifts from optimal bins, it auto-builds a rebalance proposal and surfaces it for your approval.",
-              tag: "Claude Opus 4", border: "border-primary/25", glow: "rgba(0,245,100,0.06)",
-            },
-            {
-              icon: <BarChart2 className="w-7 h-7" />, title: "DLMM Pool Reader",
-              body: "Reads Maverick V2 pool state — activeTick, TWA price, TVL, fee rate — directly from Base Mainnet via viem. No third-party data providers.",
-              tag: "on-chain", border: "border-white/[0.09]", glow: "transparent",
-            },
-            {
-              icon: <Zap className="w-7 h-7 text-amber-400" />, title: "x402 Payments",
-              body: "Access gated by HTTP 402 micropayments. 0.05 USDC per LLM call, paid on Base. No subscriptions, no API keys, no monthly invoices.",
-              tag: "0.05 USDC", border: "border-amber-400/20", glow: "rgba(251,191,36,0.04)",
-            },
-            {
-              icon: <ShieldCheck className="w-7 h-7" />, title: "Non-Custodial",
-              body: "The server never holds keys or funds. Every on-chain action — rebalance, add, remove — requires your explicit RainbowKit wallet signature.",
-              tag: "your keys", border: "border-white/[0.09]", glow: "transparent",
-            },
-          ].map(({ icon, title, body, tag, border, glow }) => (
-            <div key={title} className={`rounded-2xl border ${border} bg-white/[0.02] p-6 flex flex-col gap-4 hover:bg-white/[0.04] transition-all`}
-              style={{ boxShadow: glow !== "transparent" ? `0 0 40px ${glow}` : undefined }}>
-              <div className="text-primary/70">{icon}</div>
-              <div>
-                <div className="font-bold text-sm mb-2">{title}</div>
-                <p className="text-[11px] text-white/35 leading-relaxed">{body}</p>
-              </div>
-              <div className="mt-auto flex">
-                <span className="font-mono text-[10px] border border-white/[0.08] text-white/30 rounded px-2 py-0.5">{tag}</span>
-              </div>
+        {/* Why GlidePool — Promise-style bordered table */}
+        <div className="border border-white/[0.12] mb-10">
+          <div className="flex flex-col lg:flex-row">
+            {/* Left title column */}
+            <div className="lg:w-56 shrink-0 p-8 border-b lg:border-b-0 lg:border-r border-white/[0.12] flex items-start">
+              <span className="font-mono text-base font-bold text-white/70">Why GlidePool</span>
             </div>
-          ))}
-        </div>
-
-        {/* Mini diagram — what agents do */}
-        <div className="rounded-2xl border border-white/[0.07] bg-black/40 p-6 sm:p-8">
-          <div className="text-[10px] font-mono text-white/20 uppercase tracking-widest mb-6">Agent lifecycle — per position</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-            {[
-              { icon: <Eye className="w-4 h-4" />,         label: "Observe",     sub: "pool state / block" },
-              { icon: <Cpu className="w-4 h-4" />,         label: "Analyze",     sub: "detect bin drift" },
-              { icon: <Zap className="w-4 h-4 text-amber-400" />, label: "Pay x402", sub: "0.05 USDC on Base" },
-              { icon: <Bot className="w-4 h-4" />,         label: "Claude Opus 4",      sub: "get recommendation" },
-              { icon: <GitBranch className="w-4 h-4" />,   label: "Propose TX",  sub: "build calldata" },
-              { icon: <ShieldCheck className="w-4 h-4" />, label: "You Sign",    sub: "approve or reject" },
-            ].map(({ icon, label, sub }, i, arr) => (
-              <div key={label} className="flex items-center gap-2">
-                <div className="flex flex-col items-center flex-1">
-                  <div className="w-10 h-10 rounded-xl border border-white/[0.08] bg-white/[0.03] flex items-center justify-center text-primary/60 mb-2">
+            {/* 2×2 feature grid */}
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2">
+              {[
+                {
+                  icon: <Bot className="w-4 h-4" />,
+                  title: "AI Agent Loop",
+                  body: "Claude Opus 4–driven agent monitors every block. When pool state drifts from optimal bins, it auto-builds a rebalance proposal for your approval.",
+                },
+                {
+                  icon: <BarChart2 className="w-4 h-4" />,
+                  title: "DLMM Pool Reader",
+                  body: "Reads Maverick V2 pool state — activeTick, TWA price, TVL, fee rate — directly from Base Mainnet via viem. No third-party data providers.",
+                },
+                {
+                  icon: <Zap className="w-4 h-4 text-amber-400" />,
+                  title: "x402 Payments",
+                  body: "Access gated by HTTP 402 micropayments. 0.05 USDC per LLM call, paid on Base. No subscriptions, no API keys, no monthly invoices.",
+                },
+                {
+                  icon: <ShieldCheck className="w-4 h-4" />,
+                  title: "Non-Custodial",
+                  body: "The server never holds keys or funds. Every on-chain action — rebalance, add, remove — requires your explicit RainbowKit wallet signature.",
+                },
+              ].map(({ icon, title, body }, i) => (
+                <div key={title}
+                  className={[
+                    "p-6 flex flex-col gap-3",
+                    /* right border on left column cells */
+                    i % 2 === 0 ? "sm:border-r border-white/[0.12]" : "",
+                    /* top border on bottom row cells */
+                    i >= 2 ? "border-t border-white/[0.12]" : "",
+                    /* top border on mobile (every cell except first) */
+                    i > 0 ? "border-t sm:border-t-0" : "",
+                    i >= 2 ? "sm:border-t" : "",
+                  ].filter(Boolean).join(" ")}>
+                  {/* Icon — small outlined square */}
+                  <div className="w-8 h-8 border border-primary/35 flex items-center justify-center text-primary/70 shrink-0">
                     {icon}
                   </div>
-                  <div className="text-[11px] font-bold text-center text-white/70">{label}</div>
-                  <div className="text-[10px] text-white/25 font-mono text-center leading-tight mt-0.5">{sub}</div>
+                  <div className="font-bold text-sm text-white/85">{title}</div>
+                  <p className="text-[11px] text-white/35 leading-relaxed font-mono">{body}</p>
                 </div>
-                {i < arr.length - 1 && (
-                  <div className="text-white/10 font-bold text-lg shrink-0 pb-6">›</div>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Agent lifecycle — horizontal dotted flow */}
+        <div className="border border-white/[0.10]">
+          <div className="px-6 py-4 border-b border-white/[0.10]">
+            <span className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Agent lifecycle — per position</span>
+          </div>
+          <div className="overflow-x-auto">
+            <div className="flex items-stretch min-w-[640px]">
+              {[
+                { icon: <Eye className="w-4 h-4" />,                          label: "Observe",      sub: "pool state / block" },
+                { icon: <Cpu className="w-4 h-4" />,                          label: "Analyze",      sub: "detect bin drift" },
+                { icon: <Zap className="w-4 h-4 text-amber-400" />,           label: "Pay x402",     sub: "0.05 USDC on Base" },
+                { icon: <Bot className="w-4 h-4" />,                          label: "Claude Opus 4",sub: "get recommendation" },
+                { icon: <GitBranch className="w-4 h-4" />,                    label: "Propose TX",   sub: "build calldata" },
+                { icon: <ShieldCheck className="w-4 h-4 text-primary/70" />,  label: "You Sign",     sub: "approve or reject" },
+              ].map(({ icon, label, sub }, i, arr) => (
+                <div key={label} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center gap-2 py-6 px-4 flex-1">
+                    <div className="w-9 h-9 border border-primary/30 flex items-center justify-center text-primary/60">
+                      {icon}
+                    </div>
+                    <div className="font-mono text-[10px] font-bold text-white/60 text-center leading-tight">{label}</div>
+                    <div className="font-mono text-[9px] text-white/25 text-center leading-tight">{sub}</div>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div className="shrink-0 text-white/15 font-mono text-xs select-none">›</div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -119,20 +119,73 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ─── STATS BAR ──────────────────────────── */}
-      <div className="-mx-4 sm:-mx-6 border-y border-white/[0.05] grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/[0.05] my-10">
-        {[
-          { v: "Maverick V2",   l: "Protocol" },
-          { v: "0.05 USDC",     l: "per AI query" },
-          { v: "~2s",           l: "payment confirm" },
-          { v: "100%",          l: "non-custodial" },
-        ].map(({ v, l }) => (
-          <div key={l} className="flex flex-col items-center py-5 px-4 gap-1">
-            <span className="font-black font-mono text-white text-lg sm:text-xl tracking-tight">{v}</span>
-            <span className="font-mono text-[10px] text-white/20 uppercase tracking-widest">{l}</span>
+      {/* ─── STACK TICKER ───────────────────────── */}
+      {(() => {
+        const STACK = [
+          { name: "Maverick V2",    desc: "DLMM Protocol" },
+          { name: "x402",           desc: "HTTP 402 Payments" },
+          { name: "Base Mainnet",   desc: "Chain ID 8453" },
+          { name: "Claude Opus 4",  desc: "Anthropic AI" },
+          { name: "RainbowKit",     desc: "Wallet Connect" },
+          { name: "wagmi v2",       desc: "React Hooks" },
+          { name: "viem",           desc: "Ethereum Client" },
+          { name: "Express 5",      desc: "API Server" },
+          { name: "Drizzle ORM",    desc: "PostgreSQL" },
+          { name: "Node.js 24",     desc: "Runtime" },
+          { name: "TypeScript 5.9", desc: "Type Safety" },
+          { name: "Tailwind v4",    desc: "CSS Framework" },
+          { name: "OpenAI compat",  desc: "Anthropic via Replit" },
+          { name: "Orval",          desc: "OpenAPI Codegen" },
+          { name: "esbuild",        desc: "Build Tool" },
+        ];
+        const METRICS = [
+          { val: "0.05 USDC", label: "per AI query",     amber: true  },
+          { val: "~2s",       label: "payment confirm",  green: true  },
+          { val: "100%",      label: "non-custodial",    green: true  },
+          { val: "HTTP 402",  label: "payment protocol", amber: true  },
+          { val: "0x833589",  label: "USDC on Base",     amber: false },
+          { val: "8453",      label: "chain ID",         amber: false },
+          { val: "MIT",       label: "open source",      green: true  },
+          { val: "no keys",   label: "x402 gated",       amber: true  },
+          { val: "per block", label: "pool scan rate",   amber: false },
+          { val: "claude-opus-4-8", label: "model",      green: true  },
+        ];
+        const stackStr = [...STACK, ...STACK].map(s => `  ${s.name}  ·  ${s.desc}  ·`).join("");
+        return (
+          <div className="-mx-4 sm:-mx-6 border-y border-white/[0.07] my-10 select-none overflow-hidden">
+            {/* Row 1 — tech stack, scrolling left */}
+            <div className="flex items-stretch border-b border-white/[0.05]">
+              <div className="shrink-0 border-r border-white/[0.07] px-4 flex items-center justify-center bg-white/[0.015] min-w-[64px]">
+                <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest writing-mode-vertical whitespace-nowrap">Stack</span>
+              </div>
+              <div className="flex-1 overflow-hidden py-2.5">
+                <div className="animate-marquee-slow whitespace-nowrap font-mono text-[11px] text-white/30 tracking-wider">
+                  {stackStr}
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2 — metrics, scrolling right */}
+            <div className="flex items-stretch">
+              <div className="shrink-0 border-r border-white/[0.07] px-4 flex items-center justify-center bg-white/[0.015] min-w-[64px]">
+                <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest whitespace-nowrap">Metrics</span>
+              </div>
+              <div className="flex-1 overflow-hidden py-2.5">
+                <div className="animate-marquee-rev whitespace-nowrap font-mono text-[11px] tracking-wider">
+                  {[...METRICS, ...METRICS].map((m, i) => (
+                    <span key={i}>
+                      <span className={m.amber ? "text-amber-400/55" : m.green ? "text-primary/55" : "text-white/35"}>
+                        {m.val}
+                      </span>
+                      <span className="text-white/18">{"  "}{m.label}{"  ·  "}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* ══════════════════════════════════════════
           ABOUT

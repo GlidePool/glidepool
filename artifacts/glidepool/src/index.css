@@ -258,6 +258,24 @@
   width: max-content;
   animation: marquee 36s linear infinite;
 }
+@keyframes marquee-slow {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee-slow {
+  display: inline-block;
+  width: max-content;
+  animation: marquee-slow 60s linear infinite;
+}
+@keyframes marquee-rev {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-marquee-rev {
+  display: inline-block;
+  width: max-content;
+  animation: marquee-rev 55s linear infinite;
+}
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }

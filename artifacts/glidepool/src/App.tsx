@@ -70,6 +70,7 @@ function App() {
       <WagmiProvider config={wagmiConfig}>
         <RainbowKitProvider
           theme={glideTheme}
+          locale="en-US"
           appInfo={{
             appName: 'GlidePool',
             disclaimer: Disclaimer,

@@ -68,35 +68,40 @@ export default function Landing() {
       <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">
         {/* ── Background ── */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {/* Hero image - streaks on right side */}
+          {/* Hero image */}
           <img
-            src="/hero-bg2.png"
+            src="/hero-bg3.png"
             alt=""
-            className="absolute inset-0 w-full h-full object-cover object-right"
-            style={{ opacity: 0.85 }}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ opacity: 0.75 }}
           />
 
           {/* Breathing green orb - amplifies the glow */}
           <div className="absolute animate-hero-breathe" style={{
-            top: "-10%", right: "-5%",
-            width: "60%", height: "120%",
-            background: "radial-gradient(ellipse at 60% 45%, rgba(0,245,100,0.18) 0%, rgba(0,245,100,0.05) 45%, transparent 70%)",
-            filter: "blur(50px)",
+            top: "-10%", left: "-5%",
+            width: "70%", height: "120%",
+            background: "radial-gradient(ellipse at 40% 45%, rgba(0,245,100,0.12) 0%, rgba(0,245,100,0.04) 50%, transparent 75%)",
+            filter: "blur(60px)",
           }} />
 
-          {/* Left shadow — keeps text area dark & readable */}
+          {/* Left shadow — keeps text dark & readable */}
           <div className="absolute inset-0" style={{
-            background: "linear-gradient(to right, rgba(8,8,8,0.98) 0%, rgba(8,8,8,0.90) 20%, rgba(8,8,8,0.65) 40%, rgba(8,8,8,0.20) 65%, transparent 100%)",
+            background: "linear-gradient(to right, rgba(8,8,8,1) 0%, rgba(8,8,8,0.96) 18%, rgba(8,8,8,0.80) 35%, rgba(8,8,8,0.45) 55%, rgba(8,8,8,0.15) 75%, transparent 100%)",
           }} />
 
           {/* Top shadow */}
-          <div className="absolute top-0 left-0 right-0 h-24" style={{
-            background: "linear-gradient(to bottom, rgba(8,8,8,0.7) 0%, transparent 100%)",
+          <div className="absolute top-0 left-0 right-0 h-36" style={{
+            background: "linear-gradient(to bottom, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.5) 50%, transparent 100%)",
           }} />
 
-          {/* Bottom fade into page */}
-          <div className="absolute bottom-0 left-0 right-0 h-40" style={{
-            background: "linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.97) 100%)",
+          {/* Bottom fade — deep, into page bg */}
+          <div className="absolute bottom-0 left-0 right-0 h-56" style={{
+            background: "linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.7) 50%, rgba(8,8,8,1) 100%)",
+          }} />
+
+          {/* Right edge fade */}
+          <div className="absolute inset-y-0 right-0 w-24" style={{
+            background: "linear-gradient(to right, transparent 0%, rgba(8,8,8,0.6) 100%)",
           }} />
         </div>
 

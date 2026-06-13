@@ -239,267 +239,65 @@ export default function Landing() {
       </section>
 
       {/* ══════════════════════════════════════════
-          ARCHITECTURE — visual node graph
+          ARCHITECTURE
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05] relative">
-        <div className="text-center mb-12">
+      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+        <div className="mb-10">
           <SectionChip label="Architecture" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
             HOW THE<br /><span className="text-primary">SYSTEM</span> CONNECTS
           </h2>
         </div>
 
-        {/* Node graph — visual diagram */}
-        <div className="rounded-2xl border border-white/[0.07] bg-black/50 p-6 sm:p-10 overflow-x-auto mb-6"
-          style={{ boxShadow: "inset 0 0 80px rgba(0,245,100,0.02)" }}>
-          <div className="min-w-[600px]">
-            {/* Top row: 3 nodes */}
-            <div className="flex items-stretch justify-between gap-4 mb-4">
-              {/* Node: Wallet */}
-              <div className="flex-1 rounded-xl border border-white/[0.10] bg-white/[0.03] p-4 flex flex-col gap-2 min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center shrink-0"><Wallet className="w-4 h-4 text-white/60" /></div>
-                  <span className="font-bold text-xs tracking-wide">USER WALLET</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/25 space-y-0.5">
-                  <div>› RainbowKit connect</div>
-                  <div>› Signs all txs</div>
-                  <div>› Base Mainnet</div>
-                </div>
-                <div className="mt-auto font-mono text-[10px] text-white/15 border-t border-white/[0.05] pt-2">wagmi v2</div>
-              </div>
-
-              {/* Arrow down */}
-              <div className="flex flex-col items-center justify-center gap-1 px-1 shrink-0">
-                <div className="h-12 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
-              </div>
-
-              {/* Node: API Server */}
-              <div className="flex-1 rounded-xl border border-primary/30 bg-primary/[0.04] p-4 flex flex-col gap-2 min-w-0" style={{ boxShadow: "0 0 30px rgba(0,245,100,0.07)" }}>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><Bot className="w-4 h-4 text-primary" /></div>
-                  <span className="font-bold text-xs tracking-wide">AGENT SERVER</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/25 space-y-0.5">
-                  <div>› Poll pool / block</div>
-                  <div>› Detect bin drift</div>
-                  <div>› Trigger x402 flow</div>
-                </div>
-                <div className="mt-auto font-mono text-[10px] text-primary/30 border-t border-primary/[0.10] pt-2">Express 5 · Node.js</div>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex flex-col items-center justify-center shrink-0 px-1">
-                <div className="h-12 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
-              </div>
-
-              {/* Node: x402 + Claude Opus 4 */}
-              <div className="flex-1 rounded-xl border border-amber-400/20 bg-amber-400/[0.03] p-4 flex flex-col gap-2 min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-amber-400/10 flex items-center justify-center shrink-0"><Zap className="w-4 h-4 text-amber-400" /></div>
-                  <span className="font-bold text-xs tracking-wide">x402 GATE</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/25 space-y-0.5">
-                  <div>› HTTP 402 response</div>
-                  <div>› Pay 0.05 USDC</div>
-                  <div>› Verify on-chain</div>
-                </div>
-                <div className="mt-auto font-mono text-[10px] text-amber-400/30 border-t border-amber-400/[0.08] pt-2">Base Mainnet</div>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex flex-col items-center justify-center shrink-0 px-1">
-                <div className="h-12 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
-              </div>
-
-              {/* Node: Claude Opus 4 */}
-              <div className="flex-1 rounded-xl border border-blue-400/25 bg-blue-400/[0.03] p-4 flex flex-col gap-2 min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center shrink-0"><Cpu className="w-4 h-4 text-blue-400" /></div>
-                  <span className="font-bold text-xs tracking-wide">Claude Opus 4 ENGINE</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/25 space-y-0.5">
-                  <div>› Receive pool snapshot</div>
-                  <div>› Action + reasoning</div>
-                  <div>› Bin range + mode</div>
-                </div>
-                <div className="mt-auto font-mono text-[10px] text-blue-400/30 border-t border-blue-400/[0.08] pt-2">OpenAI API</div>
-              </div>
-            </div>
-
-            {/* Horizontal connector line */}
-            <div className="relative flex items-center justify-between px-8 mb-4">
-              <div className="absolute left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-white/10 via-primary/30 to-white/10" />
-              <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-black/80 px-3 py-1 rounded-full border border-primary/20">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="font-mono text-[10px] text-primary/60 tracking-wider">real-time · ~2s block time</span>
-              </div>
-            </div>
-
-            {/* Bottom row: 2 nodes */}
-            <div className="flex justify-center gap-6">
-              {/* Maverick V2 Pool */}
-              <div className="w-64 rounded-xl border border-white/[0.09] bg-white/[0.02] p-4 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] flex items-center justify-center shrink-0"><Layers className="w-4 h-4 text-white/50" /></div>
-                  <span className="font-bold text-xs tracking-wide">MAVERICK V2 POOL</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/25 space-y-0.5">
-                  <div>› Read: activeTick, TVL, price</div>
-                  <div>› Write: add/remove via user wallet</div>
-                </div>
-                <div className="mt-auto font-mono text-[10px] text-white/15 border-t border-white/[0.05] pt-2">Base Mainnet · viem</div>
-              </div>
-
-              {/* TX Proposal */}
-              <div className="w-64 rounded-xl border border-primary/20 bg-primary/[0.025] p-4 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-primary/[0.08] flex items-center justify-center shrink-0"><GitBranch className="w-4 h-4 text-primary/70" /></div>
-                  <span className="font-bold text-xs tracking-wide">TX PROPOSAL</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/25 space-y-0.5">
-                  <div>› Built by agent server</div>
-                  <div>› Reviewed in Monitor page</div>
-                  <div>› Signed by your wallet</div>
-                </div>
-                <div className="mt-auto font-mono text-[10px] text-primary/30 border-t border-primary/[0.08] pt-2">RainbowKit sign</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Key facts strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            { icon: <ShieldCheck className="w-4 h-4 text-primary/60" />, title: "Read-only server", body: "API server never signs transactions. Only your connected wallet submits on-chain actions." },
-            { icon: <Zap className="w-4 h-4 text-amber-400/60" />,       title: "Pay as you go",  body: "0.05 USDC per LLM call via x402. Zero subscriptions. If the agent doesn't run, you don't pay." },
-            { icon: <RefreshCw className="w-4 h-4 text-blue-400/60" />,  title: "Continuous loop", body: "Agent polls pool state every Base block (~2s). Proposals surface in Monitor when action is needed." },
-          ].map(({ icon, title, body }) => (
-            <div key={title} className="rounded-xl border border-white/[0.07] bg-white/[0.015] p-4 flex gap-3">
-              <div className="shrink-0 mt-0.5">{icon}</div>
-              <div>
-                <div className="font-bold text-xs mb-1">{title}</div>
-                <p className="text-[11px] text-white/30 leading-relaxed font-mono">{body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
-          x402 FLOW — visual timeline
-      ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05] relative overflow-hidden"
-        style={{ background: "radial-gradient(ellipse 60% 80% at 100% 50%, rgba(251,191,36,0.04) 0%, transparent 65%)" }}>
-        <div className="text-center mb-12">
-          <SectionChip label="x402 Protocol" />
-          <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
-            PAY PER<br /><span className="text-primary">INTELLIGENCE</span>
-          </h2>
-          <p className="text-sm text-white/35 mt-4 max-w-md mx-auto leading-relaxed">
-            x402 turns HTTP 402 into a machine-readable payment rail. The agent pays on-chain in ~2s, the AI unlocks automatically. No wallets on the server side ever.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-start">
-          {/* Left: visual timeline */}
-          <div className="space-y-0">
-            {[
-              {
-                n: "01", color: "border-white/20 bg-white/[0.03]", dot: "bg-white/30", tc: "text-white/60",
-                icon: <Eye className="w-4 h-4" />, label: "Agent calls /api/advisor",
-                body: "Sends pool snapshot (TVL, tick, price, mode) + user goal to the advisor endpoint.",
-                code: "POST /api/advisor\n{ pool, goal, position }",
-              },
-              {
-                n: "02", color: "border-amber-400/30 bg-amber-400/[0.04]", dot: "bg-amber-400", tc: "text-amber-400",
-                icon: <Zap className="w-4 h-4 text-amber-400" />, label: "Server responds HTTP 402",
-                body: "Returns payment instruction: treasury address, 0.05 USDC, chain ID 8453, expiry nonce.",
-                code: "HTTP 402\n{ payTo, amount: '50000', chainId: 8453 }",
-              },
-              {
-                n: "03", color: "border-primary/25 bg-primary/[0.04]", dot: "bg-primary", tc: "text-primary",
-                icon: <ArrowRight className="w-4 h-4" />, label: "Agent pays 0.05 USDC on Base",
-                body: "USDC transfer auto-executed on Base Mainnet. ~2 second confirmation. No user action.",
-                code: "USDC.transfer(treasury, 50000)\n→ confirmed block 14209877",
-              },
-              {
-                n: "04", color: "border-white/20 bg-white/[0.03]", dot: "bg-white/30", tc: "text-white/60",
-                icon: <ShieldCheck className="w-4 h-4" />, label: "Server verifies on-chain",
-                body: "API reads Base RPC, confirms USDC tx + nonce validity. Tamper-proof — no trust needed.",
-                code: "verifyPayment(txHash, nonce)\n→ valid ✓",
-              },
-              {
-                n: "05", color: "border-blue-400/25 bg-blue-400/[0.03]", dot: "bg-blue-400", tc: "text-blue-400",
-                icon: <Cpu className="w-4 h-4 text-blue-400" />, label: "Claude Opus 4 analysis unlocked",
-                body: "Full LLM run with pool context. Returns action, risk level, bin range, and reasoning.",
-                code: '{ action: "REBALANCE",\n  bins: [1838,1855], risk: "medium" }',
-              },
-            ].map(({ n, color, dot, tc, icon, label, body, code }, i, arr) => (
-              <div key={n} className="flex gap-4">
-                <div className="flex flex-col items-center shrink-0">
-                  <div className={`w-9 h-9 rounded-xl border ${color} flex items-center justify-center ${tc}`}>{icon}</div>
-                  {i < arr.length - 1 && <div className={`w-px flex-1 my-1 ${dot === "bg-primary" ? "bg-primary/20" : dot === "bg-amber-400" ? "bg-amber-400/20" : "bg-white/[0.06]"}`} style={{ minHeight: 32 }} />}
-                </div>
-                <div className="pb-5 flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-[10px] text-white/20">{n}</span>
-                    <span className={`text-sm font-bold ${tc}`}>{label}</span>
-                  </div>
-                  <p className="text-[11px] text-white/35 leading-relaxed mb-2 font-mono">{body}</p>
-                  <div className="rounded-lg bg-black/60 border border-white/[0.06] px-3 py-2 font-mono text-[10px] text-white/30 whitespace-pre">{code}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Right: live 402 response card + why x402 */}
-          <div className="space-y-4 lg:sticky lg:top-20">
-            {/* HTTP 402 mock response */}
-            <div className="rounded-2xl border border-amber-400/20 bg-black/60 overflow-hidden font-mono text-[11px]" style={{ boxShadow: "0 0 40px rgba(251,191,36,0.05)" }}>
-              <div className="px-4 py-3 border-b border-amber-400/15 bg-amber-400/[0.04] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                  <span className="text-amber-400/80 text-[10px] tracking-widest font-bold">HTTP/1.1 402 Payment Required</span>
-                </div>
-                <span className="text-white/20 text-[9px]">server → agent</span>
-              </div>
-              <div className="p-4 space-y-1.5 leading-relaxed">
-                {[
-                  { k: "Content-Type", v: "application/json",   c: "text-white/30" },
-                  { k: "X-Payment-Version", v: '"1.0"',         c: "text-white/30" },
-                  { k: "",              v: "",                   c: "" },
-                  { k: "scheme",        v: '"exact"',            c: "text-amber-400/70" },
-                  { k: "network",       v: '"base-mainnet"',     c: "text-primary/60" },
-                  { k: "asset",         v: '"USDC (0x833589…)"', c: "text-primary/60" },
-                  { k: "payTo",         v: '"0xTreasury…"',      c: "text-white/50" },
-                  { k: "amount",        v: '"50000"',            c: "text-white/70" },
-                  { k: "maxDecimals",   v: "6",                  c: "text-white/40" },
-                  { k: "nonce",         v: '"0xabc1…"',          c: "text-white/25" },
-                  { k: "expires",       v: '"2026-06-13T12:01Z"',c: "text-white/25" },
-                ].map(({ k, v, c }, i) =>
-                  k === "" ? <div key={i} className="h-1" /> : (
-                    <div key={k} className="flex gap-2">
-                      <span className="text-white/20 shrink-0 min-w-[120px]">{k}:</span>
-                      <span className={c}>{v}</span>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-
-            {/* Why x402 */}
-            <div className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-5 space-y-3">
-              <div className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Why x402 vs API keys?</div>
+        {/* 3×2 component grid */}
+        <div className="border border-white/[0.10] overflow-x-auto">
+          <div className="min-w-[560px]">
+            {/* Row 1 */}
+            <div className="grid grid-cols-3 divide-x divide-white/[0.10]">
               {[
-                { icon: "✓", text: "No API keys to rotate or leak", c: "text-primary/60" },
-                { icon: "✓", text: "No monthly invoice — pay per inference", c: "text-primary/60" },
-                { icon: "✓", text: "Payments on-chain — verifiable by anyone", c: "text-primary/60" },
-                { icon: "✓", text: "Agents pay autonomously, humans can too", c: "text-primary/60" },
-                { icon: "✓", text: "Standard HTTP — any client can implement", c: "text-primary/60" },
-              ].map(({ icon, text, c }) => (
-                <div key={text} className="flex items-start gap-2 font-mono text-[11px] text-white/40">
-                  <span className={`${c} shrink-0`}>{icon}</span>{text}
+                { label: "CLIENT LAYER", icon: <Wallet className="w-5 h-5 text-white/50" />, title: "User Wallet", lines: ["RainbowKit connect", "Signs all transactions", "Base Mainnet"], foot: "wagmi v2" },
+                { label: "SERVER LAYER", icon: <Bot className="w-5 h-5 text-primary/80" />, title: "Agent Server", lines: ["Poll pool / block", "Detect bin drift", "Trigger x402 flow"], foot: "Express 5 · Node.js", accent: true },
+                { label: "PAYMENT LAYER", icon: <Zap className="w-5 h-5 text-amber-400/80" />, title: "x402 Gate", lines: ["HTTP 402 response", "Pay 0.05 USDC on Base", "Verify on-chain"], foot: "Base Mainnet" },
+              ].map(({ label, icon, title, lines, foot, accent }) => (
+                <div key={title} className={`p-6 flex flex-col gap-4 ${accent ? "bg-primary/[0.03]" : ""}`}>
+                  <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 h-9 border flex items-center justify-center shrink-0 ${accent ? "border-primary/30" : "border-white/[0.12]"}`}>{icon}</div>
+                    <span className="font-bold text-sm tracking-wide">{title}</span>
+                  </div>
+                  <ul className="space-y-1">
+                    {lines.map(l => <li key={l} className="font-mono text-[10px] text-white/30">› {l}</li>)}
+                  </ul>
+                  <div className={`font-mono text-[9px] pt-3 border-t ${accent ? "border-primary/[0.10] text-primary/30" : "border-white/[0.06] text-white/15"}`}>{foot}</div>
+                </div>
+              ))}
+            </div>
+            {/* Divider row */}
+            <div className="border-t border-white/[0.10] grid grid-cols-3 divide-x divide-white/[0.10]">
+              <div className="px-6 py-2 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
+                <span className="font-mono text-[9px] text-primary/40 tracking-widest">~2s block time</span>
+              </div>
+              <div className="px-6 py-2 font-mono text-[9px] text-white/15 flex items-center">real-time data flow</div>
+              <div className="px-6 py-2 font-mono text-[9px] text-white/15 flex items-center">chain id 8453</div>
+            </div>
+            {/* Row 2 */}
+            <div className="border-t border-white/[0.10] grid grid-cols-3 divide-x divide-white/[0.10]">
+              {[
+                { label: "AI LAYER", icon: <Cpu className="w-5 h-5 text-blue-400/80" />, title: "Claude Opus 4", lines: ["Receives pool snapshot", "Action + reasoning", "Bin range + mode"], foot: "Anthropic API" },
+                { label: "CHAIN LAYER", icon: <Layers className="w-5 h-5 text-white/50" />, title: "Maverick V2 Pool", lines: ["Read: activeTick, TVL, price", "Write: add/remove liquidity", "DLMM bin management"], foot: "Base Mainnet · viem" },
+                { label: "OUTPUT LAYER", icon: <GitBranch className="w-5 h-5 text-primary/60" />, title: "TX Proposal", lines: ["Built by agent server", "Reviewed in Monitor", "Signed by your wallet"], foot: "RainbowKit sign" },
+              ].map(({ label, icon, title, lines, foot }) => (
+                <div key={title} className="p-6 flex flex-col gap-4">
+                  <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{label}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 border border-white/[0.12] flex items-center justify-center shrink-0">{icon}</div>
+                    <span className="font-bold text-sm tracking-wide">{title}</span>
+                  </div>
+                  <ul className="space-y-1">
+                    {lines.map(l => <li key={l} className="font-mono text-[10px] text-white/30">› {l}</li>)}
+                  </ul>
+                  <div className="font-mono text-[9px] pt-3 border-t border-white/[0.06] text-white/15">{foot}</div>
                 </div>
               ))}
             </div>
@@ -508,56 +306,132 @@ export default function Landing() {
       </section>
 
       {/* ══════════════════════════════════════════
-          GUIDE — 5 steps visual
+          x402 PROTOCOL
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05] relative"
-        style={{ background: "radial-gradient(ellipse 70% 50% at 0% 50%, rgba(0,245,100,0.03) 0%, transparent 70%)" }}>
-        <div className="text-center mb-12">
+      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+        <div className="mb-10">
+          <SectionChip label="x402 Protocol" />
+          <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
+            PAY PER<br /><span className="text-primary">INTELLIGENCE</span>
+          </h2>
+          <p className="text-sm text-white/35 mt-4 max-w-md leading-relaxed">
+            x402 turns HTTP 402 into a machine-readable payment rail. Agent pays on-chain in ~2s, AI unlocks automatically. No server-side wallets ever.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-white/[0.10]">
+          {/* Left: numbered steps */}
+          <div className="border-b lg:border-b-0 lg:border-r border-white/[0.10] divide-y divide-white/[0.10]">
+            {[
+              { n: "01", label: "Agent calls /api/advisor", body: "Sends pool snapshot + user goal.", code: "POST /api/advisor", tc: "text-white/60" },
+              { n: "02", label: "Server responds HTTP 402", body: "Returns treasury address + 0.05 USDC amount.", code: "HTTP 402 · chainId: 8453", tc: "text-amber-400/80" },
+              { n: "03", label: "Agent pays 0.05 USDC",    body: "USDC transfer on Base Mainnet. ~2s confirm.", code: "USDC.transfer(treasury, 50000)", tc: "text-primary/80" },
+              { n: "04", label: "Server verifies on-chain", body: "Reads Base RPC, confirms tx + nonce.", code: "verifyPayment(txHash) → ✓", tc: "text-white/60" },
+              { n: "05", label: "Claude Opus 4 unlocked",   body: "Full LLM run. Returns action, risk, bins.", code: '{ action:"REBALANCE", risk:"medium" }', tc: "text-primary/80" },
+            ].map(({ n, label, body, code, tc }) => (
+              <div key={n} className="flex gap-0">
+                <div className="w-14 shrink-0 border-r border-white/[0.10] flex items-start justify-center pt-5">
+                  <span className="font-mono text-[10px] text-white/20">{n}</span>
+                </div>
+                <div className="flex-1 p-5">
+                  <div className={`font-bold text-sm mb-1 ${tc}`}>{label}</div>
+                  <p className="font-mono text-[10px] text-white/30 mb-2">{body}</p>
+                  <div className="bg-black/50 border border-white/[0.06] px-3 py-1.5 font-mono text-[10px] text-white/25">{code}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right: HTTP 402 response + why */}
+          <div className="divide-y divide-white/[0.10]">
+            {/* HTTP 402 response */}
+            <div>
+              <div className="px-5 py-3 border-b border-white/[0.10] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-amber-400 animate-pulse" />
+                  <span className="font-mono text-[9px] text-amber-400/70 uppercase tracking-widest">HTTP/1.1 402 Payment Required</span>
+                </div>
+                <span className="font-mono text-[9px] text-white/15">server → agent</span>
+              </div>
+              <div className="p-5 space-y-1.5 font-mono text-[10px]">
+                {[
+                  { k: "scheme",      v: '"exact"',            c: "text-amber-400/60" },
+                  { k: "network",     v: '"base-mainnet"',     c: "text-primary/60" },
+                  { k: "asset",       v: '"USDC 0x833589…"',   c: "text-primary/60" },
+                  { k: "payTo",       v: '"0xTreasury…"',      c: "text-white/40" },
+                  { k: "amount",      v: '"50000"',            c: "text-white/65" },
+                  { k: "maxDecimals", v: "6",                  c: "text-white/35" },
+                  { k: "nonce",       v: '"0xabc1…"',          c: "text-white/20" },
+                  { k: "expires",     v: '"2026-06-13T12:01Z"',c: "text-white/20" },
+                ].map(({ k, v, c }) => (
+                  <div key={k} className="flex gap-3">
+                    <span className="text-white/18 shrink-0 w-28">{k}:</span>
+                    <span className={c}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Why x402 */}
+            <div className="p-5">
+              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-4">Why x402 vs API keys</div>
+              {[
+                "No API keys to rotate or leak",
+                "No monthly invoice — pay per inference",
+                "Payments on-chain, verifiable by anyone",
+                "Agents pay autonomously, no human needed",
+                "Standard HTTP — any client can implement",
+              ].map(t => (
+                <div key={t} className="flex items-start gap-2 font-mono text-[10px] text-white/35 py-1.5 border-b border-white/[0.05] last:border-0">
+                  <span className="text-primary/60 shrink-0">✓</span>{t}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          GUIDE
+      ══════════════════════════════════════════ */}
+      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+        <div className="mb-10">
           <SectionChip label="Guide" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
             START IN<br /><span className="text-primary">5 STEPS</span>
           </h2>
         </div>
 
-        {/* Progress bar + steps */}
-        <div className="relative">
-          {/* connecting line */}
-          <div className="hidden lg:block absolute top-10 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* 5-step bordered grid */}
+        <div className="border border-white/[0.10] overflow-x-auto">
+          <div className="grid grid-cols-5 divide-x divide-white/[0.10] min-w-[560px]">
             {[
-              { n: "01", icon: <Wallet className="w-5 h-5" />,     title: "Connect Wallet",  body: "Connect a Base Mainnet wallet via RainbowKit. MetaMask, Coinbase Wallet, WalletConnect." },
-              { n: "02", icon: <Layers className="w-5 h-5" />,      title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check TVL, tick, fee rate. Select your target." },
-              { n: "03", icon: <Bot className="w-5 h-5" />,         title: "Setup Agent",     body: "Choose strategy + budget. Agent deployment requires one wallet signature." },
-              { n: "04", icon: <RefreshCw className="w-5 h-5" />,   title: "Agent Monitors",  body: "Polls pool every block. Pays 0.05 USDC via x402 when Claude Opus 4 analysis is needed." },
-              { n: "05", icon: <ShieldCheck className="w-5 h-5" />, title: "You Sign",        body: "Review proposal in Monitor. Approve or reject. Your signature, your control." },
+              { n: "01", icon: <Wallet className="w-5 h-5" />,     title: "Connect Wallet",  body: "Base Mainnet via RainbowKit. MetaMask, Coinbase, WalletConnect." },
+              { n: "02", icon: <Layers className="w-5 h-5" />,     title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check TVL, tick, fee rate." },
+              { n: "03", icon: <Bot className="w-5 h-5" />,        title: "Setup Agent",     body: "Choose strategy + budget. One wallet signature to deploy." },
+              { n: "04", icon: <RefreshCw className="w-5 h-5" />,  title: "Agent Monitors",  body: "Polls every block. Pays 0.05 USDC via x402 for each AI call." },
+              { n: "05", icon: <ShieldCheck className="w-5 h-5" />,title: "You Sign",        body: "Review in Monitor. Approve or reject. Your keys, your control." },
             ].map(({ n, icon, title, body }, i) => (
-              <div key={n} className="flex flex-col items-center text-center gap-3">
-                {/* Step circle */}
-                <div className="relative">
-                  <div className={`w-20 h-20 rounded-2xl border flex items-center justify-center
-                    ${i === 4 ? "border-primary/40 bg-primary/10 text-primary glow-green-sm" : "border-white/[0.10] bg-white/[0.03] text-white/50"}`}>
-                    {icon}
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#080808] border border-white/[0.10] flex items-center justify-center">
-                    <span className="font-mono text-[9px] text-white/30">{n}</span>
-                  </div>
+              <div key={n} className={`p-6 flex flex-col gap-4 ${i === 4 ? "bg-primary/[0.03]" : ""}`}>
+                <div className="flex items-start justify-between">
+                  <div className={`w-9 h-9 border flex items-center justify-center ${i === 4 ? "border-primary/40 text-primary/80" : "border-white/[0.12] text-white/40"}`}>{icon}</div>
+                  <span className="font-mono text-[10px] text-white/15">{n}</span>
                 </div>
-                <div className="font-bold text-sm">{title}</div>
-                <p className="text-[11px] text-white/30 leading-relaxed font-mono max-w-[160px]">{body}</p>
+                <div>
+                  <div className={`font-bold text-sm mb-2 ${i === 4 ? "text-primary/90" : ""}`}>{title}</div>
+                  <p className="font-mono text-[10px] text-white/30 leading-relaxed">{body}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
-
-        <div className="flex flex-wrap justify-center gap-3 mt-10">
+        <div className="flex items-center gap-4 mt-5">
           {[
-            { label: "→ CLI Guide",    href: "/cli" },
-            { label: "→ Setup Agent",  href: "/agent/setup" },
-            { label: "→ Browse Pools", href: "/pools" },
+            { label: "CLI Guide",    href: "/cli" },
+            { label: "Setup Agent",  href: "/agent/setup" },
+            { label: "Browse Pools", href: "/pools" },
           ].map(({ label, href }) => (
             <Link key={href} href={href}>
-              <span className="font-mono text-xs text-primary/60 hover:text-primary border border-primary/20 hover:border-primary/40 rounded-lg px-4 py-2 transition-all cursor-pointer">{label}</span>
+              <span className="font-mono text-[11px] text-white/35 hover:text-white/70 border border-white/[0.08] hover:border-white/20 px-4 py-2 transition-all cursor-pointer">→ {label}</span>
             </Link>
           ))}
         </div>
@@ -566,81 +440,102 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           FAQ
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05]">
-        <div className="text-center mb-12">
+      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+        <div className="mb-10">
           <SectionChip label="FAQ" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
             COMMON<br /><span className="text-primary">QUESTIONS</span>
           </h2>
         </div>
-        <div className="max-w-2xl mx-auto space-y-2">
+
+        {/* Table-style FAQ */}
+        <div className="border border-white/[0.10] divide-y divide-white/[0.10]">
           {FAQS.map((faq, i) => {
             const open = openFaq === i;
             return (
-              <div key={i} className={`rounded-xl border transition-all duration-200 ${open ? "border-primary/20 bg-primary/[0.04]" : "border-white/[0.07] bg-white/[0.02] hover:border-white/[0.12]"}`}>
-                <button className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left" onClick={() => setOpenFaq(open ? null : i)}>
-                  <span className="text-sm font-bold leading-snug">{faq.q}</span>
-                  {open ? <ChevronUp className="w-4 h-4 text-primary shrink-0" /> : <ChevronDown className="w-4 h-4 text-white/25 shrink-0" />}
-                </button>
-                {open && <div className="px-5 pb-5"><p className="text-sm text-white/45 leading-relaxed">{faq.a}</p></div>}
-              </div>
+              <button key={i} className="w-full text-left" onClick={() => setOpenFaq(open ? null : i)}>
+                <div className={`grid grid-cols-1 sm:grid-cols-[1fr_auto] transition-colors ${open ? "bg-primary/[0.03]" : "hover:bg-white/[0.015]"}`}>
+                  <div className="flex gap-0">
+                    <div className="w-12 sm:w-14 shrink-0 border-r border-white/[0.10] flex items-start justify-center pt-5 pb-5">
+                      <span className="font-mono text-[9px] text-white/15">{String(i + 1).padStart(2, "0")}</span>
+                    </div>
+                    <div className="flex-1 p-5">
+                      <div className={`font-bold text-sm mb-1 leading-snug ${open ? "text-primary/90" : ""}`}>{faq.q}</div>
+                      {open && <p className="font-mono text-[11px] text-white/40 leading-relaxed mt-3">{faq.a}</p>}
+                    </div>
+                  </div>
+                  <div className="hidden sm:flex items-start pt-5 pr-5">
+                    {open
+                      ? <ChevronUp className="w-3.5 h-3.5 text-primary/60" />
+                      : <ChevronDown className="w-3.5 h-3.5 text-white/20" />}
+                  </div>
+                </div>
+              </button>
             );
           })}
         </div>
-        <div className="text-center mt-8">
+        <div className="mt-5">
           <a href="https://docs.glidepool.com" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-mono text-xs text-primary/60 hover:text-primary border border-primary/20 hover:border-primary/40 rounded-lg px-4 py-2 transition-all">
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] text-white/35 hover:text-white/70 border border-white/[0.08] hover:border-white/20 px-4 py-2 transition-all">
             Full Docs <ArrowUpRight className="w-3 h-3" />
           </a>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════
-          ECOSYSTEM
+          ECOSYSTEM STRIP
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-10 border-t border-white/[0.05]">
-        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
-          <span className="shrink-0 text-[10px] font-mono text-white/20 uppercase tracking-widest">Built with</span>
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-2">
-            {["Base", "Maverick V2", "x402", "RainbowKit", "OpenAI", "viem", "Drizzle ORM"].map((l) => (
-              <span key={l} className="font-mono text-[11px] text-white/20">{l}</span>
-            ))}
+      <section className="-mx-4 sm:-mx-6 border-t border-white/[0.05]">
+        <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08]">
+          <div className="px-6 py-4 flex items-center shrink-0">
+            <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Built with</span>
           </div>
+          {["Base", "Maverick V2", "x402", "RainbowKit", "Anthropic", "viem", "Drizzle ORM"].map(l => (
+            <div key={l} className="px-6 py-4 flex items-center">
+              <span className="font-mono text-[11px] text-white/20">{l}</span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ══════════════════════════════════════════
           CTA
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 border-t border-primary/20 overflow-hidden relative"
-        style={{ background: "radial-gradient(ellipse 100% 200% at 50% 150%, rgba(0,245,100,0.13) 0%, rgba(0,245,100,0.05) 40%, transparent 70%)" }}>
-        <div className="pointer-events-none absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "linear-gradient(rgba(0,245,100,1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,100,1) 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
-        <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-0 w-[600px] h-[300px] opacity-30" style={{ background: "radial-gradient(ellipse at center, rgba(0,245,100,0.25) 0%, transparent 70%)", filter: "blur(40px)", animation: "orb-drift-c 18s ease-in-out infinite" }} />
-        <div className="relative px-4 sm:px-6 py-20 sm:py-28 flex flex-col items-center text-center gap-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/25 bg-primary/5">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="font-mono text-[10px] text-primary/70 tracking-widest uppercase">Agent ready to deploy</span>
+      <section className="-mx-4 sm:-mx-6 border-t border-white/[0.10]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.10]">
+          {/* Left: headline */}
+          <div className="p-10 sm:p-16 flex flex-col justify-between gap-10">
+            <div>
+              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">Deploy</div>
+              <h2 className="font-black uppercase tracking-tighter leading-[0.88]" style={{ fontSize: "clamp(40px,6vw,80px)" }}>
+                DEPLOY YOUR<br /><span className="text-primary">FIRST AGENT</span><br />TODAY
+              </h2>
+            </div>
+            <p className="text-sm text-white/35 max-w-sm leading-relaxed font-mono">
+              Connect your Base wallet, pick a Maverick V2 pool, and deploy an autonomous DLMM agent in under 2 minutes.
+            </p>
           </div>
-          <h2 className="font-black uppercase tracking-tighter leading-[0.9] max-w-3xl" style={{ fontSize: "clamp(36px,7vw,88px)", textShadow: "0 0 80px rgba(0,245,100,0.2)" }}>
-            DEPLOY YOUR<br /><span className="text-primary">FIRST AGENT</span><br />TODAY
-          </h2>
-          <p className="text-sm text-white/40 max-w-md leading-relaxed">
-            Connect your Base wallet, pick a Maverick V2 pool, and deploy an autonomous DLMM agent in under 2 minutes.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <ConnectButton />
-            <Link href="/dashboard">
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-primary/30 text-sm font-semibold text-primary/80 hover:bg-primary/5 hover:border-primary/50 transition-all cursor-pointer font-mono">
-                Go to Dashboard <ArrowRight className="w-4 h-4" />
+          {/* Right: actions + links */}
+          <div className="p-10 sm:p-16 flex flex-col justify-between gap-10">
+            <div className="space-y-3">
+              <ConnectButton />
+              <Link href="/dashboard">
+                <div className="inline-flex items-center gap-2 border border-primary/30 px-6 py-3 font-mono text-sm text-primary/70 hover:bg-primary/5 hover:border-primary/50 transition-all cursor-pointer w-full sm:w-auto justify-center sm:justify-start">
+                  Go to Dashboard <ArrowRight className="w-4 h-4" />
+                </div>
+              </Link>
+            </div>
+            <div className="border-t border-white/[0.08] pt-6">
+              <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest mb-4">Resources</div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                {[["GitHub","https://github.com/glidepool"],["Docs","https://docs.glidepool.com"],["Whitepaper","https://docs.glidepool.com/whitepaper"],["Roadmap","https://github.com/glidepool/roadmap"]].map(([l,h]) => (
+                  <a key={l} href={h} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-mono text-[11px] text-white/25 hover:text-white/60 transition-colors py-1">
+                    {l} <ArrowUpRight className="w-2.5 h-2.5" />
+                  </a>
+                ))}
               </div>
-            </Link>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-6 pt-4 border-t border-white/[0.05] w-full max-w-lg">
-            {[["GitHub","https://github.com/glidepool"],["Docs","https://docs.glidepool.com"],["Whitepaper","https://docs.glidepool.com/whitepaper"],["Roadmap","https://github.com/glidepool/roadmap"]].map(([l,h]) => (
-              <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-[11px] text-white/25 hover:text-white/60 transition-colors">
-                {l} <ArrowUpRight className="w-2.5 h-2.5" />
-              </a>
-            ))}
+            </div>
           </div>
         </div>
       </section>

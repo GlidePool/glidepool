@@ -369,6 +369,223 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ══ ABOUT / PROTOCOL LOG ═══════════════════════════════ */}
+      <section className="relative border-y border-primary/20 bg-black overflow-hidden">
+
+        {/* CRT scanlines overlay */}
+        <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.18]"
+          style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(0,0,0,0.9) 0px, rgba(0,0,0,0.9) 1px, transparent 1px, transparent 3px)" }} />
+
+        {/* Top header bar */}
+        <div className="relative z-20 border-b border-primary/20 px-5 py-2.5 flex items-center justify-between bg-primary/[0.04]">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="font-mono text-primary font-bold text-sm shrink-0">+</span>
+            <span className="font-mono text-[10px] text-primary/50 tracking-widest shrink-0 hidden sm:block">BASE_EPOCH_2025</span>
+            {/* Hazard stripes */}
+            <div className="flex gap-px shrink-0">
+              {Array.from({ length: 18 }).map((_, i) => (
+                <div key={i} className="w-1.5 h-3.5" style={{ background: i % 2 === 0 ? "rgba(0,245,100,0.75)" : "rgba(0,0,0,0.9)" }} />
+              ))}
+            </div>
+            <span className="font-mono text-[11px] font-bold text-primary tracking-[0.14em] truncate">GLIDEPOOL PROTOCOL LOG</span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 ml-4">
+            <div className="w-3 h-3 rounded-full bg-primary" />
+            <div className="w-3 h-3 rounded-full border border-primary flex items-center justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+            </div>
+          </div>
+        </div>
+
+        {/* Main body — 2 columns */}
+        <div className="relative z-20 grid grid-cols-1 lg:grid-cols-2 min-h-[400px]">
+
+          {/* ── LEFT: Pool network SVG ── */}
+          <div className="relative border-r border-primary/15 flex flex-col">
+            {/* Dithered dot overlay */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{ backgroundImage: "radial-gradient(circle, rgba(0,245,100,0.07) 1px, transparent 1px)", backgroundSize: "7px 7px" }} />
+
+            <div className="relative flex-1 flex items-center justify-center p-6">
+              <svg viewBox="0 0 420 300" className="w-full max-w-[440px]"
+                style={{ filter: "drop-shadow(0 0 10px rgba(0,245,100,0.25))" }}>
+                <defs>
+                  <pattern id="aboutGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(0,245,100,0.055)" strokeWidth="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="420" height="300" fill="url(#aboutGrid)" />
+
+                {/* Connection lines */}
+                {[
+                  [210,150, 85,72],  [210,150, 340,72],
+                  [210,150, 62,188], [210,150, 355,195],
+                  [210,150, 148,258],[210,150, 278,258],
+                ].map(([x1,y1,x2,y2],i) => (
+                  <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                    stroke="rgba(0,245,100,0.22)" strokeWidth="1" strokeDasharray="4 3"/>
+                ))}
+
+                {/* Hub ring */}
+                <circle cx="210" cy="150" r="36" fill="rgba(0,245,100,0.07)" stroke="rgba(0,245,100,0.75)" strokeWidth="1.5"/>
+                <circle cx="210" cy="150" r="27" fill="none" stroke="rgba(0,245,100,0.25)" strokeWidth="0.75" strokeDasharray="3 3">
+                  <animateTransform attributeName="transform" type="rotate" from="0 210 150" to="360 210 150" dur="18s" repeatCount="indefinite"/>
+                </circle>
+                <text x="210" y="146" textAnchor="middle" fill="rgba(0,245,100,1)" fontFamily="monospace" fontSize="9.5" fontWeight="bold" letterSpacing="2">GLIDE</text>
+                <text x="210" y="159" textAnchor="middle" fill="rgba(0,245,100,0.65)" fontFamily="monospace" fontSize="8" letterSpacing="1.5">POOL</text>
+
+                {/* Pool nodes */}
+                {[
+                  [85,  72, "WETH", "USDC"],
+                  [340, 72, "WETH", "cbETH"],
+                  [62, 188, "USDC", "cbBTC"],
+                  [355,195, "WETH", "DAI"],
+                  [148,258, "BASE", "USDC"],
+                  [278,258, "cbBTC","USDC"],
+                ].map(([cx,cy,a,b],i) => (
+                  <g key={i}>
+                    <circle cx={cx as number} cy={cy as number} r="22" fill="rgba(0,245,100,0.04)" stroke="rgba(0,245,100,0.38)" strokeWidth="1"/>
+                    <text x={cx as number} y={(cy as number)-3} textAnchor="middle" fill="rgba(0,245,100,0.82)" fontFamily="monospace" fontSize="7.5" fontWeight="bold">{a as string}</text>
+                    <text x={cx as number} y={(cy as number)+8} textAnchor="middle" fill="rgba(0,245,100,0.45)" fontFamily="monospace" fontSize="7">{b as string}</text>
+                  </g>
+                ))}
+
+                {/* Animated data packets */}
+                {([
+                  { path:"M210,150 L85,72",   dur:"2.8s", begin:"0s",   r:3   },
+                  { path:"M340,72 L210,150",   dur:"3.5s", begin:"1.1s", r:2.5 },
+                  { path:"M210,150 L62,188",   dur:"4.1s", begin:"0.4s", r:2   },
+                  { path:"M355,195 L210,150",  dur:"2.6s", begin:"1.8s", r:2.5 },
+                  { path:"M210,150 L148,258",  dur:"3.8s", begin:"0.9s", r:2   },
+                  { path:"M278,258 L210,150",  dur:"3.2s", begin:"2.3s", r:2   },
+                ] as { path:string; dur:string; begin:string; r:number }[]).map(({ path, dur, begin, r }, i) => (
+                  <circle key={i} r={r} fill="rgba(0,245,100,0.95)"
+                    style={{ filter: `drop-shadow(0 0 ${r+1}px rgba(0,245,100,0.9))` }}>
+                    <animateMotion dur={dur} repeatCount="indefinite" path={path} begin={begin}/>
+                  </circle>
+                ))}
+              </svg>
+            </div>
+
+            {/* Bottom stats bar */}
+            <div className="border-t border-primary/15 grid grid-cols-3 divide-x divide-primary/10">
+              {[
+                ["TVL ANALYZED", "$2.4M"],
+                ["ACTIVE POOLS", "24"],
+                ["USERS SERVED", "12K+"],
+              ].map(([label, value]) => (
+                <div key={label} className="py-3 px-4 text-center">
+                  <div className="font-mono text-[9px] text-primary/40 tracking-widest mb-0.5">{label}</div>
+                  <div className="font-mono text-sm font-bold text-primary">{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── RIGHT: Terminal log ── */}
+          <div className="flex flex-col">
+
+            {/* Terminal entries */}
+            <div className="flex-1 p-6 font-mono space-y-2 border-b border-primary/10">
+              {([
+                ["PROTOCOL_ID",    "GLIDEPOOL_V1",              false],
+                ["NETWORK",        "BASE_MAINNET  [ID:8453]",   false],
+                ["DEX_LAYER",      "MAVERICK_V2_DLMM",          false],
+                ["AI_ENGINE",      "GPT-4O — OPENAI",           false],
+                ["ACCESS_GATE",    "X402_MICROPAYMENT_USDC",    false],
+                ["CUSTODY_MODEL",  "NON_CUSTODIAL",             false],
+                ["TX_SIGNING",     "USER_WALLET_ONLY",          true ],
+                ["DATA_SOURCE",    "BASE_RPC — LIVE_ONCHAIN",   true ],
+              ] as [string,string,boolean][]).map(([key, val, dim]) => (
+                <div key={key} className="flex items-start gap-2 text-[11px]">
+                  <span className="text-primary/50 shrink-0 mt-px">›</span>
+                  <span>
+                    <span className="text-primary/40">{key}:</span>{" "}
+                    <span className={dim ? "text-primary/55" : "text-primary"}>{val}</span>
+                  </span>
+                </div>
+              ))}
+              <div className="flex items-center gap-2 text-[11px] mt-1 pt-1">
+                <span className="text-primary/50">›</span>
+                <span className="text-primary animate-cursor font-bold">█</span>
+              </div>
+            </div>
+
+            {/* Health / integrity bars */}
+            <div className="p-5 space-y-3.5 border-b border-primary/10">
+              {([
+                ["AI RESPONSE QUALITY",    94,  14],
+                ["CHAIN DATA FRESHNESS",   99,  14],
+                ["PROTOCOL UPTIME",        100, 14],
+              ] as [string,number,number][]).map(([label, pct, chars]) => {
+                const filled = Math.round(pct / 100 * chars);
+                return (
+                  <div key={label} className="font-mono text-[10px]">
+                    <div className="flex justify-between mb-1">
+                      <span className="text-primary/45 tracking-wider">{label}</span>
+                      <span className="text-primary font-bold">{pct}%</span>
+                    </div>
+                    <span className="text-primary/80">{"▓".repeat(filled)}</span>
+                    <span className="text-primary/20">{"░".repeat(chars - filled)}</span>
+                    <span className="text-primary/20"> · · ·</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Bottom: crosshair + status */}
+            <div className="p-5 flex items-center gap-5">
+              {/* Rotating crosshair */}
+              <svg width="52" height="52" viewBox="0 0 52 52" className="shrink-0">
+                <g>
+                  <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(0,245,100,0.45)" strokeWidth="1"/>
+                  <circle cx="26" cy="26" r="7"  fill="none" stroke="rgba(0,245,100,0.75)" strokeWidth="1.5"/>
+                  <circle cx="26" cy="26" r="2"  fill="rgba(0,245,100,1)"/>
+                  <line x1="26" y1="2"  x2="26" y2="16" stroke="rgba(0,245,100,0.6)" strokeWidth="1"/>
+                  <line x1="26" y1="36" x2="26" y2="50" stroke="rgba(0,245,100,0.6)" strokeWidth="1"/>
+                  <line x1="2"  y1="26" x2="16" y2="26" stroke="rgba(0,245,100,0.6)" strokeWidth="1"/>
+                  <line x1="36" y1="26" x2="50" y2="26" stroke="rgba(0,245,100,0.6)" strokeWidth="1"/>
+                  <line x1="6"  y1="6"  x2="12" y2="6"  stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="6"  y1="6"  x2="6"  y2="12" stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="46" y1="6"  x2="40" y2="6"  stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="46" y1="6"  x2="46" y2="12" stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="6"  y1="46" x2="12" y2="46" stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="6"  y1="46" x2="6"  y2="40" stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="46" y1="46" x2="40" y2="46" stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <line x1="46" y1="46" x2="46" y2="40" stroke="rgba(0,245,100,0.3)" strokeWidth="1"/>
+                  <animateTransform attributeName="transform" type="rotate"
+                    from="0 26 26" to="360 26 26" dur="14s" repeatCount="indefinite"/>
+                </g>
+              </svg>
+
+              <div>
+                <div className="font-mono text-[9px] text-primary/38 tracking-widest mb-0.5">TARGETING ENGINE</div>
+                <div className="font-mono text-sm font-bold text-primary tracking-wider">ACTIVE</div>
+                <div className="font-mono text-[9px] text-primary/32 mt-0.5">MISSION: SMARTER LIQUIDITY</div>
+              </div>
+
+              <div className="ml-auto text-right">
+                <div className="font-mono text-[8px] text-primary/30 tracking-widest mb-1">SYSTEM STATUS</div>
+                <div className="flex items-center gap-1.5 justify-end">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="font-mono text-xs font-bold text-primary">OPERATIONAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom ticker */}
+        <div className="relative z-20 border-t border-primary/15 py-2 overflow-hidden bg-primary/[0.03]">
+          <div className="animate-marquee font-mono text-[10px] text-primary/45 tracking-widest whitespace-nowrap">
+            {(
+              "  ›  GLIDEPOOL — AI ADVISOR FOR MAVERICK V2 LIQUIDITY  ·  NON-CUSTODIAL · NO SIGNUP  ·  BASE MAINNET [ID:8453]  ·  X402 MICROPAYMENT ~$0.05 USDC/QUERY  ·  GPT-4O POWERED ANALYSIS  ·  REAL-TIME ONCHAIN DATA  ·  YOUR KEYS · YOUR POSITIONS · YOUR DECISIONS  ›  WHOSE LIQUIDITY IS EVAPORATING BEFORE YOU?  "
+            ).repeat(2)}
+          </div>
+        </div>
+
+      </section>
+
       {/* ══ POOL TABLE ═══════════════════════════════════════ */}
       <section className="px-6 py-20">
         <div className="max-w-5xl mx-auto">

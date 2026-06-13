@@ -122,7 +122,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           ABOUT
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-24 border-t border-white/[0.05] relative">
+      <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-16 sm:py-24 border-t border-white/[0.05] relative">
         <div className="mb-10">
           <SectionChip label="About" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
@@ -224,7 +224,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           ARCHITECTURE
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+      <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-16 sm:py-20 border-t border-white/[0.05]">
         <div className="mb-10">
           <SectionChip label="Architecture" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
@@ -291,7 +291,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           x402 PROTOCOL
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+      <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-16 sm:py-20 border-t border-white/[0.05]">
         <div className="mb-10">
           <SectionChip label="x402 Protocol" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
@@ -376,7 +376,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           GUIDE
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+      <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-16 sm:py-20 border-t border-white/[0.05]">
         <div className="mb-10">
           <SectionChip label="Guide" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>
@@ -423,7 +423,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════
           FAQ
       ══════════════════════════════════════════ */}
-      <section className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-16 sm:py-20 border-t border-white/[0.05]">
+      <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-16 sm:py-20 border-t border-white/[0.05]">
         <div className="mb-10">
           <SectionChip label="FAQ" />
           <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(36px,6vw,72px)" }}>

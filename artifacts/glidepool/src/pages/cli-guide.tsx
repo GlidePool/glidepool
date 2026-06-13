@@ -14,7 +14,7 @@ function CodeBlock({ code, lang = "bash" }: { code: string; lang?: string }) {
           {copied ? <><CheckCheck className="w-3 h-3 text-primary" /> copied</> : <><Copy className="w-3 h-3" /> copy</>}
         </button>
       </div>
-      <pre className="p-4 font-mono text-xs text-white/60 overflow-x-auto leading-relaxed whitespace-pre">{code}</pre>
+      <pre className="p-4 font-mono text-xs text-white/60 leading-relaxed whitespace-pre-wrap break-words">{code}</pre>
     </div>
   );
 }

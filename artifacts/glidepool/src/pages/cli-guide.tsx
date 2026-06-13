@@ -85,16 +85,17 @@ export default function CliGuide() {
         </div>
       </div>
 
-      {/* Step tabs — flat bordered */}
-      <div className="border border-white/[0.10] flex divide-x divide-white/[0.10] overflow-x-auto">
+      {/* Step tabs — 2 col mobile, 4 col sm+ */}
+      <div className="border border-white/[0.10] grid grid-cols-2 sm:grid-cols-4 overflow-hidden">
         {STEPS.map((s, i) => (
           <button key={i} onClick={() => setActive(i)}
-            className={`flex-1 px-4 py-3 font-mono text-[10px] transition-colors whitespace-nowrap text-left ${
+            className={[
+              "px-4 py-3 font-mono text-[10px] transition-colors text-left border-b border-r border-white/[0.10]",
               active === i
-                ? "bg-primary/[0.06] text-primary border-b-2 border-b-primary/60"
-                : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]"
-            }`}>
-            <div className="text-[9px] text-white/20 mb-0.5">[{s.num}]</div>
+                ? "bg-primary/[0.06] text-primary border-b-primary/60"
+                : "text-white/30 hover:text-white/60 hover:bg-white/[0.02]",
+            ].join(" ")}>
+            <div className={`text-[9px] mb-0.5 ${active === i ? "text-primary/50" : "text-white/20"}`}>[{s.num}]</div>
             <div className="font-bold">{s.title}</div>
           </button>
         ))}

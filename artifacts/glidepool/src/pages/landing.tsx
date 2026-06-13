@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
@@ -35,8 +35,23 @@ const FAQS = [
 /* ══════════════════════════════════════════════════════════════
    MAIN
 ══════════════════════════════════════════════════════════════ */
+const LIFECYCLE_STEPS = [
+  { icon: Eye,        label: "Observe",      sub: "pool state / block",    desc: "Agent reads Maverick V2 pool every ~2s block — activeTick, TVL, price, fee rate via viem on Base Mainnet.", color: "primary" },
+  { icon: Cpu,        label: "Analyze",      sub: "detect bin drift",      desc: "Compares current tick to optimal bin range. If drift exceeds threshold, triggers the rebalance pipeline.", color: "primary" },
+  { icon: Zap,        label: "Pay x402",     sub: "0.05 USDC on Base",    desc: "Agent autonomously pays 0.05 USDC via HTTP 402. USDC transfer confirmed on-chain in ~2s. No user action needed.", color: "amber" },
+  { icon: Bot,        label: "Claude Opus 4",sub: "get recommendation",    desc: "Sends pool snapshot + user goal to Claude Opus 4. Returns action, risk level, bin range, and reasoning chain.", color: "primary" },
+  { icon: GitBranch,  label: "Propose TX",   sub: "build calldata",        desc: "Agent server assembles transaction calldata — removeLiquidity + addLiquidity — and surfaces it in Monitor.", color: "primary" },
+  { icon: ShieldCheck,label: "You Sign",     sub: "approve or reject",     desc: "You review the full proposal in Monitor. One RainbowKit signature executes on-chain. You can reject at any time.", color: "green" },
+] as const;
+
 export default function Landing() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setActiveStep(s => (s + 1) % LIFECYCLE_STEPS.length), 1800);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="relative flex flex-col" style={{ zIndex: 2 }}>
@@ -188,35 +203,123 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Agent lifecycle — horizontal dotted flow */}
+        {/* Agent lifecycle — large animated visual table */}
         <div className="border border-white/[0.10]">
-          <div className="px-6 py-4 border-b border-white/[0.10]">
+          {/* Header row */}
+          <div className="flex items-center justify-between px-6 py-3 border-b border-white/[0.10]">
             <span className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Agent lifecycle — per position</span>
-          </div>
-          <div className="overflow-x-auto">
-            <div className="flex items-stretch min-w-[640px]">
-              {[
-                { icon: <Eye className="w-4 h-4" />,                          label: "Observe",      sub: "pool state / block" },
-                { icon: <Cpu className="w-4 h-4" />,                          label: "Analyze",      sub: "detect bin drift" },
-                { icon: <Zap className="w-4 h-4 text-amber-400" />,           label: "Pay x402",     sub: "0.05 USDC on Base" },
-                { icon: <Bot className="w-4 h-4" />,                          label: "Claude Opus 4",sub: "get recommendation" },
-                { icon: <GitBranch className="w-4 h-4" />,                    label: "Propose TX",   sub: "build calldata" },
-                { icon: <ShieldCheck className="w-4 h-4 text-primary/70" />,  label: "You Sign",     sub: "approve or reject" },
-              ].map(({ icon, label, sub }, i, arr) => (
-                <div key={label} className="flex items-center flex-1">
-                  <div className="flex flex-col items-center gap-2 py-6 px-4 flex-1">
-                    <div className="w-9 h-9 border border-primary/30 flex items-center justify-center text-primary/60">
-                      {icon}
-                    </div>
-                    <div className="font-mono text-[10px] font-bold text-white/60 text-center leading-tight">{label}</div>
-                    <div className="font-mono text-[9px] text-white/25 text-center leading-tight">{sub}</div>
-                  </div>
-                  {i < arr.length - 1 && (
-                    <div className="shrink-0 text-white/15 font-mono text-xs select-none">›</div>
-                  )}
-                </div>
-              ))}
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
+              <span className="font-mono text-[9px] text-primary/40 tracking-widest">running</span>
             </div>
+          </div>
+
+          {/* 6-cell step table */}
+          <div className="overflow-x-auto">
+            <div className="grid grid-cols-6 divide-x divide-white/[0.10] min-w-[640px]">
+              {LIFECYCLE_STEPS.map((step, i) => {
+                const Icon = step.icon;
+                const isActive = activeStep === i;
+                const isPast   = i < activeStep;
+                const isAmber  = step.color === "amber";
+                return (
+                  <button
+                    key={step.label}
+                    onClick={() => setActiveStep(i)}
+                    className="text-left flex flex-col transition-all duration-500 cursor-pointer"
+                    style={{
+                      background: isActive
+                        ? isAmber ? "rgba(251,191,36,0.06)" : "rgba(0,245,100,0.05)"
+                        : "transparent",
+                    }}
+                  >
+                    {/* Step number + status dot */}
+                    <div className="flex items-center justify-between px-4 pt-4 pb-0">
+                      <span
+                        className="font-mono text-[9px] transition-colors duration-300"
+                        style={{ color: isActive ? (isAmber ? "rgba(251,191,36,0.7)" : "rgba(0,245,100,0.7)") : "rgba(255,255,255,0.12)" }}
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div
+                        className="w-1.5 h-1.5 transition-all duration-300"
+                        style={{
+                          background: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : isPast ? "rgba(0,245,100,0.25)" : "rgba(255,255,255,0.08)",
+                          boxShadow: isActive ? (isAmber ? "0 0 6px #fbbf24" : "0 0 6px rgb(0,245,100)") : "none",
+                        }}
+                      />
+                    </div>
+
+                    {/* Icon */}
+                    <div className="px-4 py-4">
+                      <div
+                        className="w-11 h-11 border flex items-center justify-center transition-all duration-300"
+                        style={{
+                          borderColor: isActive ? (isAmber ? "rgba(251,191,36,0.5)" : "rgba(0,245,100,0.5)") : "rgba(255,255,255,0.08)",
+                          color: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "rgba(255,255,255,0.25)",
+                          boxShadow: isActive ? (isAmber ? "0 0 16px rgba(251,191,36,0.15)" : "0 0 16px rgba(0,245,100,0.12)") : "none",
+                        }}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    {/* Labels */}
+                    <div className="px-4 pb-2">
+                      <div
+                        className="font-bold text-xs leading-tight mb-1 transition-colors duration-300"
+                        style={{ color: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "rgba(255,255,255,0.55)" }}
+                      >
+                        {step.label}
+                      </div>
+                      <div className="font-mono text-[9px] text-white/20 leading-tight">{step.sub}</div>
+                    </div>
+
+                    {/* Active bottom bar */}
+                    <div
+                      className="mt-auto h-[2px] transition-all duration-500"
+                      style={{
+                        background: isActive ? (isAmber ? "#fbbf24" : "rgb(0,245,100)") : "transparent",
+                        opacity: isActive ? 0.7 : 0,
+                      }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Active step detail panel */}
+          <div className="border-t border-white/[0.10] px-6 py-5 transition-all duration-300" style={{ minHeight: 72 }}>
+            <div className="flex items-start gap-4">
+              <div
+                className="font-mono text-[9px] shrink-0 pt-0.5 transition-colors duration-300"
+                style={{ color: LIFECYCLE_STEPS[activeStep].color === "amber" ? "rgba(251,191,36,0.5)" : "rgba(0,245,100,0.5)" }}
+              >
+                STEP {String(activeStep + 1).padStart(2, "0")}
+              </div>
+              <p className="font-mono text-[11px] text-white/40 leading-relaxed">
+                {LIFECYCLE_STEPS[activeStep].desc}
+              </p>
+            </div>
+          </div>
+
+          {/* Progress track */}
+          <div className="border-t border-white/[0.06] h-[3px] flex">
+            {LIFECYCLE_STEPS.map((_, i) => (
+              <div
+                key={i}
+                className="flex-1 transition-all duration-500"
+                style={{
+                  background: i < activeStep
+                    ? "rgba(0,245,100,0.25)"
+                    : i === activeStep
+                    ? LIFECYCLE_STEPS[i].color === "amber" ? "#fbbf24" : "rgb(0,245,100)"
+                    : "transparent",
+                  opacity: i === activeStep ? 0.8 : 1,
+                }}
+              />
+            ))}
           </div>
         </div>
       </section>

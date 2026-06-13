@@ -212,7 +212,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           {/* Divider */}
           <div className="border-t border-white/[0.05] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span className="font-mono text-[10px] text-white/18">© 2025 GlidePool. All rights reserved.</span>
+              <span className="font-mono text-[10px] text-white/18">© 2026 GlidePool. All rights reserved.</span>
               <span className="font-mono text-[10px] text-white/12 hidden sm:inline">·</span>
               <span className="font-mono text-[10px] text-white/18">Built on Base Mainnet · Maverick V2 DLMM</span>
             </div>

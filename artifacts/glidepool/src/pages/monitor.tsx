@@ -134,20 +134,22 @@ export default function Monitor() {
         ))}
       </div>
 
-      {/* Filter bar */}
-      <div className="flex items-center gap-0 border border-white/[0.10] overflow-x-auto">
-        {(["all", "decision", "tx", "warning", "info"] as const).map((f) => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`px-3.5 py-2 font-mono text-[9px] uppercase tracking-widest transition-colors border-r border-white/[0.10] last:border-r-0 whitespace-nowrap ${
-              filter === f ? "bg-primary/[0.08] text-primary" : "text-white/25 hover:text-white/60 hover:bg-white/[0.02]"
-            }`}>
-            {f}
-          </button>
-        ))}
-        <div className="ml-auto px-4 font-mono text-[9px] text-white/15 shrink-0 flex items-center gap-2">
-          <span>{filtered.length} entries</span>
+      {/* Filter bar — grid so buttons never overflow */}
+      <div className="border border-white/[0.10] overflow-hidden">
+        <div className="grid grid-cols-5">
+          {(["all", "decision", "tx", "warning", "info"] as const).map((f) => (
+            <button key={f} onClick={() => setFilter(f)}
+              className={`px-2 py-2 font-mono text-[9px] uppercase tracking-widest transition-colors border-r border-white/[0.10] last:border-r-0 text-center ${
+                filter === f ? "bg-primary/[0.08] text-primary" : "text-white/25 hover:text-white/60 hover:bg-white/[0.02]"
+              }`}>
+              {f}
+            </button>
+          ))}
+        </div>
+        <div className="border-t border-white/[0.06] px-4 py-1.5 flex items-center gap-2">
+          <span className="font-mono text-[9px] text-white/15">{filtered.length} entries</span>
           {!paused && (
-            <span className="inline-flex items-center gap-1 text-primary/50">
+            <span className="inline-flex items-center gap-1 font-mono text-[9px] text-primary/50">
               <span className="w-1.5 h-1.5 bg-primary animate-pulse" /> live
             </span>
           )}

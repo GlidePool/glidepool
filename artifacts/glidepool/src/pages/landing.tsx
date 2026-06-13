@@ -342,7 +342,7 @@ export default function Landing() {
         {/* ── Bottom labels ── */}
         <div className="absolute bottom-8 left-10 z-20">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.10] bg-white/[0.05] backdrop-blur-sm text-[10px] font-mono text-white/40">
-            glidepool.xyz
+            glidepool.com
           </span>
         </div>
         <div className="absolute bottom-8 right-10 z-20 text-right hidden md:block">

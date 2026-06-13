@@ -1,4 +1,4 @@
-import { WagmiProvider, createConfig, http } from 'wagmi';
+import { WagmiProvider, http } from 'wagmi';
 import { base } from 'wagmi/chains';
 import {
   RainbowKitProvider,
@@ -14,11 +14,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
 import Landing from "@/pages/landing";
+import Dashboard from "@/pages/dashboard";
+import AgentSetup from "@/pages/agent-setup";
+import Monitor from "@/pages/monitor";
 import Pools from "@/pages/pools";
 import PoolDetail from "@/pages/pool-detail";
 import Positions from "@/pages/positions";
 import PositionDetail from "@/pages/position-detail";
-import Advisor from "@/pages/advisor";
+import CliGuide from "@/pages/cli-guide";
+import Settings from "@/pages/settings";
 import { Layout } from "@/components/layout";
 
 const queryClient = new QueryClient();
@@ -26,14 +30,14 @@ const queryClient = new QueryClient();
 const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
   <Text>
     By connecting, you agree to GlidePool&apos;s{' '}
-    <Link href="https://glidepool.xyz/terms">Terms of Service</Link>.
+    <Link href="https://glidepool.com/terms">Terms of Service</Link>.
     GlidePool is non-custodial — your keys, your assets.
   </Text>
 );
 
 const wagmiConfig = getDefaultConfig({
   appName: 'GlidePool',
-  appDescription: 'AI advisor for Maverick V2 DLMM liquidity on Base mainnet',
+  appDescription: 'Autonomous DLMM agent platform for Maverick V2 liquidity on Base mainnet',
   appUrl: 'https://glidepool.com',
   projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? '',
   chains: [base],
@@ -52,12 +56,16 @@ function Router() {
   return (
     <Layout>
       <Switch>
-        <Route path="/" component={Landing} />
+        <Route path="/" component={Dashboard} />
         <Route path="/pools" component={Pools} />
         <Route path="/pools/:poolAddress" component={PoolDetail} />
         <Route path="/positions" component={Positions} />
         <Route path="/positions/:nftId" component={PositionDetail} />
-        <Route path="/advisor" component={Advisor} />
+        <Route path="/agent/setup" component={AgentSetup} />
+        <Route path="/monitor" component={Monitor} />
+        <Route path="/cli" component={CliGuide} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/landing" component={Landing} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

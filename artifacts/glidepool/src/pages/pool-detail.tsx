@@ -1,5 +1,5 @@
 import { useGetPool, getGetPoolQueryKey } from "@workspace/api-client-react";
-import { formatCrypto, truncateAddress } from "@/lib/format";
+import { formatCrypto, formatUsd, truncateAddress } from "@/lib/format";
 import { useParams, Link } from "wouter";
 import { ArrowLeft, BarChart3, Settings2 } from "lucide-react";
 
@@ -83,11 +83,17 @@ export default function PoolDetail() {
 
       {/* Stat cards — flat bordered grid */}
       <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
-        {[
-          { label: "TVL",         value: "—",                                note: "Live data requires allowlisted pool" },
-          { label: "Fee Rate",    value: "—",                                note: `Tick spacing: ${pool.tickSpacing}` },
-          { label: "Active Tick", value: pool.activeTick?.toString() ?? "—", note: `Bin counter: ${pool.binCounter}` },
-        ].map(({ label, value, note }) => (
+        {(() => {
+          const feeRatePct = ((Number(pool.feeAIn || 0) / 1e18) * 100).toFixed(4);
+          const tvlNum = pool.currentPrice > 0
+            ? Number(pool.reserveA || 0) / 1e18 * pool.currentPrice + Number(pool.reserveB || 0) / 1e6
+            : 0;
+          return [
+            { label: "TVL",         value: tvlNum > 0.01 ? formatUsd(tvlNum) : "$0.00",      note: `Reserves from chain` },
+            { label: "Fee Rate",    value: `${feeRatePct}%`,                                  note: `Tick spacing: ${pool.tickSpacing ?? "—"}` },
+            { label: "Active Tick", value: pool.activeTick?.toString() ?? "—",                note: `Bin counter: ${pool.binCounter ?? 0}` },
+          ];
+        })().map(({ label, value, note }) => (
           <div key={label} className="p-5">
             <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-2">{label}</div>
             <div className="text-xl font-mono font-bold">{value}</div>

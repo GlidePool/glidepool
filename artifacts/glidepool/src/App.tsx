@@ -49,7 +49,6 @@ const glideTheme = darkTheme({
   accentColor: 'hsl(145 100% 48%)',
   accentColorForeground: 'hsl(222 47% 6%)',
   borderRadius: 'none',
-  fontStack: 'mono',
   overlayBlur: 'small',
 });
 

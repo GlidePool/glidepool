@@ -4,6 +4,7 @@ import {
   POOL_STATE_ABI,
   POOL_LENS_ABI,
   MAVERICK_V2_POOL_LENS,
+  MAVERICK_API_BASE,
   SUPPORTED_POOL_ALLOW_LIST,
   TOKEN_SYMBOLS,
   TOKEN_DECIMALS,
@@ -42,6 +43,36 @@ export interface PoolSummary {
   activeTick: string;
   currentPrice: number;
   feeRate: number;
+}
+
+interface MaverickApiPool {
+  id: string;
+  tokenA: { address: string; symbol: string; decimals: number };
+  tokenB: { address: string; symbol: string; decimals: number };
+  tvl: { amount: number };
+  price: number;
+  lowerTick: number;
+  fee: number;
+  tickSpacing: number;
+}
+
+// Fetch pool data from Maverick API (TVL, price, activeTick).
+// API data may be cached; we use it to supplement on-chain reads.
+async function fetchMaverickApiPools(): Promise<Map<string, MaverickApiPool>> {
+  try {
+    const resp = await fetch(`${MAVERICK_API_BASE}/pools/${8453}?pageSize=100`, {
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!resp.ok) return new Map();
+    const data = (await resp.json()) as { pools: MaverickApiPool[] };
+    const map = new Map<string, MaverickApiPool>();
+    for (const p of data.pools ?? []) {
+      map.set(p.id.toLowerCase(), p);
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
 }
 
 async function getTokenSymbol(address: string): Promise<string> {
@@ -110,8 +141,9 @@ function estimateTvlUsd(
 export async function readPoolState(poolAddress: string): Promise<PoolState> {
   const addr = getAddress(poolAddress);
 
-  const [tokenA, tokenB, tickSpacing, state, feeAIn, feeBIn, sqrtPrice] =
-    await Promise.all([
+  // Fetch on-chain data with individual resilient calls
+  const [tokenARes, tokenBRes, tickSpacingRes, stateRes, feeAInRes, feeBInRes, sqrtPriceRes] =
+    await Promise.allSettled([
       publicClient.readContract({ address: addr, abi: POOL_STATE_ABI, functionName: "tokenA" }),
       publicClient.readContract({ address: addr, abi: POOL_STATE_ABI, functionName: "tokenB" }),
       publicClient.readContract({ address: addr, abi: POOL_STATE_ABI, functionName: "tickSpacing" }),
@@ -126,8 +158,20 @@ export async function readPoolState(poolAddress: string): Promise<PoolState> {
       }),
     ]);
 
-  const tokenAAddr = tokenA as string;
-  const tokenBAddr = tokenB as string;
+  // Fallback to allowlist for known tokens
+  const allowlistEntry = SUPPORTED_POOL_ALLOW_LIST.find(
+    (p) => p.poolAddress.toLowerCase() === poolAddress.toLowerCase()
+  );
+
+  const tokenAAddr =
+    tokenARes.status === "fulfilled"
+      ? (tokenARes.value as string)
+      : (allowlistEntry?.tokenA ?? poolAddress);
+  const tokenBAddr =
+    tokenBRes.status === "fulfilled"
+      ? (tokenBRes.value as string)
+      : (allowlistEntry?.tokenB ?? poolAddress);
+
   const [tokenASymbol, tokenBSymbol, decimalsA, decimalsB] = await Promise.all([
     getTokenSymbol(tokenAAddr),
     getTokenSymbol(tokenBAddr),
@@ -135,15 +179,39 @@ export async function readPoolState(poolAddress: string): Promise<PoolState> {
     getTokenDecimals(tokenBAddr),
   ]);
 
-  const stateResult = state as {
-    reserveA: bigint;
-    reserveB: bigint;
-    lastTwaD8: bigint;
-    activeTick: number;
-    binCounter: number;
-  };
+  // getState() returns tuple(int256 activeTick, uint256 reserveA, uint256 reserveB, uint256 binCounter)
+  const stateResult =
+    stateRes.status === "fulfilled"
+      ? (stateRes.value as {
+          activeTick: bigint;
+          reserveA: bigint;
+          reserveB: bigint;
+          binCounter: bigint;
+        })
+      : { activeTick: 0n, reserveA: 0n, reserveB: 0n, binCounter: 0n };
 
-  const currentPrice = sqrtPriceToPrice(sqrtPrice as bigint, decimalsA, decimalsB);
+  const sqrtPrice =
+    sqrtPriceRes.status === "fulfilled" ? (sqrtPriceRes.value as bigint) : 0n;
+
+  let currentPrice = sqrtPriceToPrice(sqrtPrice, decimalsA, decimalsB);
+
+  // If lens price failed or is 0, try Maverick API price
+  if (currentPrice === 0) {
+    try {
+      const apiMap = await fetchMaverickApiPools();
+      const apiPool = apiMap.get(poolAddress.toLowerCase());
+      if (apiPool?.price) {
+        currentPrice = apiPool.price;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const feeAIn =
+    feeAInRes.status === "fulfilled" ? (feeAInRes.value as bigint) : BigInt(Math.round((allowlistEntry?.feeRate ?? 0) * 1e18));
+  const feeBIn =
+    feeBInRes.status === "fulfilled" ? (feeBInRes.value as bigint) : feeAIn;
 
   return {
     poolAddress,
@@ -157,16 +225,41 @@ export async function readPoolState(poolAddress: string): Promise<PoolState> {
     reserveB: String(stateResult.reserveB),
     feeAIn: String(feeAIn),
     feeBIn: String(feeBIn),
-    tickSpacing: String(tickSpacing),
+    tickSpacing:
+      tickSpacingRes.status === "fulfilled"
+        ? String(tickSpacingRes.value)
+        : String(allowlistEntry?.tickSpacing ?? 0),
     binCounter: String(stateResult.binCounter),
-    lastTwaD8: String(stateResult.lastTwaD8),
+    lastTwaD8: "0",
     currentPrice,
   };
 }
 
 export async function listSupportedPools(): Promise<PoolSummary[]> {
+  // Fetch Maverick API data in parallel with pool-level on-chain reads
+  const [apiMap] = await Promise.all([fetchMaverickApiPools()]);
+
   const results = await Promise.allSettled(
     SUPPORTED_POOL_ALLOW_LIST.map(async (p) => {
+      const apiPool = apiMap.get(p.poolAddress.toLowerCase());
+
+      // Use API data when available (it has real TVL + price);
+      // fall back to on-chain reads if API misses this pool.
+      if (apiPool) {
+        return {
+          poolAddress: p.poolAddress,
+          tokenA: p.tokenA,
+          tokenB: p.tokenB,
+          tokenASymbol: p.tokenASymbol,
+          tokenBSymbol: p.tokenBSymbol,
+          tvlUsd: apiPool.tvl?.amount ?? 0,
+          activeTick: String(apiPool.lowerTick ?? 0),
+          currentPrice: apiPool.price ?? 0,
+          feeRate: apiPool.fee ?? p.feeRate,
+        } satisfies PoolSummary;
+      }
+
+      // No API data — fall back to on-chain reads
       try {
         const state = await readPoolState(p.poolAddress);
         const decimalsA = TOKEN_DECIMALS[p.tokenA.toLowerCase()] ?? 18;
@@ -202,7 +295,7 @@ export async function listSupportedPools(): Promise<PoolSummary[]> {
           tvlUsd: 0,
           activeTick: "0",
           currentPrice: 0,
-          feeRate: 0,
+          feeRate: p.feeRate,
         } satisfies PoolSummary;
       }
     })

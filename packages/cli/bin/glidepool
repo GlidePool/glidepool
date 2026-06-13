@@ -1,0 +1,311 @@
+#!/usr/bin/env node
+
+import { Command } from 'commander';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { homedir } from 'os';
+import { join } from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const pkg = require('../package.json');
+
+// ─────────────────────────────────────────
+// Config
+// ─────────────────────────────────────────
+const CONFIG_DIR = join(homedir(), '.glidepool');
+const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
+
+function loadConfig() {
+  if (!existsSync(CONFIG_FILE)) return {};
+  try { return JSON.parse(readFileSync(CONFIG_FILE, 'utf8')); } catch { return {}; }
+}
+
+function saveConfig(data) {
+  mkdirSync(CONFIG_DIR, { recursive: true });
+  writeFileSync(CONFIG_FILE, JSON.stringify(data, null, 2));
+}
+
+function getApiUrl(opts) {
+  const url = opts.api || process.env.GLIDEPOOL_API_URL || loadConfig().apiUrl;
+  if (!url) {
+    console.error('Error: API URL required. Set via --api <url> or GLIDEPOOL_API_URL env or run: glidepool config set-api <url>');
+    process.exit(1);
+  }
+  return url.replace(/\/$/, '');
+}
+
+// ─────────────────────────────────────────
+// HTTP helper
+// ─────────────────────────────────────────
+async function apiFetch(apiUrl, path, options = {}) {
+  const url = `${apiUrl}${path}`;
+  const res = await fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (res.status === 402) {
+      console.error('\n[402] Payment Required');
+      console.error(`  Send ${data.amount || '0.05'} ${data.currency || 'USDC'} on Base to:`);
+      console.error(`  ${data.recipient}`);
+      console.error(`  Token: ${data.token}`);
+      console.error(`\n  Then retry with: --payment-proof <base64(JSON{txHash,from,amount})>`);
+      process.exit(2);
+    }
+    console.error(`API error (${res.status}): ${data.message || data.error || 'Unknown error'}`);
+    process.exit(1);
+  }
+  return data;
+}
+
+function printJson(data) {
+  console.log(JSON.stringify(data, null, 2));
+}
+
+function printTable(rows, columns) {
+  const widths = columns.map(c => Math.max(c.label.length, ...rows.map(r => String(r[c.key] ?? '').length)));
+  const header = columns.map((c, i) => c.label.padEnd(widths[i])).join('  ');
+  const divider = widths.map(w => '-'.repeat(w)).join('  ');
+  console.log(header);
+  console.log(divider);
+  rows.forEach(row => {
+    console.log(columns.map((c, i) => String(row[c.key] ?? '').padEnd(widths[i])).join('  '));
+  });
+}
+
+// ─────────────────────────────────────────
+// CLI
+// ─────────────────────────────────────────
+const program = new Command();
+
+program
+  .name('glidepool')
+  .description('CLI for GlidePool — autonomous DLMM agent platform on Base Mainnet')
+  .version(pkg.version)
+  .option('--api <url>', 'GlidePool API URL (or set GLIDEPOOL_API_URL env var)')
+  .option('--json', 'Output raw JSON');
+
+// ── config ──────────────────────────────
+const config = program.command('config').description('Manage CLI configuration');
+
+config
+  .command('set-api <url>')
+  .description('Save the GlidePool API URL to ~/.glidepool/config.json')
+  .action((url) => {
+    const cfg = loadConfig();
+    cfg.apiUrl = url.replace(/\/$/, '');
+    saveConfig(cfg);
+    console.log(`Saved API URL: ${cfg.apiUrl}`);
+  });
+
+config
+  .command('show')
+  .description('Show current configuration')
+  .action(() => {
+    printJson({ configFile: CONFIG_FILE, ...loadConfig() });
+  });
+
+// ── pools ───────────────────────────────
+const pools = program.command('pools').description('List and inspect Maverick V2 pools');
+
+pools
+  .command('list')
+  .description('List all supported pools with live TVL, price, and fee rate')
+  .action(async (_, cmd) => {
+    const opts = program.opts();
+    const api = getApiUrl(opts);
+    const data = await apiFetch(api, '/api/pools');
+    if (opts.json) { printJson(data); return; }
+    printTable(data, [
+      { key: 'tokenASymbol', label: 'TOKEN A' },
+      { key: 'tokenBSymbol', label: 'TOKEN B' },
+      { key: 'tvlUsd',       label: 'TVL (USD)' },
+      { key: 'currentPrice', label: 'PRICE' },
+      { key: 'feeRate',      label: 'FEE' },
+      { key: 'poolAddress',  label: 'ADDRESS' },
+    ]);
+  });
+
+pools
+  .command('get <address>')
+  .description('Get details for a specific pool')
+  .action(async (address) => {
+    const opts = program.opts();
+    const api = getApiUrl(opts);
+    const data = await apiFetch(api, `/api/pools/${address}`);
+    printJson(data);
+  });
+
+// ── agent ────────────────────────────────
+const agent = program.command('agent').description('Create and manage autonomous agents');
+
+agent
+  .command('create')
+  .description('Deploy a new autonomous DLMM agent')
+  .requiredOption('--wallet <address>', 'Your wallet address (0x...)')
+  .requiredOption('--pool <address>', 'Maverick V2 pool address to monitor')
+  .option('--strategy <strategy>', 'Strategy: conservative | balanced | aggressive', 'balanced')
+  .option('--budget <usdc>', 'Max USDC budget for liquidity operations', '100')
+  .option('--interval <seconds>', 'Analysis interval in seconds (min: 30)', '60')
+  .action(async (opts) => {
+    const api = getApiUrl(program.opts());
+    const data = await apiFetch(api, '/api/agents', {
+      method: 'POST',
+      body: JSON.stringify({
+        userAddress: opts.wallet,
+        poolAddress: opts.pool,
+        strategy: opts.strategy,
+        budgetUsdc: Number(opts.budget),
+        analysisIntervalSec: Number(opts.interval),
+      }),
+    });
+    if (program.opts().json) { printJson(data); return; }
+    console.log(`\nAgent deployed`);
+    console.log(`  ID:       ${data.id}`);
+    console.log(`  Pool:     ${data.poolAddress}`);
+    console.log(`  Strategy: ${data.strategy}`);
+    console.log(`  Budget:   ${data.budgetUsdc} USDC`);
+    console.log(`  Status:   ${data.status}`);
+    console.log(`\nMonitor with: glidepool agent actions ${data.id}`);
+  });
+
+agent
+  .command('list')
+  .description('List all agents for a wallet address')
+  .requiredOption('--wallet <address>', 'Wallet address (0x...)')
+  .action(async (opts) => {
+    const api = getApiUrl(program.opts());
+    const data = await apiFetch(api, `/api/agents?userAddress=${encodeURIComponent(opts.wallet)}`);
+    if (program.opts().json) { printJson(data); return; }
+    if (!data.length) { console.log('No agents found for this wallet.'); return; }
+    printTable(data, [
+      { key: 'id',             label: 'AGENT ID' },
+      { key: 'poolAddress',    label: 'POOL' },
+      { key: 'strategy',       label: 'STRATEGY' },
+      { key: 'budgetUsdc',     label: 'BUDGET USDC' },
+      { key: 'status',         label: 'STATUS' },
+      { key: 'lastAnalysisAt', label: 'LAST ANALYSIS' },
+    ]);
+  });
+
+agent
+  .command('get <agentId>')
+  .description('Get details for a specific agent')
+  .action(async (agentId) => {
+    const api = getApiUrl(program.opts());
+    const data = await apiFetch(api, `/api/agents/${agentId}`);
+    printJson(data);
+  });
+
+agent
+  .command('pause <agentId>')
+  .description('Pause a running agent')
+  .action(async (agentId) => {
+    const api = getApiUrl(program.opts());
+    await apiFetch(api, `/api/agents/${agentId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'paused' }),
+    });
+    console.log(`Agent ${agentId} paused.`);
+  });
+
+agent
+  .command('resume <agentId>')
+  .description('Resume a paused agent')
+  .action(async (agentId) => {
+    const api = getApiUrl(program.opts());
+    await apiFetch(api, `/api/agents/${agentId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'active' }),
+    });
+    console.log(`Agent ${agentId} resumed.`);
+  });
+
+agent
+  .command('stop <agentId>')
+  .description('Stop an agent permanently')
+  .action(async (agentId) => {
+    const api = getApiUrl(program.opts());
+    await apiFetch(api, `/api/agents/${agentId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'stopped' }),
+    });
+    console.log(`Agent ${agentId} stopped.`);
+  });
+
+agent
+  .command('actions <agentId>')
+  .description('Show LLM decisions (actions) for an agent')
+  .option('--limit <n>', 'Number of actions to show', '10')
+  .action(async (agentId, opts) => {
+    const api = getApiUrl(program.opts());
+    const data = await apiFetch(api, `/api/agents/${agentId}/actions?limit=${opts.limit}`);
+    if (program.opts().json) { printJson(data); return; }
+    if (!data.length) { console.log('No actions yet. Agent will analyze on its next cycle.'); return; }
+    data.forEach((a) => {
+      const ts = new Date(a.createdAt).toLocaleTimeString();
+      const rec = a.llmRecommendation;
+      console.log(`\n[${ts}] ${a.actionType.toUpperCase()} — ${a.status}`);
+      if (rec?.riskLevel) console.log(`  Risk:    ${rec.riskLevel}`);
+      if (a.llmReasoning) console.log(`  Reason:  ${a.llmReasoning.slice(0, 200)}...`);
+      if (rec?.recommendation?.suggestedBinRange) {
+        const r = rec.recommendation.suggestedBinRange;
+        console.log(`  Bins:    lower=${r.lowerTick} upper=${r.upperTick}`);
+      }
+      if (a.txHash) console.log(`  TX:      ${a.txHash}`);
+    });
+  });
+
+// ── positions ────────────────────────────
+program
+  .command('positions <walletAddress>')
+  .description('List Maverick V2 LP positions for a wallet on Base Mainnet')
+  .action(async (walletAddress) => {
+    const api = getApiUrl(program.opts());
+    const data = await apiFetch(api, `/api/positions/${walletAddress}`);
+    if (program.opts().json) { printJson(data); return; }
+    if (!data.length) { console.log('No Maverick V2 positions found for this wallet.'); return; }
+    printTable(data, [
+      { key: 'nftId',        label: 'NFT ID' },
+      { key: 'tokenASymbol', label: 'TOKEN A' },
+      { key: 'tokenBSymbol', label: 'TOKEN B' },
+      { key: 'valueUsd',     label: 'VALUE USD' },
+      { key: 'amountA',      label: 'AMOUNT A' },
+      { key: 'amountB',      label: 'AMOUNT B' },
+      { key: 'binCount',     label: 'BINS' },
+    ]);
+  });
+
+// ── advisor ──────────────────────────────
+program
+  .command('advisor')
+  .description('Get a Claude Opus 4 AI recommendation for a pool position')
+  .requiredOption('--pool <address>', 'Pool address to analyze')
+  .requiredOption('--goal <text>', 'Your liquidity goal (e.g. "maximize fee income with low IL")')
+  .option('--nft <id>', 'NFT position ID if analyzing an existing position')
+  .option('--payment-proof <base64>', 'x402 payment proof header (if server requires payment)')
+  .action(async (opts) => {
+    const api = getApiUrl(program.opts());
+    const qs = new URLSearchParams({ poolAddress: opts.pool, userGoal: opts.goal });
+    if (opts.nft) qs.set('nftId', opts.nft);
+    const headers = {};
+    if (opts.paymentProof) headers['x-payment-proof'] = opts.paymentProof;
+    const data = await apiFetch(api, `/api/advisor?${qs}`, { headers });
+    if (program.opts().json) { printJson(data); return; }
+    console.log(`\n── AI Advisor ──────────────────────────`);
+    console.log(`  Action:   ${data.recommendation?.action?.toUpperCase()}`);
+    console.log(`  Risk:     ${data.riskLevel}`);
+    console.log(`  Summary:  ${data.summary}`);
+    if (data.recommendation?.suggestedBinRange) {
+      const r = data.recommendation.suggestedBinRange;
+      console.log(`  Bins:     lower=${r.lowerTick} upper=${r.upperTick}`);
+    }
+    if (data.recommendation?.suggestedWithdrawPercent) {
+      console.log(`  Withdraw: ${data.recommendation.suggestedWithdrawPercent}%`);
+    }
+    console.log(`\n  Reasoning:`);
+    console.log(`  ${data.recommendation?.reasoning}`);
+  });
+
+program.parse();

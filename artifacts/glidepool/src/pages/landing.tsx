@@ -683,10 +683,10 @@ export default function Landing() {
               <div className="font-mono text-[9px] text-white/15 uppercase tracking-widest mb-3">Resources</div>
               <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
                 {[
-                  ["GitHub",     "https://github.com/glidepool"],
+                  ["GitHub",     "https://github.com/GlidePool"],
                   ["Docs",       "https://docs.glidepool.com"],
                   ["Whitepaper", "https://docs.glidepool.com/whitepaper"],
-                  ["Roadmap",    "https://github.com/glidepool/roadmap"],
+                  ["Roadmap",    "https://github.com/GlidePool/roadmap"],
                 ].map(([l, h]) => (
                   <a key={l} href={h} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 font-mono text-[11px] text-white/30 hover:text-white/65 transition-colors py-1">

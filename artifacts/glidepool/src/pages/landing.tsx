@@ -431,8 +431,8 @@ export default function Landing() {
                 <circle cx="210" cy="150" r="27" fill="none" stroke="rgba(0,245,100,0.25)" strokeWidth="0.75" strokeDasharray="3 3">
                   <animateTransform attributeName="transform" type="rotate" from="0 210 150" to="360 210 150" dur="18s" repeatCount="indefinite"/>
                 </circle>
-                <text x="210" y="146" textAnchor="middle" fill="rgba(0,245,100,1)" fontFamily="monospace" fontSize="9.5" fontWeight="bold" letterSpacing="2">GLIDE</text>
-                <text x="210" y="159" textAnchor="middle" fill="rgba(0,245,100,0.65)" fontFamily="monospace" fontSize="8" letterSpacing="1.5">POOL</text>
+                <image href="/logo.png" x="178" y="118" width="64" height="64"
+                  style={{ filter: "drop-shadow(0 0 6px rgba(0,245,100,0.7))" }} />
 
                 {/* Pool nodes */}
                 {[

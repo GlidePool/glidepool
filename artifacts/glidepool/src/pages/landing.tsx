@@ -96,8 +96,8 @@ export default function Landing() {
           style={{ backgroundImage: "url('/hero-bg.png')", backgroundSize: "cover", backgroundPosition: "center 25%" }} />
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/85 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-black/92 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-transparent to-black/65 pointer-events-none" />
 
         {/* SVG architectural grid */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100"
@@ -216,23 +216,25 @@ export default function Landing() {
 
         {/* Floating light particles */}
         {[
-          { x: "46%", delay: "0s",    dur: "3.6s" },
-          { x: "50%", delay: "0.8s",  dur: "4.2s" },
-          { x: "53%", delay: "1.5s",  dur: "3.1s" },
-          { x: "48%", delay: "2.2s",  dur: "4.8s" },
-          { x: "51%", delay: "0.4s",  dur: "3.9s" },
-          { x: "44%", delay: "1.9s",  dur: "4.0s" },
-          { x: "55%", delay: "1.1s",  dur: "3.4s" },
-          { x: "47%", delay: "2.8s",  dur: "4.5s" },
-        ].map(({ x, delay, dur }, i) => (
-          <div key={i} className="absolute pointer-events-none rounded-full"
+          { x: "44%", bot: "22%", sz: 5, delay: "0s",   dur: "3.6s" },
+          { x: "50%", bot: "20%", sz: 6, delay: "0.8s", dur: "4.2s" },
+          { x: "53%", bot: "25%", sz: 4, delay: "1.5s", dur: "3.1s" },
+          { x: "48%", bot: "18%", sz: 5, delay: "2.2s", dur: "4.8s" },
+          { x: "51%", bot: "23%", sz: 7, delay: "0.4s", dur: "3.9s" },
+          { x: "46%", bot: "26%", sz: 4, delay: "1.9s", dur: "4.0s" },
+          { x: "55%", bot: "21%", sz: 6, delay: "1.1s", dur: "3.4s" },
+          { x: "47%", bot: "19%", sz: 5, delay: "2.8s", dur: "4.5s" },
+          { x: "52%", bot: "24%", sz: 4, delay: "3.3s", dur: "3.7s" },
+          { x: "43%", bot: "27%", sz: 6, delay: "0.6s", dur: "4.3s" },
+        ].map(({ x, bot, sz, delay, dur }, i) => (
+          <div key={i} className="absolute pointer-events-none rounded-full z-10"
             style={{
               left: x,
-              bottom: "28%",
-              width: "3px",
-              height: "3px",
-              background: "rgba(0,245,100,0.9)",
-              boxShadow: "0 0 6px 2px rgba(0,245,100,0.4)",
+              bottom: bot,
+              width: `${sz}px`,
+              height: `${sz}px`,
+              background: "rgba(0,245,100,1)",
+              boxShadow: `0 0 ${sz * 3}px ${sz}px rgba(0,245,100,0.7), 0 0 ${sz * 6}px ${sz * 2}px rgba(0,245,100,0.3)`,
               animation: `particle-rise ${dur} ease-out infinite`,
               animationDelay: delay,
             }} />

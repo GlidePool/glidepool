@@ -99,7 +99,7 @@ export default function Advisor() {
     );
   }
 
-  const selectClass = "w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white/80 focus:outline-none focus:border-primary/40 transition-all font-mono appearance-none";
+  const selectClass = "w-full bg-[#0d0d0d] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white/80 focus:outline-none focus:border-primary/40 transition-all font-mono appearance-none cursor-pointer";
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto animate-in fade-in duration-500">

@@ -1,9 +1,8 @@
 import { Link, useLocation } from "wouter";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useState } from "react";
 import {
   LayoutDashboard, Bot, Activity, Layers, Wallet2,
-  Terminal, Settings, Menu, X, ExternalLink,
+  Terminal, Settings, ExternalLink,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -16,9 +15,17 @@ const NAV_ITEMS = [
   { href: "/settings",    label: "Settings",    icon: Settings },
 ];
 
+/* 5 tabs shown in the mobile bottom bar */
+const BOTTOM_TABS = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/pools",     label: "Pools",     icon: Layers },
+  { href: "/positions", label: "Positions", icon: Wallet2 },
+  { href: "/monitor",   label: "Monitor",   icon: Activity },
+  { href: "/settings",  label: "Settings",  icon: Settings },
+];
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isActive = (href: string) =>
     href === "/" ? location === "/" : location === href || location.startsWith(href + "/");
@@ -42,8 +49,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <span className="font-bold text-sm sm:text-base tracking-tight">GlidePool</span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center overflow-x-auto">
+          {/* Desktop nav — only on lg+ */}
+          <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
               const active = isActive(href);
               return (
@@ -61,55 +68,51 @@ export function Layout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Wallet button — only on sm+ in header */}
-            <div className="hidden sm:block">
-              <ConnectButton showBalance={false} />
-            </div>
-            {/* Hamburger — shown below lg */}
-            <button
-              className="lg:hidden p-1.5 border border-white/[0.08] text-white/40 hover:text-white/80 transition-colors"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle navigation"
-            >
-              {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
+          {/* Wallet connect button — always visible in header */}
+          <div className="shrink-0">
+            <ConnectButton showBalance={false} />
           </div>
         </div>
-
-        {/* Mobile / tablet drawer */}
-        {mobileOpen && (
-          <div className="lg:hidden border-t border-white/[0.06] bg-[#080808]">
-            {/* Wallet connect inside drawer on mobile */}
-            <div className="sm:hidden px-5 py-4 border-b border-white/[0.06]">
-              <ConnectButton showBalance={false} />
-            </div>
-
-            {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-              const active = isActive(href);
-              return (
-                <Link key={href} href={href}>
-                  <div
-                    className={`flex items-center gap-3 px-5 py-3.5 text-sm font-mono border-b border-white/[0.04] cursor-pointer transition-colors ${
-                      active ? "text-primary bg-primary/5" : "text-white/50 hover:text-white/80"
-                    }`}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <Icon className={`w-4 h-4 ${active ? "text-primary" : "text-white/25"}`} />
-                    {label}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
       </header>
 
       {/* ── Main ───────────────────────────────────────────── */}
-      <main className={location === "/" ? "flex-1 w-full px-4 sm:px-6" : "flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8"}>
+      {/* pb-20 on mobile to clear the fixed bottom tab bar */}
+      <main className={[
+        "flex-1 w-full",
+        "pb-20 lg:pb-0",
+        location === "/"
+          ? "px-4 sm:px-6"
+          : "max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8",
+      ].join(" ")}>
         {children}
       </main>
+
+      {/* ── Mobile bottom tab bar — hidden on lg+ ──────────── */}
+      <nav
+        className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.08]"
+        style={{ background: "rgba(8,8,8,0.97)", backdropFilter: "blur(20px)" }}
+      >
+        <div className="flex items-stretch h-16">
+          {BOTTOM_TABS.map(({ href, label, icon: Icon }) => {
+            const active = isActive(href);
+            return (
+              <Link key={href} href={href} className="flex-1">
+                <div className={[
+                  "h-full flex flex-col items-center justify-center gap-1 transition-all",
+                  active
+                    ? "text-primary border-t-2 border-primary"
+                    : "text-white/30 hover:text-white/60 border-t-2 border-transparent",
+                ].join(" ")}>
+                  <Icon className="w-5 h-5 shrink-0" />
+                  <span className="font-mono text-[9px] uppercase tracking-widest leading-none">
+                    {label}
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
 
       {/* ── Footer ─────────────────────────────────────────── */}
       <footer className="border-t border-white/[0.05] mt-8">
@@ -169,12 +172,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col gap-3">
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Developers</div>
               {[
-                { label: "CLI Guide",    href: "/cli",                                    ext: false },
-                { label: "SDK",          href: "https://docs.glidepool.com/sdk",          ext: true },
-                { label: "API Docs",     href: "https://docs.glidepool.com/api",          ext: true },
-                { label: "GitHub",       href: "https://github.com/glidepool",            ext: true },
-                { label: "Changelog",    href: "https://github.com/glidepool/releases",   ext: true },
-                { label: "Settings",     href: "/settings",                               ext: false },
+                { label: "CLI Guide",  href: "/cli",                                    ext: false },
+                { label: "SDK",        href: "https://docs.glidepool.com/sdk",          ext: true },
+                { label: "API Docs",   href: "https://docs.glidepool.com/api",          ext: true },
+                { label: "GitHub",     href: "https://github.com/glidepool",            ext: true },
+                { label: "Changelog",  href: "https://github.com/glidepool/releases",   ext: true },
+                { label: "Settings",   href: "/settings",                               ext: false },
               ].map(({ label, href, ext }) => (
                 ext ? (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"

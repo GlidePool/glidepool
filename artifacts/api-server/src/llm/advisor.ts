@@ -1,4 +1,4 @@
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { z } from "zod";
 import {
   SYSTEM_PROMPT,
@@ -48,23 +48,24 @@ export async function runAdvisor(input: AdvisorInput): Promise<AdvisorRecommenda
   let rawContent: string | null = null;
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      max_completion_tokens: 2048,
+    const response = await anthropic.messages.create({
+      model: "claude-opus-4-8",
+      max_tokens: 8192,
+      system: SYSTEM_PROMPT,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: prompt },
       ],
     });
 
-    rawContent = response.choices[0]?.message?.content ?? null;
-    if (!rawContent) throw new Error("Empty LLM response");
+    const block = response.content[0];
+    rawContent = block.type === "text" ? block.text : null;
+    if (!rawContent) throw new Error("Empty Claude response");
 
     const parsed = JSON.parse(rawContent) as unknown;
     const validated = recommendationSchema.parse(parsed);
     return validated;
   } catch (err) {
-    logger.error({ err, rawContent }, "LLM advisor error");
+    logger.error({ err, rawContent }, "Claude advisor error");
 
     return {
       summary:

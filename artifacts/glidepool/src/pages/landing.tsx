@@ -38,7 +38,7 @@ function PageBackground() {
 /* ─────────────────────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────────────────────── */
-const TICKER = "AUTONOMOUS DLMM AGENTS  ·  BASE MAINNET  ·  x402 MICROPAYMENTS  ·  MAVERICK V2  ·  NON-CUSTODIAL  ·  GPT-4o POWERED  ·  REBALANCE ON-CHAIN  ·  OPEN SOURCE  ·  ";
+const TICKER = "AUTONOMOUS DLMM AGENTS  ·  BASE MAINNET  ·  x402 MICROPAYMENTS  ·  MAVERICK V2  ·  NON-CUSTODIAL  ·  Claude Opus 4 POWERED  ·  REBALANCE ON-CHAIN  ·  OPEN SOURCE  ·  ";
 
 function SectionChip({ label }: { label: string }) {
   return (
@@ -51,10 +51,10 @@ function SectionChip({ label }: { label: string }) {
 }
 
 const FAQS = [
-  { q: "What is GlidePool?", a: "GlidePool deploys GPT-4o–driven agents that monitor Maverick V2 DLMM pools on Base Mainnet, propose rebalances, and wait for your wallet signature before doing anything on-chain. Fully non-custodial." },
+  { q: "What is GlidePool?", a: "GlidePool deploys Claude Opus 4–driven agents that monitor Maverick V2 DLMM pools on Base Mainnet, propose rebalances, and wait for your wallet signature before doing anything on-chain. Fully non-custodial." },
   { q: "Does GlidePool hold my funds?", a: "Never. The API server only reads on-chain data and produces transaction calldata. Every write requires your explicit signature via RainbowKit. No private keys, no custody." },
-  { q: "How does x402 micropayment work?", a: "The advisor endpoint returns HTTP 402 with a treasury address + 0.05 USDC amount. The agent pays on Base, the server verifies the tx on-chain, then unlocks GPT-4o. ~2s end-to-end. No API keys, no subscriptions." },
-  { q: "What strategies are available?", a: "Conservative (Static bins), Balanced (Both — follows price both ways), Aggressive (Right/Left — follows trend). GPT-4o picks the mode based on volatility and your stated risk tolerance." },
+  { q: "How does x402 micropayment work?", a: "The advisor endpoint returns HTTP 402 with a treasury address + 0.05 USDC amount. The agent pays on Base, the server verifies the tx on-chain, then unlocks Claude Opus 4. ~2s end-to-end. No API keys, no subscriptions." },
+  { q: "What strategies are available?", a: "Conservative (Static bins), Balanced (Both — follows price both ways), Aggressive (Right/Left — follows trend). Claude Opus 4 picks the mode based on volatility and your stated risk tolerance." },
   { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet — WETH/USDC, WETH/cbETH, WETH/wstETH initially. The allowlist can be extended." },
   { q: "Can I use the CLI?", a: "Yes — the CLI covers agent deploy, monitoring, and management. All features in the web UI are available via CLI. See the CLI Guide page." },
   { q: "Is the code open-source?", a: "Yes. Full monorepo on GitHub: API server, frontend, chain readers, LLM integration, x402 middleware, Drizzle schema — all MIT-licensed." },
@@ -87,7 +87,7 @@ export default function Landing() {
             <div className="w-9 h-9 rounded-full border-2 border-white/15 bg-white/[0.03] flex items-center justify-center"><Plus className="w-4 h-4 text-primary" strokeWidth={2.5} /></div>
             <div className="w-9 h-9 rounded-full border-2 border-primary/50 bg-primary/10 flex items-center justify-center -ml-3"><div className="w-3 h-3 rounded-full bg-primary animate-pulse" /></div>
           </div>
-          <p className="hidden sm:block text-[11px] text-white/25 leading-relaxed max-w-[180px] text-right font-mono">GPT-4o · Maverick V2 · x402 on Base · non-custodial LP</p>
+          <p className="hidden sm:block text-[11px] text-white/25 leading-relaxed max-w-[180px] text-right font-mono">Claude Opus 4 · Maverick V2 · x402 on Base · non-custodial LP</p>
         </div>
         <h1 className="relative font-black uppercase tracking-tighter leading-[0.87] text-white select-none" style={{ fontSize: "clamp(48px,10vw,122px)" }}>
           <span className="block">AUTONOMOUS</span>
@@ -131,7 +131,7 @@ export default function Landing() {
           </h2>
           <p className="text-sm text-white/40 mt-5 max-w-lg mx-auto leading-relaxed">
             An autonomous agent platform that manages your Maverick V2 DLMM liquidity positions on Base Mainnet —
-            powered by GPT-4o, gated by x402 micropayments, and fully non-custodial.
+            powered by Claude Opus 4, gated by x402 micropayments, and fully non-custodial.
           </p>
         </div>
 
@@ -140,8 +140,8 @@ export default function Landing() {
           {[
             {
               icon: <Bot className="w-7 h-7" />, title: "AI Agent Loop",
-              body: "GPT-4o–driven agent monitors every block. When pool state drifts from optimal bins, it auto-builds a rebalance proposal and surfaces it for your approval.",
-              tag: "GPT-4o", border: "border-primary/25", glow: "rgba(0,245,100,0.06)",
+              body: "Claude Opus 4–driven agent monitors every block. When pool state drifts from optimal bins, it auto-builds a rebalance proposal and surfaces it for your approval.",
+              tag: "Claude Opus 4", border: "border-primary/25", glow: "rgba(0,245,100,0.06)",
             },
             {
               icon: <BarChart2 className="w-7 h-7" />, title: "DLMM Pool Reader",
@@ -181,7 +181,7 @@ export default function Landing() {
               { icon: <Eye className="w-4 h-4" />,         label: "Observe",     sub: "pool state / block" },
               { icon: <Cpu className="w-4 h-4" />,         label: "Analyze",     sub: "detect bin drift" },
               { icon: <Zap className="w-4 h-4 text-amber-400" />, label: "Pay x402", sub: "0.05 USDC on Base" },
-              { icon: <Bot className="w-4 h-4" />,         label: "GPT-4o",      sub: "get recommendation" },
+              { icon: <Bot className="w-4 h-4" />,         label: "Claude Opus 4",      sub: "get recommendation" },
               { icon: <GitBranch className="w-4 h-4" />,   label: "Propose TX",  sub: "build calldata" },
               { icon: <ShieldCheck className="w-4 h-4" />, label: "You Sign",    sub: "approve or reject" },
             ].map(({ icon, label, sub }, i, arr) => (
@@ -257,7 +257,7 @@ export default function Landing() {
                 <div className="h-12 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
               </div>
 
-              {/* Node: x402 + GPT-4o */}
+              {/* Node: x402 + Claude Opus 4 */}
               <div className="flex-1 rounded-xl border border-amber-400/20 bg-amber-400/[0.03] p-4 flex flex-col gap-2 min-w-0">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-amber-400/10 flex items-center justify-center shrink-0"><Zap className="w-4 h-4 text-amber-400" /></div>
@@ -276,11 +276,11 @@ export default function Landing() {
                 <div className="h-12 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
               </div>
 
-              {/* Node: GPT-4o */}
+              {/* Node: Claude Opus 4 */}
               <div className="flex-1 rounded-xl border border-blue-400/25 bg-blue-400/[0.03] p-4 flex flex-col gap-2 min-w-0">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center shrink-0"><Cpu className="w-4 h-4 text-blue-400" /></div>
-                  <span className="font-bold text-xs tracking-wide">GPT-4o ENGINE</span>
+                  <span className="font-bold text-xs tracking-wide">Claude Opus 4 ENGINE</span>
                 </div>
                 <div className="font-mono text-[10px] text-white/25 space-y-0.5">
                   <div>› Receive pool snapshot</div>
@@ -395,7 +395,7 @@ export default function Landing() {
               },
               {
                 n: "05", color: "border-blue-400/25 bg-blue-400/[0.03]", dot: "bg-blue-400", tc: "text-blue-400",
-                icon: <Cpu className="w-4 h-4 text-blue-400" />, label: "GPT-4o analysis unlocked",
+                icon: <Cpu className="w-4 h-4 text-blue-400" />, label: "Claude Opus 4 analysis unlocked",
                 body: "Full LLM run with pool context. Returns action, risk level, bin range, and reasoning.",
                 code: '{ action: "REBALANCE",\n  bins: [1838,1855], risk: "medium" }',
               },
@@ -493,7 +493,7 @@ export default function Landing() {
               { n: "01", icon: <Wallet className="w-5 h-5" />,     title: "Connect Wallet",  body: "Connect a Base Mainnet wallet via RainbowKit. MetaMask, Coinbase Wallet, WalletConnect." },
               { n: "02", icon: <Layers className="w-5 h-5" />,      title: "Pick a Pool",     body: "Browse Maverick V2 pools. Check TVL, tick, fee rate. Select your target." },
               { n: "03", icon: <Bot className="w-5 h-5" />,         title: "Setup Agent",     body: "Choose strategy + budget. Agent deployment requires one wallet signature." },
-              { n: "04", icon: <RefreshCw className="w-5 h-5" />,   title: "Agent Monitors",  body: "Polls pool every block. Pays 0.05 USDC via x402 when GPT-4o analysis is needed." },
+              { n: "04", icon: <RefreshCw className="w-5 h-5" />,   title: "Agent Monitors",  body: "Polls pool every block. Pays 0.05 USDC via x402 when Claude Opus 4 analysis is needed." },
               { n: "05", icon: <ShieldCheck className="w-5 h-5" />, title: "You Sign",        body: "Review proposal in Monitor. Approve or reject. Your signature, your control." },
             ].map(({ n, icon, title, body }, i) => (
               <div key={n} className="flex flex-col items-center text-center gap-3">

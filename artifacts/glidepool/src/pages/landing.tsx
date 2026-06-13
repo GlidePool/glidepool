@@ -81,7 +81,53 @@ export default function Landing() {
 
       {/* ─── HERO ───────────────────────────────── */}
       <section className="relative pt-10 sm:pt-14 pb-4 overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(0,245,100,1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,100,1) 1px,transparent 1px)", backgroundSize: "80px 80px" }} />
+        {/* ── Vertical light beams (reference image, green) ── */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          {/* Stripe field — glow applied to the whole layer */}
+          <div className="absolute inset-0" style={{
+            filter: "blur(0.5px) drop-shadow(0 0 6px rgba(0,245,100,0.8))",
+            backgroundImage: [
+              "linear-gradient(180deg, rgba(0,245,100,0.90) 0%, rgba(0,245,100,1.00) 45%, rgba(0,245,100,0.90) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.55) 0%, rgba(0,245,100,0.80) 45%, rgba(0,245,100,0.55) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.30) 0%, rgba(0,245,100,0.50) 45%, rgba(0,245,100,0.30) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.18) 0%, rgba(0,245,100,0.32) 45%, rgba(0,245,100,0.18) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.45) 0%, rgba(0,245,100,0.70) 45%, rgba(0,245,100,0.45) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.14) 0%, rgba(0,245,100,0.24) 45%, rgba(0,245,100,0.14) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.22) 0%, rgba(0,245,100,0.38) 45%, rgba(0,245,100,0.22) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.60) 0%, rgba(0,245,100,0.85) 45%, rgba(0,245,100,0.60) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.10) 0%, rgba(0,245,100,0.18) 45%, rgba(0,245,100,0.10) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.18) 0%, rgba(0,245,100,0.30) 45%, rgba(0,245,100,0.18) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.25) 0%, rgba(0,245,100,0.42) 45%, rgba(0,245,100,0.25) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.07) 0%, rgba(0,245,100,0.12) 45%, rgba(0,245,100,0.07) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.12) 0%, rgba(0,245,100,0.20) 45%, rgba(0,245,100,0.12) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.05) 0%, rgba(0,245,100,0.08) 45%, rgba(0,245,100,0.05) 100%)",
+              "linear-gradient(180deg, rgba(0,245,100,0.08) 0%, rgba(0,245,100,0.14) 45%, rgba(0,245,100,0.08) 100%)",
+            ].join(","),
+            backgroundRepeat: "no-repeat",
+            backgroundSize: [
+              "4px 100%","2.5px 100%","1.5px 100%","2px 100%","2px 100%",
+              "1px 100%","2.5px 100%","3px 100%","1px 100%","2px 100%",
+              "1.5px 100%","2px 100%","1px 100%","2px 100%","1px 100%",
+            ].join(","),
+            backgroundPosition: [
+              "14% 0","10% 0","7% 0","5% 0","18% 0",
+              "22% 0","26% 0","30% 0","34% 0","38% 0",
+              "43% 0","49% 0","56% 0","65% 0","76% 0",
+            ].join(","),
+            maskImage: "radial-gradient(ellipse 60% 100% at 28% 50%, black 0%, rgba(0,0,0,0.6) 45%, transparent 75%)",
+            WebkitMaskImage: "radial-gradient(ellipse 60% 100% at 28% 50%, black 0%, rgba(0,0,0,0.6) 45%, transparent 75%)",
+          }} />
+          {/* Wide ambient bloom — soft green light from left-center */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(ellipse 50% 90% at 20% 50%, rgba(0,245,100,0.20) 0%, rgba(0,245,100,0.06) 50%, transparent 72%)",
+            filter: "blur(24px)",
+          }} />
+          {/* Vignette — keeps text readable */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 25%, rgba(8,8,8,0.65) 100%)",
+          }} />
+        </div>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(rgba(0,245,100,1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,100,1) 1px,transparent 1px)", backgroundSize: "80px 80px" }} />
         <div className="flex items-start justify-between gap-4 mb-8 relative">
           <div className="flex items-center">
             <div className="w-9 h-9 rounded-full border-2 border-white/15 bg-white/[0.03] flex items-center justify-center"><Plus className="w-4 h-4 text-primary" strokeWidth={2.5} /></div>

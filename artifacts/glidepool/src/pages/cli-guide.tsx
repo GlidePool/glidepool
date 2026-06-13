@@ -4,7 +4,7 @@ import { Terminal, Copy, CheckCheck, ChevronRight, ChevronLeft, Package, Key, Cp
 function CodeBlock({ code, lang = "bash" }: { code: string; lang?: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="border border-white/[0.08] bg-black/60">
+    <div className="border border-white/[0.08] bg-black/60 min-w-0 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06]">
         <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">{lang}</span>
         <button

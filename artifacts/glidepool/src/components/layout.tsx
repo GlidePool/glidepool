@@ -31,7 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     href === "/" ? location === "/" : location === href || location.startsWith(href + "/");
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans">
+    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans overflow-x-hidden">
 
       {/* ── Header ─────────────────────────────────────────── */}
       <header

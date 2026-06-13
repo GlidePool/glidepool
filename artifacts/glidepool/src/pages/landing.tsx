@@ -8,34 +8,6 @@ import {
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────────
-   FLOATING ORBS BACKGROUND
-───────────────────────────────────────────────────────────── */
-function PageBackground() {
-  return (
-    <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="absolute" style={{ width: 800, height: 600, top: "-15%", left: "-8%", background: "radial-gradient(ellipse at center, rgba(0,245,100,0.09) 0%, rgba(0,245,100,0.03) 45%, transparent 70%)", animation: "orb-drift-a 24s ease-in-out infinite", filter: "blur(50px)" }} />
-      <div className="absolute" style={{ width: 500, height: 400, bottom: "0%", right: "-5%", background: "radial-gradient(ellipse at center, rgba(0,245,100,0.07) 0%, transparent 70%)", animation: "orb-drift-b 30s ease-in-out infinite", filter: "blur(50px)" }} />
-      <div className="absolute" style={{ width: 350, height: 280, top: "45%", left: "40%", background: "radial-gradient(ellipse at center, rgba(0,245,100,0.04) 0%, transparent 70%)", animation: "orb-drift-c 38s ease-in-out infinite", filter: "blur(60px)" }} />
-      <div className="absolute inset-0 opacity-[0.016]" style={{ backgroundImage: "radial-gradient(rgba(0,245,100,1) 1px, transparent 1px)", backgroundSize: "44px 44px" }} />
-      {/* Radar ping — top left */}
-      <div style={{ position: "absolute", top: "18%", left: "10%", width: 420, height: 420 }}>
-        <div className="radar-ring" style={{ width: 420, height: 420, left: "50%", top: "50%" }} />
-        <div className="radar-ring" style={{ width: 420, height: 420, left: "50%", top: "50%" }} />
-        <div className="radar-ring" style={{ width: 420, height: 420, left: "50%", top: "50%" }} />
-        <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: 6, height: 6, borderRadius: "50%", background: "rgba(0,245,100,0.5)", boxShadow: "0 0 10px rgba(0,245,100,0.6)" }} />
-      </div>
-      {/* Radar ping — bottom right */}
-      <div style={{ position: "absolute", bottom: "12%", right: "8%", width: 320, height: 320 }}>
-        <div className="radar-ring" style={{ width: 320, height: 320, left: "50%", top: "50%", animationDelay: "2s" }} />
-        <div className="radar-ring" style={{ width: 320, height: 320, left: "50%", top: "50%", animationDelay: "3.33s" }} />
-        <div className="radar-ring" style={{ width: 320, height: 320, left: "50%", top: "50%", animationDelay: "4.66s" }} />
-        <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: 5, height: 5, borderRadius: "50%", background: "rgba(0,245,100,0.4)", boxShadow: "0 0 8px rgba(0,245,100,0.5)" }} />
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────────────────────── */
 const TICKER = "AUTONOMOUS DLMM AGENTS  ·  BASE MAINNET  ·  x402 MICROPAYMENTS  ·  MAVERICK V2  ·  NON-CUSTODIAL  ·  Claude Opus 4 POWERED  ·  REBALANCE ON-CHAIN  ·  OPEN SOURCE  ·  ";
@@ -68,7 +40,6 @@ export default function Landing() {
 
   return (
     <div className="relative flex flex-col" style={{ zIndex: 2 }}>
-      <PageBackground />
 
       {/* ─── TICKER ─────────────────────────────── */}
       <div className="pt-6 relative">

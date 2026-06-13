@@ -153,19 +153,7 @@ export default function Landing() {
         const stackStr = [...STACK, ...STACK].map(s => `  ${s.name}  ·  ${s.desc}  ·`).join("");
         return (
           <div className="-mx-4 sm:-mx-6 border-y border-white/[0.07] my-10 select-none overflow-hidden">
-            {/* Row 1 — tech stack, scrolling left */}
-            <div className="flex items-stretch border-b border-white/[0.05]">
-              <div className="shrink-0 border-r border-white/[0.07] px-4 flex items-center justify-center bg-white/[0.015] min-w-[64px]">
-                <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest writing-mode-vertical whitespace-nowrap">Stack</span>
-              </div>
-              <div className="flex-1 overflow-hidden py-2.5">
-                <div className="animate-marquee-slow whitespace-nowrap font-mono text-[11px] text-white/30 tracking-wider">
-                  {stackStr}
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2 — metrics, scrolling right */}
+            {/* Metrics, scrolling right */}
             <div className="flex items-stretch">
               <div className="shrink-0 border-r border-white/[0.07] px-4 flex items-center justify-center bg-white/[0.015] min-w-[64px]">
                 <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest whitespace-nowrap">Metrics</span>

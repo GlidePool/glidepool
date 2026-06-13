@@ -34,7 +34,7 @@ const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
 const wagmiConfig = getDefaultConfig({
   appName: 'GlidePool',
   appDescription: 'AI advisor for Maverick V2 DLMM liquidity on Base mainnet',
-  appUrl: 'https://glidepool.xyz',
+  appUrl: 'https://glidepool.com',
   projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? '',
   chains: [base],
   transports: { [base.id]: http('https://mainnet.base.org') },

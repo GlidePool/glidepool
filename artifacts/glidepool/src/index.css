@@ -87,12 +87,70 @@
   --radius: 0.625rem;
 }
 
+@keyframes orb-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
+  33%       { transform: translate(40px, -30px) scale(1.08); opacity: 0.8; }
+  66%       { transform: translate(-20px, 20px) scale(0.95); opacity: 0.45; }
+}
+@keyframes orb-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  40%       { transform: translate(-50px, 30px) scale(1.12); opacity: 0.65; }
+  75%       { transform: translate(30px, -20px) scale(0.9); opacity: 0.35; }
+}
+@keyframes orb-drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  50%       { transform: translate(20px, 40px) scale(1.06); opacity: 0.55; }
+}
+@keyframes scanline-scroll {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes noise-shift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    position: relative;
+    overflow-x: hidden;
+  }
+  /* Ambient green orbs — always visible behind everything */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 15% 15%, rgba(0,245,100,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 35% at 85% 75%, rgba(0,245,100,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(0,245,100,0.02) 0%, transparent 70%);
+    animation: orb-drift-a 20s ease-in-out infinite;
+  }
+  /* Subtle horizontal scanlines overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.04) 3px,
+      rgba(0, 0, 0, 0.04) 4px
+    );
+  }
+  /* Everything else stacks above the pseudo-elements */
+  #root {
+    position: relative;
+    z-index: 2;
   }
   select,
   select option {

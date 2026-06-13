@@ -66,48 +66,37 @@ export default function Landing() {
 
       {/* ─── HERO ───────────────────────────────── */}
       <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">
-        {/* ── Background lights ── */}
+        {/* ── Background ── */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {/* Primary orb - large, slow breathe */}
+          {/* Hero image - streaks on right side */}
+          <img
+            src="/hero-bg2.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-right"
+            style={{ opacity: 0.85 }}
+          />
+
+          {/* Breathing green orb - amplifies the glow */}
           <div className="absolute animate-hero-breathe" style={{
-            top: "-20%", left: "-10%",
-            width: "65%", height: "130%",
-            background: "radial-gradient(ellipse at 45% 45%, rgba(0,245,100,0.28) 0%, rgba(0,245,100,0.10) 35%, rgba(0,245,100,0.03) 60%, transparent 75%)",
-            filter: "blur(60px)",
+            top: "-10%", right: "-5%",
+            width: "60%", height: "120%",
+            background: "radial-gradient(ellipse at 60% 45%, rgba(0,245,100,0.18) 0%, rgba(0,245,100,0.05) 45%, transparent 70%)",
+            filter: "blur(50px)",
           }} />
 
-          {/* Secondary orb - offset phase, slightly lower */}
-          <div className="absolute" style={{
-            top: "15%", left: "5%",
-            width: "50%", height: "80%",
-            background: "radial-gradient(ellipse at center, rgba(0,245,100,0.16) 0%, rgba(0,245,100,0.05) 45%, transparent 68%)",
-            filter: "blur(45px)",
-            animation: "hero-breathe 8s ease-in-out infinite 3.5s",
-          }} />
-
-          {/* Accent orb - tight bright core */}
-          <div className="absolute" style={{
-            top: "5%", left: "8%",
-            width: "28%", height: "55%",
-            background: "radial-gradient(ellipse at center, rgba(0,245,100,0.20) 0%, transparent 55%)",
-            filter: "blur(28px)",
-            animation: "hero-breathe 5s ease-in-out infinite 1s",
-          }} />
-
-          {/* Ground reflection */}
-          <div className="absolute bottom-0 animate-ground-pulse" style={{
-            left: "0%", width: "50%", height: "90px",
-            background: "radial-gradient(ellipse at 40% 100%, rgba(0,245,100,0.30) 0%, rgba(0,245,100,0.08) 55%, transparent 80%)",
-            filter: "blur(22px)",
-          }} />
-
-          {/* Right-side dark fade so text stays readable */}
+          {/* Left shadow — keeps text area dark & readable */}
           <div className="absolute inset-0" style={{
-            background: "linear-gradient(to right, transparent 0%, rgba(8,8,8,0.55) 45%, rgba(8,8,8,0.92) 70%, rgba(8,8,8,0.99) 100%)",
+            background: "linear-gradient(to right, rgba(8,8,8,0.98) 0%, rgba(8,8,8,0.90) 20%, rgba(8,8,8,0.65) 40%, rgba(8,8,8,0.20) 65%, transparent 100%)",
           }} />
-          {/* Bottom fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-32" style={{
-            background: "linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.95) 100%)",
+
+          {/* Top shadow */}
+          <div className="absolute top-0 left-0 right-0 h-24" style={{
+            background: "linear-gradient(to bottom, rgba(8,8,8,0.7) 0%, transparent 100%)",
+          }} />
+
+          {/* Bottom fade into page */}
+          <div className="absolute bottom-0 left-0 right-0 h-40" style={{
+            background: "linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.97) 100%)",
           }} />
         </div>
 

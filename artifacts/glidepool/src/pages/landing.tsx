@@ -134,7 +134,7 @@ export default function Landing() {
           { name: "Node.js 24",     desc: "Runtime" },
           { name: "TypeScript 5.9", desc: "Type Safety" },
           { name: "Tailwind v4",    desc: "CSS Framework" },
-          { name: "OpenAI compat",  desc: "Anthropic via Replit" },
+          { name: "OpenAI compat",  desc: "Anthropic Claude API" },
           { name: "Orval",          desc: "OpenAPI Codegen" },
           { name: "esbuild",        desc: "Build Tool" },
         ];

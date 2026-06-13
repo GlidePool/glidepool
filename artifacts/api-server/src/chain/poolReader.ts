@@ -179,16 +179,20 @@ export async function readPoolState(poolAddress: string): Promise<PoolState> {
     getTokenDecimals(tokenBAddr),
   ]);
 
-  // getState() returns tuple(int256 activeTick, uint256 reserveA, uint256 reserveB, uint256 binCounter)
+  // Maverick V2 State struct: reserveA uint128, reserveB uint128, activeTick int32,
+  // status uint8, binCounter uint128, protocolFeeRatioD3 uint96, lastTwapD8 uint8
   const stateResult =
     stateRes.status === "fulfilled"
       ? (stateRes.value as {
-          activeTick: bigint;
           reserveA: bigint;
           reserveB: bigint;
+          activeTick: number;
+          status: number;
           binCounter: bigint;
+          protocolFeeRatioD3: bigint;
+          lastTwapD8: number;
         })
-      : { activeTick: 0n, reserveA: 0n, reserveB: 0n, binCounter: 0n };
+      : { reserveA: 0n, reserveB: 0n, activeTick: 0, status: 0, binCounter: 0n, protocolFeeRatioD3: 0n, lastTwapD8: 0 };
 
   const sqrtPrice =
     sqrtPriceRes.status === "fulfilled" ? (sqrtPriceRes.value as bigint) : 0n;
@@ -230,7 +234,7 @@ export async function readPoolState(poolAddress: string): Promise<PoolState> {
         ? String(tickSpacingRes.value)
         : String(allowlistEntry?.tickSpacing ?? 0),
     binCounter: String(stateResult.binCounter),
-    lastTwaD8: "0",
+    lastTwaD8: String(stateResult.lastTwapD8),
     currentPrice,
   };
 }

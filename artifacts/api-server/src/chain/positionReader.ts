@@ -53,12 +53,17 @@ export async function getUserPositions(userAddress: string): Promise<UserPositio
   const addr = getAddress(userAddress);
   const positionAddr = getAddress(MAVERICK_V2_POSITION);
 
-  const tokenIds = await publicClient.readContract({
-    address: positionAddr,
-    abi: POSITION_ABI,
-    functionName: "tokenIdsOfOwner",
-    args: [addr],
-  }) as bigint[];
+  let tokenIds: bigint[] = [];
+  try {
+    tokenIds = await publicClient.readContract({
+      address: positionAddr,
+      abi: POSITION_ABI,
+      functionName: "tokenIdsOfOwner",
+      args: [addr],
+    }) as bigint[];
+  } catch {
+    return [];
+  }
 
   if (!tokenIds || tokenIds.length === 0) return [];
 

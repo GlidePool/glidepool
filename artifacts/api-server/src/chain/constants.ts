@@ -159,6 +159,9 @@ export const POOL_STATE_ABI = [
     outputs: [{ type: "uint256" }],
   },
   {
+    // Maverick V2 State struct (real layout):
+    // reserveA uint128, reserveB uint128, activeTick int32,
+    // status uint8, binCounter uint128, protocolFeeRatioD3 uint96, lastTwapD8 uint8
     name: "getState",
     type: "function",
     stateMutability: "view",
@@ -167,10 +170,13 @@ export const POOL_STATE_ABI = [
       {
         type: "tuple",
         components: [
-          { name: "activeTick", type: "int256" },
-          { name: "reserveA", type: "uint256" },
-          { name: "reserveB", type: "uint256" },
-          { name: "binCounter", type: "uint256" },
+          { name: "reserveA", type: "uint128" },
+          { name: "reserveB", type: "uint128" },
+          { name: "activeTick", type: "int32" },
+          { name: "status", type: "uint8" },
+          { name: "binCounter", type: "uint128" },
+          { name: "protocolFeeRatioD3", type: "uint96" },
+          { name: "lastTwapD8", type: "uint8" },
         ],
       },
     ],

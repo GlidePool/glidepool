@@ -1,1 +1,1 @@
-- [Maverick pool ABI and Base addresses](maverick-pools-base.md) — getState() returns 4 words not 9; pools are V1; use Maverick API for TVL, allowlist for tickSpacing fallback.
+- [Agent System Architecture](agent-system.md) — agent-per-wallet, real LLM loop, x402 on-chain verification, DB schema, API routes, frontend flow.

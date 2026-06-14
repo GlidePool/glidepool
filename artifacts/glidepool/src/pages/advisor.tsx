@@ -1,19 +1,34 @@
 import { useState, useEffect } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { useSearch } from "wouter";
 import {
   useListPools, getListPoolsQueryKey,
   useGetUserPositions, getGetUserPositionsQueryKey,
-  useGetAdvice, getGetAdviceQueryKey,
   useComputeRemoveParams,
 } from "@workspace/api-client-react";
 import { formatUsd, formatCrypto, truncateAddress } from "@/lib/format";
 import {
   Bot, AlertCircle, Loader2,
   TrendingUp, TrendingDown, Minus, ChevronRight,
-  ShieldAlert, ShieldCheck, Shield, CreditCard,
+  ShieldAlert, ShieldCheck, Shield, CreditCard, CheckCircle2,
 } from "lucide-react";
 
+// ── USDC ERC20 ABI (transfer only) ───────────────────────────────────────────
+const USDC_ABI = [
+  {
+    name: "transfer",
+    type: "function" as const,
+    inputs: [
+      { name: "to",     type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+  },
+] as const;
+const USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" as const;
+
+// ── Styles ────────────────────────────────────────────────────────────────────
 const RISK_STYLES: Record<string, string> = {
   low:    "bg-primary/[0.08] text-primary border-primary/25",
   medium: "bg-amber-500/[0.08] text-amber-400 border-amber-500/25",
@@ -39,41 +54,149 @@ const ACTION_ICONS: Record<string, React.ReactNode> = {
 const selectCls = "w-full bg-black/40 border border-white/[0.10] px-3 py-2.5 text-sm text-white/80 focus:outline-none focus:border-primary/40 transition-all font-mono appearance-none cursor-pointer";
 const inputCls  = "w-full bg-black/40 border border-white/[0.10] px-3 py-2.5 text-sm text-white/80 focus:outline-none focus:border-primary/40 transition-all font-mono placeholder:text-white/20";
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface PaymentData {
+  amount: string;
+  currency: string;
+  network: string;
+  recipient: string;
+  token?: string;
+}
+
+interface AdviceResult {
+  summary: string;
+  riskLevel: string;
+  recommendation: {
+    action: string;
+    reasoning: string;
+    suggestedMode?: string;
+    suggestedBinRange?: { lowerTick: number; upperTick: number };
+    suggestedWithdrawPercent?: number;
+  };
+}
+
+// ── Fetch advice (with optional payment proof) ────────────────────────────────
+async function fetchAdvice(
+  params: { poolAddress: string; nftId?: string; userGoal: string },
+  paymentProof?: { txHash: string; from: string; amount: string },
+): Promise<{ ok: true; data: AdviceResult } | { ok: false; status: number; data: PaymentData | null }> {
+  const qs = new URLSearchParams({ poolAddress: params.poolAddress, userGoal: params.userGoal });
+  if (params.nftId) qs.set("nftId", params.nftId);
+
+  const headers: Record<string, string> = {};
+  if (paymentProof) {
+    headers["x-payment-proof"] = btoa(JSON.stringify(paymentProof));
+  }
+
+  const res = await fetch(`/api/advisor?${qs.toString()}`, { headers });
+
+  if (res.ok) {
+    return { ok: true, data: await res.json() as AdviceResult };
+  }
+  if (res.status === 402) {
+    const body = await res.json().catch(() => null);
+    return { ok: false, status: 402, data: body as PaymentData | null };
+  }
+  return { ok: false, status: res.status, data: null };
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
 export default function Advisor() {
   const { address, isConnected } = useAccount();
   const search = useSearch();
   const poolFromUrl = new URLSearchParams(search).get("pool") ?? "";
+
   const [selectedPool, setSelectedPool] = useState(poolFromUrl);
   const [selectedNft,  setSelectedNft]  = useState("");
   const [userGoal,     setUserGoal]     = useState("maximize fee income while minimizing impermanent loss");
-  const [hasRequested, setHasRequested] = useState(false);
 
-  useEffect(() => { if (poolFromUrl) setSelectedPool(poolFromUrl); }, [poolFromUrl]);
+  // Result / error state
+  const [advice,       setAdvice]       = useState<AdviceResult | null>(null);
+  const [loading,      setLoading]      = useState(false);
+  const [paymentData,  setPaymentData]  = useState<PaymentData | null>(null);
+  const [fetchError,   setFetchError]   = useState("");
+
+  // Payment flow
+  const [payTxHash, setPayTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const [payError,  setPayError]  = useState("");
 
   const { data: pools }     = useListPools({ query: { queryKey: getListPoolsQueryKey() } });
   const { data: positions } = useGetUserPositions(address ?? "", {
     query: { enabled: !!address, queryKey: getGetUserPositionsQueryKey(address ?? "") },
   });
-
   const pool = pools?.find((p) => p.poolAddress === selectedPool);
-
-  const { data: advice, isLoading: adviceLoading, refetch: fetchAdvice, error: adviceError } = useGetAdvice(
-    { poolAddress: selectedPool, nftId: selectedNft || undefined, userGoal },
-    { query: { enabled: false, queryKey: getGetAdviceQueryKey({ poolAddress: selectedPool, nftId: selectedNft }) } }
-  );
 
   const removeParamsMutation = useComputeRemoveParams();
   const [txPreview, setTxPreview] = useState<Record<string, string> | null>(null);
 
+  useEffect(() => { if (poolFromUrl) setSelectedPool(poolFromUrl); }, [poolFromUrl]);
+
+  // ── wagmi write (USDC transfer) ───────────────────────────────────────────
+  const { writeContractAsync, isPending: walletPending } = useWriteContract();
+  const { data: payReceipt, isLoading: chainPending, isSuccess: chainConfirmed } =
+    useWaitForTransactionReceipt({ hash: payTxHash });
+
+  // After chain confirmation → retry advisor with proof
+  useEffect(() => {
+    if (!chainConfirmed || !payReceipt || !paymentData || !address) return;
+    setLoading(true);
+    fetchAdvice(
+      { poolAddress: selectedPool, nftId: selectedNft || undefined, userGoal },
+      { txHash: payReceipt.transactionHash, from: address, amount: paymentData.amount },
+    ).then((result) => {
+      if (result.ok) {
+        setAdvice(result.data);
+        setPaymentData(null);
+      } else {
+        setPayError("Payment verified but advisor failed — try again.");
+      }
+    }).finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainConfirmed]);
+
+  // ── Handlers ───────────────────────────────────────────────────────────────
   const handleAnalyze = async () => {
     if (!selectedPool) return;
-    setHasRequested(true);
-    setTxPreview(null);
-    await fetchAdvice();
+    setLoading(true);
+    setAdvice(null);
+    setPaymentData(null);
+    setFetchError("");
+    setPayError("");
+    setPayTxHash(undefined);
+
+    const result = await fetchAdvice({ poolAddress: selectedPool, nftId: selectedNft || undefined, userGoal });
+    setLoading(false);
+
+    if (result.ok) {
+      setAdvice(result.data);
+    } else if (result.status === 402) {
+      setPaymentData(result.data);
+    } else {
+      setFetchError("Failed to load recommendation. Please try again.");
+    }
+  };
+
+  const handlePay = async () => {
+    if (!paymentData?.recipient || !address) return;
+    setPayError("");
+    setPayTxHash(undefined);
+    try {
+      const amountMicro = BigInt(Math.round(Number(paymentData.amount ?? "0.001") * 1e6));
+      const hash = await writeContractAsync({
+        address: USDC_BASE,
+        abi: USDC_ABI,
+        functionName: "transfer",
+        args: [paymentData.recipient as `0x${string}`, amountMicro],
+      });
+      setPayTxHash(hash);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setPayError(msg.slice(0, 150));
+    }
   };
 
   const handlePreviewTx = () => {
-    if (!advice || !("recommendation" in advice)) return;
+    if (!advice) return;
     const pos = positions?.find((p) => p.nftId === selectedNft);
     if (pos && address && advice.recommendation.action === "withdraw") {
       removeParamsMutation.mutate(
@@ -82,9 +205,6 @@ export default function Advisor() {
       );
     }
   };
-
-  const isPaymentRequired = adviceError && (adviceError as { status?: number }).status === 402;
-  const paymentData = isPaymentRequired ? (adviceError as { data?: { amount?: string; currency?: string; network?: string; recipient?: string } }).data : null;
 
   if (!isConnected) {
     return (
@@ -95,13 +215,16 @@ export default function Advisor() {
         <div>
           <h1 className="text-xl font-bold tracking-tight mb-2">Connect your wallet</h1>
           <p className="text-sm text-white/40 max-w-xs leading-relaxed font-mono">
-            Connect to access the GlidePool AI Advisor - analyze pools and get on-chain recommendations.
+            Connect to access the GlidePool AI Advisor — analyze pools and get on-chain recommendations.
           </p>
         </div>
         <w3m-button />
       </div>
     );
   }
+
+  // Payment flow state label
+  const payStep = walletPending ? "waiting_wallet" : chainPending ? "waiting_chain" : chainConfirmed && loading ? "verifying" : "idle";
 
   return (
     <div className="flex flex-col gap-5 max-w-xl mx-auto animate-in fade-in duration-400">
@@ -127,7 +250,7 @@ export default function Advisor() {
         <div className="p-5 space-y-4">
           <div>
             <label className="font-mono text-[9px] text-white/20 uppercase tracking-widest block mb-1.5">Pool</label>
-            <select value={selectedPool} onChange={(e) => { setSelectedPool(e.target.value); setHasRequested(false); }} className={selectCls}>
+            <select value={selectedPool} onChange={(e) => { setSelectedPool(e.target.value); setAdvice(null); setPaymentData(null); }} className={selectCls}>
               <option value="">Select a pool…</option>
               {pools?.map((p) => (
                 <option key={p.poolAddress} value={p.poolAddress}>
@@ -140,11 +263,11 @@ export default function Advisor() {
           {positions && positions.length > 0 && (
             <div>
               <label className="font-mono text-[9px] text-white/20 uppercase tracking-widest block mb-1.5">My Position (optional)</label>
-              <select value={selectedNft} onChange={(e) => { setSelectedNft(e.target.value); setHasRequested(false); }} className={selectCls}>
-                <option value="">None - analyzing for new entry</option>
+              <select value={selectedNft} onChange={(e) => { setSelectedNft(e.target.value); setAdvice(null); }} className={selectCls}>
+                <option value="">None — analyzing for new entry</option>
                 {positions.filter((p) => !selectedPool || p.poolAddress === selectedPool).map((p) => (
                   <option key={p.nftId} value={p.nftId}>
-                    NFT #{p.nftId} - {p.tokenASymbol}/{p.tokenBSymbol} ({formatUsd(p.valueUsd)})
+                    NFT #{p.nftId} — {p.tokenASymbol}/{p.tokenBSymbol} ({formatUsd(p.valueUsd)})
                   </option>
                 ))}
               </select>
@@ -160,10 +283,10 @@ export default function Advisor() {
 
           <button
             onClick={handleAnalyze}
-            disabled={!selectedPool || adviceLoading}
+            disabled={!selectedPool || loading}
             className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 font-semibold text-sm bg-primary text-[#080808] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed font-mono"
           >
-            {adviceLoading
+            {loading
               ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing…</>
               : <><Bot className="w-4 h-4" /> Analyze Position</>
             }
@@ -175,31 +298,78 @@ export default function Advisor() {
         </div>
       </div>
 
-      {/* Payment required */}
-      {isPaymentRequired && (
-        <div className="border border-amber-500/20 bg-amber-500/[0.04] p-5 animate-in fade-in duration-300">
+      {/* ── Payment required — wallet-driven ── */}
+      {paymentData && (
+        <div className="border border-amber-500/20 bg-amber-500/[0.04] p-5 animate-in fade-in duration-300 flex flex-col gap-4">
           <div className="flex gap-3 items-start">
             <CreditCard className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-            <div>
-              <div className="font-bold text-amber-400 text-sm mb-1">Payment Required</div>
-              <p className="font-mono text-[10px] text-white/40 leading-relaxed mb-2">
-                Access costs{" "}
-                <span className="text-white/70">{paymentData?.amount ?? "0.05"} {paymentData?.currency ?? "USDC"}</span>{" "}
-                on {paymentData?.network ?? "Base"} via x402 micropayment.
+            <div className="flex flex-col gap-1">
+              <div className="font-bold text-amber-400 text-sm">Payment Required</div>
+              <p className="font-mono text-[10px] text-white/40 leading-relaxed">
+                This AI call costs{" "}
+                <span className="text-white/75 font-bold">{paymentData.amount} {paymentData.currency}</span>{" "}
+                on {paymentData.network ?? "Base"}. Your connected wallet pays directly — no middleman.
               </p>
-              {paymentData?.recipient && (
-                <span className="font-mono text-[9px] text-white/20">Treasury: {truncateAddress(paymentData.recipient)}</span>
-              )}
+              <div className="flex gap-4 font-mono text-[9px] text-white/25 mt-1">
+                <span>From: <span className="text-white/45">{truncateAddress(address ?? "")}</span></span>
+                <span>To: <span className="text-white/45">{truncateAddress(paymentData.recipient)}</span></span>
+              </div>
             </div>
+          </div>
+
+          {/* Pay button */}
+          {!payTxHash && (
+            <button
+              onClick={handlePay}
+              disabled={walletPending}
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 font-bold text-sm font-mono bg-amber-500/90 text-[#080808] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {walletPending
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Waiting for wallet…</>
+                : <><CreditCard className="w-4 h-4" /> Pay {paymentData.amount} USDC &amp; Get Analysis</>
+              }
+            </button>
+          )}
+
+          {/* Chain confirmation progress */}
+          {payTxHash && !chainConfirmed && (
+            <div className="flex items-center gap-3 font-mono text-[10px] text-white/40 border border-white/[0.06] px-4 py-3">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400/70 shrink-0" />
+              <span>Confirming on Base Mainnet… tx sent, waiting for block.</span>
+            </div>
+          )}
+
+          {payStep === "verifying" && (
+            <div className="flex items-center gap-3 font-mono text-[10px] text-white/40 border border-primary/15 px-4 py-3">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-primary/60 shrink-0" />
+              <span>Payment verified on-chain · fetching AI analysis…</span>
+            </div>
+          )}
+
+          {payError && (
+            <div className="flex items-start gap-2 font-mono text-[10px] text-red-400 border border-red-500/20 bg-red-500/[0.04] px-4 py-3">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+              <span>{payError}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* General fetch error */}
+      {fetchError && (
+        <div className="border border-red-500/20 bg-red-500/[0.04] p-4">
+          <div className="flex gap-3 items-center text-red-400 text-sm">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            {fetchError}
           </div>
         </div>
       )}
 
-      {/* Result */}
-      {hasRequested && !adviceLoading && advice && "summary" in advice && (
+      {/* ── Result ── */}
+      {advice && (
         <div className="border border-primary/15 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3 px-5 py-3.5 border-b border-white/[0.08] bg-primary/[0.03]">
-            <Bot className="w-4 h-4 text-primary" />
+            <CheckCircle2 className="w-4 h-4 text-primary" />
             <span className="font-bold text-sm">Recommendation</span>
           </div>
 
@@ -248,7 +418,7 @@ export default function Advisor() {
               </div>
             )}
 
-            {/* Withdraw */}
+            {/* Withdraw preview */}
             {(advice.recommendation.suggestedWithdrawPercent ?? 0) > 0 && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -281,15 +451,6 @@ export default function Advisor() {
               <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
               Advisory only. GlidePool never signs transactions on your behalf. Always review before approving.
             </div>
-          </div>
-        </div>
-      )}
-
-      {hasRequested && !adviceLoading && !advice && !isPaymentRequired && (
-        <div className="border border-red-500/20 bg-red-500/[0.04] p-4">
-          <div className="flex gap-3 items-center text-red-400 text-sm">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            Failed to load recommendation. Please try again.
           </div>
         </div>
       )}

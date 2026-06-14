@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { getAddress, parseAbi } from "viem";
 import { publicClient } from "../chain/viemClient.js";
 
-const ADVISOR_PRICE_USDC = Number(process.env.ADVISOR_PRICE_USDC ?? "0.05");
+const ADVISOR_PRICE_USDC = Number(process.env.ADVISOR_PRICE_USDC ?? "0.001");
 const TREASURY_ADDRESS = process.env.TREASURY_ADDRESS ?? "";
 const USDC_ADDRESS_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
 const MAX_TX_AGE_MS = 30 * 60 * 1000; // 30 min

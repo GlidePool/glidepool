@@ -17,3 +17,9 @@ id = "nNw1UT0Z575jn0O6RWWZq"
 uri = "file://PANDUAN.md"
 type = "text"
 title = "Panduan GlidePool — Siap Copy-Paste"
+
+[[outputs]]
+id = "fDI5cyznWwIK3c0AmzeRD"
+uri = "file://CARA_PAKAI.md"
+type = "text"
+title = "Cara Pakai GlidePool — Step by Step"

@@ -12,6 +12,9 @@ export const agents = pgTable("agents", {
   analysisIntervalSec: integer("analysis_interval_sec").notNull().default(60),
   lastAnalysisAt: timestamp("last_analysis_at", { withTimezone: true }),
   paymentTxHash: text("payment_tx_hash"),
+  // Optional agent wallet private key — stored server-side for autonomous x402 payments.
+  // Never returned in any API response. Users should use a dedicated burner wallet.
+  agentPrivateKey: text("agent_private_key"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

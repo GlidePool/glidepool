@@ -1,4 +1,4 @@
-import { BookOpen, Layers, Bot, Zap, Plus, Eye, ExternalLink } from "lucide-react";
+import { BookOpen, Layers, Bot, Zap, Plus, Eye, ExternalLink, Terminal } from "lucide-react";
 import { Link } from "wouter";
 
 const SECTIONS = [
@@ -13,9 +13,9 @@ const SECTIONS = [
 
 · Maverick V2 — the DLMM protocol that manages on-chain liquidity bins
 · Claude Opus 4 — Anthropic's frontier model that analyzes pool state and recommends actions
-· x402 — an HTTP micropayment standard that gates each AI call with 0.05 USDC on Base
+· x402 — an HTTP micropayment standard that gates each AI call with 0.001 USDC on Base
 
-GlidePool is fully non-custodial. The server reads on-chain data and produces recommendations. Every write (rebalance, add/remove liquidity) requires your explicit wallet signature.`,
+GlidePool is fully non-custodial. The server reads on-chain data and produces recommendations. Every write (rebalance, add/remove liquidity) requires your explicit wallet signature — unless you deploy a fully autonomous agent with a private key.`,
       },
     ],
   },
@@ -52,16 +52,23 @@ Data is fetched live from Base Mainnet via viem every time you load the page.`,
     id: "agents",
     content: [
       {
-        heading: "Deploying an Agent",
-        body: `An agent is a server-side loop that monitors a pool and generates LLM recommendations on a schedule. To deploy:
+        heading: "Two Agent Modes",
+        body: `GlidePool agents run in two distinct modes depending on whether you supply a private key:
 
-1. Go to Deploy Agent
+Semi-autonomous (no private key)
+The agent reads pool state and calls Claude Opus 4 on schedule. Every on-chain action recommendation appears in Monitor with a "Sign" button — you approve each transaction with your connected wallet.
+
+Fully autonomous (with private key)
+The agent holds a dedicated burner wallet. It auto-pays the 0.001 USDC x402 fee per analysis cycle, calls Claude Opus 4, and can sign on-chain actions without any manual step. Use a burner wallet only — fund it with a small ETH balance for gas and USDC for advisor fees.`,
+      },
+      {
+        heading: "Deploying an Agent",
+        body: `1. Go to Deploy Agent
 2. Select a pool from the dropdown
 3. Choose a strategy: Conservative (Static bins), Balanced (Both mode), or Aggressive (Right/Left mode)
 4. Set a USDC budget and analysis interval (minimum 30s)
-5. Submit — your wallet address is recorded as the agent owner
-
-No wallet signature is required to create an agent. Signatures are only needed when you approve a transaction proposal.`,
+5. Optionally expand "Agent Wallet" and paste a burner wallet private key for full autonomy
+6. Submit — the agent starts immediately`,
       },
       {
         heading: "Agent Lifecycle",
@@ -101,7 +108,7 @@ Decisions are stored in the database and persist across sessions.`,
       },
       {
         heading: "Approving Transactions",
-        body: `When the agent recommends a rebalance or liquidity action, it generates a transaction proposal. The proposal appears in Monitor with a "Sign" button. Clicking it opens your wallet (RainbowKit / Reown AppKit) for signature. GlidePool never signs on your behalf.`,
+        body: `When the agent recommends a rebalance or liquidity action (semi-autonomous mode), it generates a transaction proposal. The proposal appears in Monitor with a "Sign" button. Clicking it opens your wallet (RainbowKit / Reown AppKit) for signature. GlidePool never signs on your behalf unless you have explicitly provided a private key.`,
       },
     ],
   },
@@ -115,18 +122,46 @@ Decisions are stored in the database and persist across sessions.`,
         body: `x402 is an HTTP micropayment standard built on the HTTP 402 (Payment Required) status code. When enabled:
 
 1. Client calls GET /api/advisor
-2. Server responds HTTP 402 with a payment header: treasury address + 0.05 USDC on Base
-3. Client sends a USDC transfer on Base Mainnet
-4. Client retries the request with the transaction hash
+2. Server responds HTTP 402 with payment details: treasury address + 0.001 USDC on Base
+3. Client sends a USDC transfer on Base Mainnet (your wallet, or the agent's burner wallet)
+4. Client retries the request with the transaction hash in the x-payment-proof header
 5. Server verifies the transfer on-chain via Base RPC
 6. Server unlocks Claude Opus 4 and returns the analysis
 
 x402 is disabled by default. Enable it server-side with X402_ENABLED=true and set TREASURY_ADDRESS.`,
       },
+      {
+        heading: "Paying from the Browser",
+        body: `The AI Advisor page handles x402 automatically when your wallet is connected. Click "Analyze Position" — if the server returns 402, a payment panel appears. Click "Pay 0.001 USDC & Get Analysis" and your connected wallet signs the USDC transfer. Once confirmed on-chain, the advisor result is returned instantly.`,
+      },
+      {
+        heading: "Paying from the CLI",
+        body: `For programmatic access, manually encode the payment proof:
+
+# 1. Send 0.001 USDC to the treasury on Base Mainnet
+#    (use cast, wagmi, or any EVM library)
+#    USDC: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+
+# 2. Encode proof header
+PROOF=$(echo -n '{"txHash":"0xYOUR_TX","from":"0xYOUR_ADDR","amount":"0.001"}' | base64)
+
+# 3. Call advisor with proof
+curl -H "x-payment-proof: $PROOF" \\
+  "https://your-app.replit.app/api/advisor?poolAddress=0x...&userGoal=maximize+fees"
+
+The server verifies the tx on-chain — same flow as the browser, just encoded manually.`,
+      },
+      {
+        heading: "Autonomous Agents and x402",
+        body: `Fully autonomous agents (deployed with a private key) auto-pay x402 on every analysis cycle. The agent's burner wallet sends 0.001 USDC to the treasury, waits for the tx to confirm, then calls Claude Opus 4. No user interaction is needed. The burner wallet needs:
+
+· A small ETH balance for gas (≈ 0.0001 ETH per cycle on Base)
+· Enough USDC for ongoing advisor fees (0.001 USDC × cycles per day)`,
+      },
     ],
   },
   {
-    icon: <Plus className="w-4 h-4 text-primary" />,
+    icon: <Terminal className="w-4 h-4 text-primary" />,
     title: "REST API",
     id: "api",
     content: [
@@ -145,6 +180,22 @@ GET  /api/agents/:id/actions           — LLM decision history
 PUT  /api/agents/:id/status            — pause / resume / stop
 
 GET  /api/advisor                      — AI advisor (x402-gated if enabled)`,
+      },
+      {
+        heading: "Creating an Agent via API",
+        body: `POST /api/agents
+Content-Type: application/json
+
+{
+  "userAddress": "0xYOUR_WALLET",
+  "poolAddress": "0xPOOL_ADDRESS",
+  "strategy": "balanced",
+  "budgetUsdc": 100,
+  "analysisIntervalSec": 300,
+  "agentPrivateKey": "0xBURNER_WALLET_PRIVATE_KEY"  // optional — enables full autonomy
+}
+
+The agentPrivateKey field is write-only. It is stored server-side and never returned in any GET response. Omit it for semi-autonomous mode (manual signing via Monitor).`,
       },
       {
         heading: "Full Reference",

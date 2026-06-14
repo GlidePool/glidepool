@@ -18,6 +18,10 @@ import PositionDetail from "@/pages/position-detail";
 import Advisor from "@/pages/advisor";
 import CliGuide from "@/pages/cli-guide";
 import CreatePool from "@/pages/create-pool";
+import Privacy from "@/pages/privacy";
+import Docs from "@/pages/docs";
+import HowTo from "@/pages/how-to";
+import Architecture from "@/pages/architecture";
 import { Layout } from "@/components/layout";
 
 const queryClient = new QueryClient();
@@ -70,6 +74,10 @@ function Router() {
         <Route path="/agent/setup" component={AgentSetup} />
         <Route path="/monitor" component={Monitor} />
         <Route path="/cli" component={CliGuide} />
+        <Route path="/docs" component={Docs} />
+        <Route path="/how-to" component={HowTo} />
+        <Route path="/architecture" component={Architecture} />
+        <Route path="/privacy" component={Privacy} />
       </Switch>
     </Layout>
   );

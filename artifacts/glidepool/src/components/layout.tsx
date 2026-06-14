@@ -154,9 +154,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {/* Developers */}
             <div className="flex flex-col gap-3">
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Developers</div>
-              <Link href="/cli">
-                <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">API Guide</span>
-              </Link>
+              {[
+                { label: "Docs",         href: "/docs" },
+                { label: "API Guide",    href: "/cli" },
+                { label: "How-To",       href: "/how-to" },
+                { label: "Architecture", href: "/architecture" },
+              ].map(({ label, href }) => (
+                <Link key={href} href={href}>
+                  <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">{label}</span>
+                </Link>
+              ))}
             </div>
 
             {/* Resources */}
@@ -174,6 +181,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 className="inline-flex items-center gap-1 text-xs text-white/40 hover:text-white/75 transition-colors font-mono w-fit">
                 x402 Protocol <ExternalLink className="w-2.5 h-2.5" />
               </a>
+            </div>
+
+            {/* Legal */}
+            <div className="flex flex-col gap-3">
+              <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Legal</div>
+              <Link href="/privacy">
+                <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">Privacy Policy</span>
+              </Link>
             </div>
           </div>
 

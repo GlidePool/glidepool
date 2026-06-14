@@ -1,1 +1,4 @@
 - [Agent System Architecture](agent-system.md) — agent-per-wallet, real LLM loop, x402 on-chain verification, DB schema, API routes, frontend flow.
+- [Maverick V2 DLMM contracts](maverick-v2-contracts.md) — router/factory/position NFT addresses on Base + correct ABI shapes for remove/add liquidity on-chain.
+- [Wagmi v2 write pattern](wagmi-v2-write.md) — useWriteContract + useWaitForTransactionReceipt; NFT setApprovalForAll required before router.removeLiquidity.
+- [Custom pools DB pattern](custom-pools-db.md) — user-created pools in custom_pools table; listSupportedPools merges hardcoded allowlist + DB rows.

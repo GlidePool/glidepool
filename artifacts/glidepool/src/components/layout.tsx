@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard, Bot, Activity, Layers, Wallet2,
-  Terminal, Settings, ExternalLink,
+  Terminal, Settings, ExternalLink, Plus,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/agent/setup", label: "Deploy Agent", icon: Bot },
   { href: "/monitor",     label: "Monitor",     icon: Activity },
   { href: "/pools",       label: "Pools",       icon: Layers },
+  { href: "/pools/create", label: "Create Pool", icon: Plus },
   { href: "/positions",   label: "Positions",   icon: Wallet2 },
   { href: "/cli",         label: "API Guide",   icon: Terminal },
   { href: "/settings",    label: "Settings",    icon: Settings },
@@ -156,6 +157,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               {[
                 { label: "Dashboard",   href: "/dashboard" },
                 { label: "Pools",       href: "/pools" },
+                { label: "Create Pool", href: "/pools/create" },
                 { label: "Positions",   href: "/positions" },
                 { label: "AI Advisor",  href: "/advisor" },
                 { label: "Monitor",     href: "/monitor" },

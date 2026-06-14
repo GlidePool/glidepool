@@ -1,6 +1,12 @@
 import { getAddress } from "viem";
 import { publicClient } from "./viemClient.js";
-import { POOL_LENS_ABI, MAVERICK_V2_POOL_LENS, TOKEN_DECIMALS } from "./constants.js";
+import {
+  POOL_LENS_ABI,
+  POOL_BALANCE_ABI,
+  MAVERICK_V2_POOL_LENS,
+  MAVERICK_V2_POSITION,
+  TOKEN_DECIMALS,
+} from "./constants.js";
 import { readPoolState } from "./poolReader.js";
 
 export interface RemoveLiquidityResult {
@@ -32,9 +38,31 @@ export async function computeRemoveParams(
   amountA: string,
   amountB: string
 ): Promise<RemoveLiquidityResult> {
+  const poolAddr = getAddress(poolAddress);
+  const positionAddr = getAddress(MAVERICK_V2_POSITION);
   const fraction = BigInt(withdrawPercent);
-  const amounts = binIds.map(() => {
-    return String((BigInt(amountA) * fraction) / 100n);
+
+  // Fetch real LP balances for each bin.
+  // NFT positions: the position contract holds LP on behalf of tokenId (= subaccount).
+  const lpBalances = await Promise.allSettled(
+    binIds.map((binId) =>
+      publicClient.readContract({
+        address: poolAddr,
+        abi: POOL_BALANCE_ABI,
+        functionName: "balanceOf",
+        args: [positionAddr, BigInt(nftId), Number(binId)],
+      })
+    )
+  );
+
+  const amounts = lpBalances.map((result) => {
+    if (result.status === "fulfilled" && result.value) {
+      const lpBalance = result.value as bigint;
+      return String((lpBalance * fraction) / 100n);
+    }
+    // Fallback if balanceOf call fails: proportional token proxy
+    const perBin = BigInt(amountA) / BigInt(binIds.length || 1);
+    return String((perBin * fraction) / 100n);
   });
 
   const estA = (BigInt(amountA) * fraction) / 100n;
@@ -43,7 +71,7 @@ export async function computeRemoveParams(
   return {
     poolAddress,
     recipient: userAddress,
-    subaccount: 0,
+    subaccount: Number(nftId),
     binIds,
     amounts,
     estimatedTokenA: String(estA),
@@ -101,6 +129,7 @@ export async function computeAddParams(
   const poolState = await readPoolState(poolAddress);
   const decimalsA = TOKEN_DECIMALS[poolState.tokenA.toLowerCase()] ?? 18;
   const decimalsB = TOKEN_DECIMALS[poolState.tokenB.toLowerCase()] ?? 18;
+  void decimalsA; void decimalsB;
 
   const estA = tickDeltas[0] ?? 0n;
   const estB = tickDeltas[1] ?? 0n;

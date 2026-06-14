@@ -18,6 +18,7 @@ import PositionDetail from "@/pages/position-detail";
 import Advisor from "@/pages/advisor";
 import CliGuide from "@/pages/cli-guide";
 import Settings from "@/pages/settings";
+import CreatePool from "@/pages/create-pool";
 import { Layout } from "@/components/layout";
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ function Router() {
         <Route path="/" component={Landing} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/pools" component={Pools} />
+        <Route path="/pools/create" component={CreatePool} />
         <Route path="/pools/:poolAddress" component={PoolDetail} />
         <Route path="/positions" component={Positions} />
         <Route path="/positions/:nftId" component={PositionDetail} />

@@ -14,6 +14,7 @@ import {
   WETH,
   USDC,
 } from "./constants.js";
+import { db, customPools } from "@workspace/db";
 
 export interface PoolState {
   poolAddress: string;
@@ -240,8 +241,11 @@ export async function readPoolState(poolAddress: string): Promise<PoolState> {
 }
 
 export async function listSupportedPools(): Promise<PoolSummary[]> {
-  // Fetch Maverick API data in parallel with pool-level on-chain reads
-  const [apiMap] = await Promise.all([fetchMaverickApiPools()]);
+  // Fetch Maverick API data + custom pools from DB in parallel
+  const [apiMap, dbPoolRows] = await Promise.all([
+    fetchMaverickApiPools(),
+    db.select().from(customPools).catch(() => [] as (typeof customPools.$inferSelect)[]),
+  ]);
 
   const results = await Promise.allSettled(
     SUPPORTED_POOL_ALLOW_LIST.map(async (p) => {
@@ -305,7 +309,76 @@ export async function listSupportedPools(): Promise<PoolSummary[]> {
     })
   );
 
-  return results
-    .filter((r) => r.status === "fulfilled")
-    .map((r) => (r as PromiseFulfilledResult<PoolSummary>).value);
+  // Also fetch custom user-registered pools from DB
+  const allowlistAddresses = new Set(
+    SUPPORTED_POOL_ALLOW_LIST.map((p) => p.poolAddress.toLowerCase())
+  );
+  const uniqueDbPools = dbPoolRows.filter(
+    (p) => !allowlistAddresses.has(p.poolAddress.toLowerCase())
+  );
+
+  const dbResults = await Promise.allSettled(
+    uniqueDbPools.map(async (p) => {
+      const apiPool = apiMap.get(p.poolAddress.toLowerCase());
+
+      if (apiPool) {
+        return {
+          poolAddress: p.poolAddress,
+          tokenA: p.tokenA,
+          tokenB: p.tokenB,
+          tokenASymbol: p.tokenASymbol,
+          tokenBSymbol: p.tokenBSymbol,
+          tvlUsd: apiPool.tvl?.amount ?? 0,
+          activeTick: String(apiPool.lowerTick ?? 0),
+          currentPrice: apiPool.price ?? 0,
+          feeRate: p.feeRate,
+        } satisfies PoolSummary;
+      }
+
+      try {
+        const state = await readPoolState(p.poolAddress);
+        const tvlUsd = estimateTvlUsd(
+          BigInt(state.reserveA),
+          BigInt(state.reserveB),
+          p.tokenADecimals,
+          p.tokenBDecimals,
+          p.tokenA,
+          p.tokenB,
+          state.currentPrice
+        );
+        return {
+          poolAddress: p.poolAddress,
+          tokenA: p.tokenA,
+          tokenB: p.tokenB,
+          tokenASymbol: p.tokenASymbol,
+          tokenBSymbol: p.tokenBSymbol,
+          tvlUsd,
+          activeTick: state.activeTick,
+          currentPrice: state.currentPrice,
+          feeRate: p.feeRate,
+        } satisfies PoolSummary;
+      } catch {
+        return {
+          poolAddress: p.poolAddress,
+          tokenA: p.tokenA,
+          tokenB: p.tokenB,
+          tokenASymbol: p.tokenASymbol,
+          tokenBSymbol: p.tokenBSymbol,
+          tvlUsd: 0,
+          activeTick: "0",
+          currentPrice: 0,
+          feeRate: p.feeRate,
+        } satisfies PoolSummary;
+      }
+    })
+  );
+
+  return [
+    ...results
+      .filter((r) => r.status === "fulfilled")
+      .map((r) => (r as PromiseFulfilledResult<PoolSummary>).value),
+    ...dbResults
+      .filter((r) => r.status === "fulfilled")
+      .map((r) => (r as PromiseFulfilledResult<PoolSummary>).value),
+  ];
 }

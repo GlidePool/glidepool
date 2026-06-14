@@ -249,5 +249,47 @@ export const ERC20_ABI = [
   },
 ] as const;
 
+export const POOL_BALANCE_ABI = [
+  {
+    name: "balanceOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "user",       type: "address" },
+      { name: "subaccount", type: "uint256" },
+      { name: "binId",      type: "uint32"  },
+    ],
+    outputs: [{ type: "uint128" }],
+  },
+] as const;
+
+export const ROUTER_ABI = [
+  {
+    name: "removeLiquidity",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "pool",            type: "address" },
+      { name: "recipient",       type: "address" },
+      { name: "subaccount",      type: "uint256" },
+      {
+        name: "params",
+        type: "tuple[]",
+        components: [
+          { name: "binId",  type: "uint32"  },
+          { name: "amount", type: "uint128" },
+        ],
+      },
+      { name: "minTokenAAmount", type: "uint256" },
+      { name: "minTokenBAmount", type: "uint256" },
+      { name: "deadline",        type: "uint256" },
+    ],
+    outputs: [
+      { name: "tokenAAmount", type: "uint256" },
+      { name: "tokenBAmount", type: "uint256" },
+    ],
+  },
+] as const;
+
 export const USDC_PRICE_USD = 1.0;
 export const ETH_PRICE_USD_FALLBACK = 3000;

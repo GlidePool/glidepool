@@ -1,5 +1,5 @@
 import { useRoute, Link } from "wouter";
-import { useAccount } from "wagmi";
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import {
   useGetPositionDetail, getGetPositionDetailQueryKey,
   useGetAdvice, getGetAdviceQueryKey,
@@ -9,8 +9,13 @@ import { formatUsd, formatCrypto, truncateAddress } from "@/lib/format";
 import {
   ArrowLeft, Bot, TrendingDown, TrendingUp, Minus,
   AlertCircle, Wallet2, Loader2, ChevronRight,
+  CheckCircle2, ExternalLink, ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
+import {
+  MAVERICK_V2_ROUTER, MAVERICK_V2_POSITION,
+  ROUTER_ABI, POSITION_NFT_ABI,
+} from "@/lib/maverick-abi";
 
 const RISK_STYLES: Record<string, string> = {
   low:    "bg-primary/[0.08] text-primary border-primary/25",
@@ -25,13 +30,22 @@ const ACTION_ICONS: Record<string, React.ReactNode> = {
   switch_mode:   <ChevronRight className="w-3.5 h-3.5" />,
 };
 
+interface TxPreview {
+  poolAddress: string;
+  subaccount: number;
+  binIds: string[];
+  amounts: string[];
+  estimatedTokenA: string;
+  estimatedTokenB: string;
+}
+
 export default function PositionDetail() {
   const [, params] = useRoute("/positions/:nftId");
   const nftId = params?.nftId ?? "";
   const { address, isConnected } = useAccount();
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [removePercent, setRemovePercent] = useState(50);
-  const [txPreview, setTxPreview] = useState<{ binIds: string[]; estimatedTokenA: string; estimatedTokenB: string } | null>(null);
+  const [txPreview, setTxPreview] = useState<TxPreview | null>(null);
 
   const { data: position, isLoading } = useGetPositionDetail(address ?? "", nftId, {
     query: { enabled: !!address && !!nftId, queryKey: getGetPositionDetailQueryKey(address ?? "", nftId) },
@@ -43,6 +57,62 @@ export default function PositionDetail() {
   );
 
   const removeParamsMutation = useComputeRemoveParams();
+
+  // ── Check if router is approved to manage this NFT ───────────────────────
+  const { data: isRouterApproved, refetch: refetchApproval } = useReadContract({
+    address: MAVERICK_V2_POSITION,
+    abi: POSITION_NFT_ABI,
+    functionName: "isApprovedForAll",
+    args: [address!, MAVERICK_V2_ROUTER],
+    query: { enabled: !!address },
+  });
+
+  // ── Approve router ────────────────────────────────────────────────────────
+  const approveWrite = useWriteContract();
+  const approveReceipt = useWaitForTransactionReceipt({ hash: approveWrite.data });
+
+  const handleApprove = () => {
+    approveWrite.writeContract({
+      address: MAVERICK_V2_POSITION,
+      abi: POSITION_NFT_ABI,
+      functionName: "setApprovalForAll",
+      args: [MAVERICK_V2_ROUTER, true],
+    });
+  };
+
+  // Refetch approval after confirmed
+  if (approveReceipt.isSuccess && !isRouterApproved) {
+    refetchApproval();
+  }
+
+  // ── Remove liquidity ──────────────────────────────────────────────────────
+  const removeWrite = useWriteContract();
+  const removeReceipt = useWaitForTransactionReceipt({ hash: removeWrite.data });
+
+  const handleRemoveLiquidity = () => {
+    if (!txPreview || !address) return;
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 1800); // 30 min
+    removeWrite.writeContract({
+      address: MAVERICK_V2_ROUTER,
+      abi: ROUTER_ABI,
+      functionName: "removeLiquidity",
+      args: [
+        txPreview.poolAddress as `0x${string}`,
+        address,
+        BigInt(txPreview.subaccount),
+        txPreview.binIds.map((binId, i) => ({
+          binId: Number(binId),
+          amount: BigInt(txPreview.amounts[i] ?? "0"),
+        })),
+        0n,
+        0n,
+        deadline,
+      ],
+    });
+  };
+
+  const routerApproved = isRouterApproved || approveReceipt.isSuccess;
+  const canSign = !!txPreview && routerApproved;
 
   if (!isConnected) {
     return (
@@ -94,7 +164,16 @@ export default function PositionDetail() {
     if (!position || !address) return;
     removeParamsMutation.mutate(
       { data: { nftId: position.nftId, userAddress: address, poolAddress: position.poolAddress, withdrawPercent: removePercent } },
-      { onSuccess: (data) => setTxPreview(data) }
+      {
+        onSuccess: (data) => setTxPreview({
+          poolAddress: data.poolAddress ?? position.poolAddress,
+          subaccount: (data as TxPreview).subaccount ?? Number(nftId),
+          binIds: data.binIds ?? [],
+          amounts: (data as TxPreview).amounts ?? [],
+          estimatedTokenA: data.estimatedTokenA ?? "0",
+          estimatedTokenB: data.estimatedTokenB ?? "0",
+        }),
+      }
     );
   };
 
@@ -138,7 +217,7 @@ export default function PositionDetail() {
         </button>
       </div>
 
-      {/* Stats - flat bordered grid */}
+      {/* Stats */}
       <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
         {[
           { label: `Amount ${position.tokenASymbol}`, value: formatCrypto(position.amountA, 6) },
@@ -150,6 +229,178 @@ export default function PositionDetail() {
             <div className="text-xl font-mono font-bold">{value}</div>
           </div>
         ))}
+      </div>
+
+      {/* ── Manage Position (Remove Liquidity) ── */}
+      <div className="border border-white/[0.10]">
+        <div className="px-5 py-3.5 border-b border-white/[0.10] flex items-center gap-2">
+          <TrendingDown className="w-3.5 h-3.5 text-white/30" />
+          <span className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Remove Liquidity</span>
+        </div>
+
+        <div className="p-5 space-y-4">
+          {/* Percent slider */}
+          <div className="flex items-center justify-between gap-4">
+            <input
+              type="range" min={1} max={100} value={removePercent}
+              onChange={(e) => { setRemovePercent(Number(e.target.value)); setTxPreview(null); }}
+              className="flex-1 accent-primary"
+            />
+            <span className="font-mono text-sm text-primary/80 font-bold w-12 text-right">{removePercent}%</span>
+          </div>
+          <div className="flex gap-1.5">
+            {[25, 50, 75, 100].map((p) => (
+              <button key={p} onClick={() => { setRemovePercent(p); setTxPreview(null); }}
+                className={`font-mono text-[9px] px-2.5 py-1 border transition-all ${
+                  removePercent === p ? "border-primary/40 text-primary/70 bg-primary/[0.05]" : "border-white/[0.07] text-white/25 hover:border-white/15 hover:text-white/50"
+                }`}>{p}%</button>
+            ))}
+          </div>
+
+          {/* Preview button */}
+          {!txPreview && (
+            <button
+              onClick={handlePreviewRemove}
+              disabled={removeParamsMutation.isPending}
+              className="inline-flex items-center gap-2 px-4 py-2.5 font-mono text-[10px] border border-white/[0.08] text-white/50 hover:border-primary/30 hover:text-primary/70 transition-all disabled:opacity-50"
+            >
+              {removeParamsMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
+              {removeParamsMutation.isPending ? "Computing params…" : "Preview Removal"}
+            </button>
+          )}
+
+          {/* TX Preview */}
+          {txPreview && !removeReceipt.isSuccess && (
+            <div className="border border-white/[0.08] bg-black/30 p-4 space-y-4">
+              <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Transaction Preview</div>
+              <div className="space-y-1.5 font-mono text-[10px]">
+                <div className="flex justify-between">
+                  <span className="text-white/30">Remove %</span>
+                  <span>{removePercent}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/30">Est. {position.tokenASymbol}</span>
+                  <span>{formatCrypto(txPreview.estimatedTokenA, 6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/30">Est. {position.tokenBSymbol}</span>
+                  <span>{formatCrypto(txPreview.estimatedTokenB, 6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/30">Bins affected</span>
+                  <span>{txPreview.binIds.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/30">NFT subaccount</span>
+                  <span>#{txPreview.subaccount}</span>
+                </div>
+              </div>
+
+              {/* Step 1: Approve */}
+              {!routerApproved && (
+                <div className="border border-amber-500/20 bg-amber-500/[0.04] p-3 space-y-2">
+                  <div className="flex items-center gap-2 font-mono text-[10px] text-amber-400/80">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    Step 1 — Approve router to manage your position NFT
+                  </div>
+                  <p className="font-mono text-[9px] text-white/25 leading-relaxed">
+                    One-time approval per wallet. Required before the router can remove liquidity on your behalf.
+                  </p>
+                  <button
+                    onClick={handleApprove}
+                    disabled={approveWrite.isPending || approveReceipt.isLoading}
+                    className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[10px] border border-amber-500/30 text-amber-400/80 hover:bg-amber-500/[0.06] transition-all disabled:opacity-50"
+                  >
+                    {approveWrite.isPending ? (
+                      <><Loader2 className="w-3 h-3 animate-spin" /> Waiting for wallet…</>
+                    ) : approveReceipt.isLoading ? (
+                      <><Loader2 className="w-3 h-3 animate-spin" /> Confirming…</>
+                    ) : (
+                      <><ShieldCheck className="w-3 h-3" /> Approve Position Manager</>
+                    )}
+                  </button>
+                  {approveWrite.data && !approveReceipt.isSuccess && (
+                    <a href={`https://basescan.org/tx/${approveWrite.data}`} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 font-mono text-[9px] text-amber-400/50 hover:text-amber-400/80 transition-colors">
+                      View TX <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                  {approveWrite.error && (
+                    <p className="font-mono text-[9px] text-red-400/70">{approveWrite.error.message?.slice(0, 100)}</p>
+                  )}
+                </div>
+              )}
+
+              {routerApproved && !approveReceipt.isSuccess && (
+                <div className="flex items-center gap-2 font-mono text-[9px] text-primary/50">
+                  <CheckCircle2 className="w-3 h-3 text-primary" /> Router approved
+                </div>
+              )}
+              {approveReceipt.isSuccess && (
+                <div className="flex items-center gap-2 font-mono text-[9px] text-primary/70">
+                  <CheckCircle2 className="w-3 h-3 text-primary" /> Approval confirmed!
+                </div>
+              )}
+
+              {/* Step 2: Sign & Remove */}
+              <div className={`space-y-2 ${!routerApproved ? "opacity-40 pointer-events-none" : ""}`}>
+                <div className="font-mono text-[9px] text-white/25 uppercase tracking-widest">
+                  {!approveReceipt.isSuccess && routerApproved ? "Ready to sign" : "Step 2 — Sign transaction"}
+                </div>
+                <button
+                  onClick={handleRemoveLiquidity}
+                  disabled={!canSign || removeWrite.isPending || removeReceipt.isLoading}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 font-bold text-sm font-mono bg-primary text-[#080808] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed glow-green w-full justify-center"
+                >
+                  {removeWrite.isPending ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Waiting for wallet…</>
+                  ) : removeReceipt.isLoading ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Confirming on-chain…</>
+                  ) : (
+                    <><TrendingDown className="w-4 h-4" /> Sign & Remove {removePercent}% Liquidity</>
+                  )}
+                </button>
+                {removeWrite.error && (
+                  <p className="font-mono text-[9px] text-red-400/70">{removeWrite.error.message?.slice(0, 150)}</p>
+                )}
+                {removeWrite.data && !removeReceipt.isSuccess && (
+                  <a href={`https://basescan.org/tx/${removeWrite.data}`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-mono text-[9px] text-primary/50 hover:text-primary/80 transition-colors">
+                    View TX on BaseScan <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                )}
+              </div>
+
+              <button onClick={() => setTxPreview(null)}
+                className="font-mono text-[9px] text-white/20 hover:text-white/45 transition-colors">
+                ↺ Re-compute
+              </button>
+
+              <p className="font-mono text-[9px] text-white/15 leading-relaxed">
+                GlidePool is non-custodial. All transactions require your wallet signature and are executed on Base Mainnet.
+              </p>
+            </div>
+          )}
+
+          {/* Success state */}
+          {removeReceipt.isSuccess && (
+            <div className="border border-primary/30 bg-primary/[0.04] p-4 space-y-2">
+              <div className="flex items-center gap-2 font-bold text-sm">
+                <CheckCircle2 className="w-5 h-5 text-primary" />
+                Liquidity removed successfully!
+              </div>
+              <p className="font-mono text-[10px] text-white/40">
+                {removePercent}% of your {position.tokenASymbol}/{position.tokenBSymbol} position was removed.
+              </p>
+              {removeWrite.data && (
+                <a href={`https://basescan.org/tx/${removeWrite.data}`} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-mono text-[10px] text-primary/70 hover:text-primary transition-colors">
+                  View on BaseScan <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Detail panels */}
@@ -258,39 +509,10 @@ export default function PositionDetail() {
                   </div>
                 )}
 
-                {/* Withdraw */}
-                {(advice.recommendation.suggestedWithdrawPercent ?? 0) > 0 && (
-                  <div className="border border-white/[0.06] bg-black/20 p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest">Suggested Withdraw</div>
-                      <span className="font-mono text-xs text-primary/70 border border-primary/20 px-2 py-0.5">
-                        {advice.recommendation.suggestedWithdrawPercent}%
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <input type="range" min={1} max={100} value={removePercent}
-                        onChange={(e) => setRemovePercent(Number(e.target.value))}
-                        className="flex-1 accent-primary" />
-                      <span className="font-mono text-xs text-white/50 w-9 text-right">{removePercent}%</span>
-                    </div>
-                    <button
-                      onClick={handlePreviewRemove}
-                      disabled={removeParamsMutation.isPending}
-                      className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[10px] border border-white/[0.08] text-white/50 hover:border-primary/30 hover:text-primary/70 transition-all disabled:opacity-50"
-                    >
-                      {removeParamsMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
-                      Preview Transaction
-                    </button>
-                    {txPreview && (
-                      <div className="font-mono text-[10px] space-y-1.5 p-4 border border-white/[0.06] bg-black/30">
-                        <div className="font-mono text-[9px] text-white/20 mb-2 uppercase tracking-widest">TX Parameters</div>
-                        <div className="flex justify-between"><span className="text-white/30">Est. {position.tokenASymbol}</span><span>{formatCrypto(txPreview.estimatedTokenA, 6)}</span></div>
-                        <div className="flex justify-between"><span className="text-white/30">Est. {position.tokenBSymbol}</span><span>{formatCrypto(txPreview.estimatedTokenB, 6)}</span></div>
-                        <div className="flex justify-between"><span className="text-white/30">Bins</span><span>{txPreview.binIds.length}</span></div>
-                      </div>
-                    )}
-                    <p className="font-mono text-[9px] text-white/20">GlidePool never holds funds. All writes require your wallet signature.</p>
-                  </div>
+                {advice.recommendation.suggestedWithdrawPercent && (
+                  <p className="font-mono text-[10px] text-primary/50 border border-primary/15 px-3 py-2">
+                    AI suggests withdrawing {advice.recommendation.suggestedWithdrawPercent}% — use the Remove Liquidity panel above.
+                  </p>
                 )}
               </>
             ) : (

@@ -290,7 +290,7 @@ export default function Landing() {
               <img
                 src="/claude-logo.png"
                 alt="Claude"
-                className="h-16 sm:h-20 object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+                className="h-24 sm:h-32 object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ filter: "brightness(0) invert(1)" }}
               />
             </div>

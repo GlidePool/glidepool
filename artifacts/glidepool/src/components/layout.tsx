@@ -6,7 +6,7 @@ import {
 
 const NAV_ITEMS = [
   { href: "/dashboard",   label: "Dashboard",   icon: LayoutDashboard },
-  { href: "/agent/setup", label: "Setup Agent", icon: Bot },
+  { href: "/agent/setup", label: "Deploy Agent", icon: Bot },
   { href: "/monitor",     label: "Monitor",     icon: Activity },
   { href: "/pools",       label: "Pools",       icon: Layers },
   { href: "/positions",   label: "Positions",   icon: Wallet2 },
@@ -159,7 +159,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 { label: "Positions",   href: "/positions" },
                 { label: "AI Advisor",  href: "/advisor" },
                 { label: "Monitor",     href: "/monitor" },
-                { label: "Setup Agent", href: "/agent/setup" },
+                { label: "Deploy Agent", href: "/agent/setup" },
               ].map(({ label, href }) => (
                 <Link key={href} href={href}>
                   <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">{label}</span>

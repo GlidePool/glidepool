@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
+import { useSearch } from "wouter";
 import {
   useListPools, getListPoolsQueryKey,
   useGetUserPositions, getGetUserPositionsQueryKey,
@@ -40,10 +41,14 @@ const inputCls  = "w-full bg-black/40 border border-white/[0.10] px-3 py-2.5 tex
 
 export default function Advisor() {
   const { address, isConnected } = useAccount();
-  const [selectedPool, setSelectedPool] = useState("");
+  const search = useSearch();
+  const poolFromUrl = new URLSearchParams(search).get("pool") ?? "";
+  const [selectedPool, setSelectedPool] = useState(poolFromUrl);
   const [selectedNft,  setSelectedNft]  = useState("");
   const [userGoal,     setUserGoal]     = useState("maximize fee income while minimizing impermanent loss");
   const [hasRequested, setHasRequested] = useState(false);
+
+  useEffect(() => { if (poolFromUrl) setSelectedPool(poolFromUrl); }, [poolFromUrl]);
 
   const { data: pools }     = useListPools({ query: { queryKey: getListPoolsQueryKey() } });
   const { data: positions } = useGetUserPositions(address ?? "", {

@@ -1,7 +1,7 @@
 import { useGetPool, getGetPoolQueryKey } from "@workspace/api-client-react";
 import { formatCrypto, formatUsd, truncateAddress } from "@/lib/format";
 import { useParams, Link } from "wouter";
-import { ArrowLeft, BarChart3, Settings2 } from "lucide-react";
+import { ArrowLeft, BarChart3, Settings2, Bot, Zap, AlertTriangle, ExternalLink } from "lucide-react";
 
 const BIN_MODES = [
   { code: "01", label: "Static", icon: "-", badge: "border-white/[0.10] text-white/40",     desc: "Concentrated liquidity that does not move with price." },
@@ -51,9 +51,11 @@ export default function PoolDetail() {
   }
 
   const feeRatePct = ((Number(pool.feeAIn || 0) / 1e18) * 100).toFixed(4);
-  const tvlNum = pool.currentPrice > 0
-    ? Number(pool.reserveA || 0) / 1e18 * pool.currentPrice + Number(pool.reserveB || 0) / 1e6
+  const currentPriceNum = Number(pool.currentPrice ?? 0);
+  const tvlNum = currentPriceNum > 0
+    ? Number(pool.reserveA || 0) / 1e18 * currentPriceNum + Number(pool.reserveB || 0) / 1e6
     : 0;
+  const isEmpty = tvlNum === 0 && Number(pool.binCounter ?? "0") === 0;
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-400">
@@ -64,6 +66,20 @@ export default function PoolDetail() {
           <ArrowLeft className="w-3 h-3" /> Pools
         </button>
       </Link>
+
+      {/* Empty pool warning */}
+      {isEmpty && (
+        <div className="flex items-start gap-3 border border-amber-500/20 bg-amber-500/[0.04] px-4 py-3">
+          <AlertTriangle className="w-4 h-4 text-amber-400/70 shrink-0 mt-0.5" />
+          <div>
+            <div className="font-bold text-sm text-amber-400/80 mb-0.5">Pool belum ada likuiditas</div>
+            <p className="font-mono text-[10px] text-white/35 leading-relaxed">
+              TVL $0 dan bin counter 0 — pool ini masih kosong di on-chain. Agent bisa dipasang, tapi tidak akan ada aksi rebalance sampai ada reserve dan TWA price yang valid.
+              Kamu tetap bisa test AI Advisor untuk analisis kondisi pool saat ini.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-stretch justify-between gap-0 border border-white/[0.10]">
@@ -169,6 +185,60 @@ export default function PoolDetail() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* ── CTA Bar ── */}
+      <div className="border border-white/[0.10] grid grid-cols-1 sm:grid-cols-3 overflow-hidden">
+        {/* AI Advisor */}
+        <Link href={`/advisor?pool=${poolAddress}`} className="sm:col-span-2">
+          <div className="group flex items-center gap-4 p-5 border-b sm:border-b-0 sm:border-r border-white/[0.10] bg-primary/[0.03] hover:bg-primary/[0.07] transition-all cursor-pointer h-full">
+            <div className="w-10 h-10 border border-primary/30 flex items-center justify-center shrink-0 group-hover:border-primary/60 transition-colors">
+              <Bot className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="font-bold text-sm text-white/85 group-hover:text-white transition-colors mb-0.5">
+                Tanya AI Advisor
+              </div>
+              <p className="font-mono text-[10px] text-white/30 leading-relaxed">
+                Analisis kondisi pool ini dengan Claude Opus 4 — dapat rekomendasi action, risk level, dan bin range yang optimal.
+              </p>
+            </div>
+            <div className="text-primary/40 group-hover:text-primary/80 transition-colors shrink-0">
+              <ExternalLink className="w-4 h-4" />
+            </div>
+          </div>
+        </Link>
+
+        {/* Deploy Agent */}
+        <Link href={`/agent/setup`}>
+          <div className="group flex items-center gap-4 p-5 hover:bg-white/[0.03] transition-all cursor-pointer h-full">
+            <div className="w-10 h-10 border border-white/[0.12] flex items-center justify-center shrink-0 group-hover:border-amber-500/30 transition-colors">
+              <Zap className="w-5 h-5 text-white/30 group-hover:text-amber-400/70 transition-colors" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="font-bold text-sm text-white/60 group-hover:text-white/85 transition-colors mb-0.5">
+                Deploy Agent
+              </div>
+              <p className="font-mono text-[10px] text-white/20 leading-relaxed">
+                Pasang agent otomatis via CLI untuk monitor dan rebalance pool ini.
+              </p>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Pool address footer */}
+      <div className="flex items-center gap-2 pb-2">
+        <span className="font-mono text-[9px] text-white/15">Pool contract:</span>
+        <a
+          href={`https://basescan.org/address/${poolAddress}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-[9px] text-white/25 hover:text-primary/60 transition-colors flex items-center gap-1"
+        >
+          {poolAddress}
+          <ExternalLink className="w-2.5 h-2.5" />
+        </a>
       </div>
     </div>
   );

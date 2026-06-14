@@ -214,8 +214,8 @@ export default function Landing() {
               <img
                 src="/maverick-logo.png"
                 alt="Maverick Protocol"
-                className="h-16 sm:h-20 object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ filter: "brightness(0) invert(1)" }}
+                className="h-16 sm:h-20 object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ mixBlendMode: "screen" }}
               />
             </div>
             <div className="mt-6 space-y-2.5 border-t border-white/[0.07] pt-5">

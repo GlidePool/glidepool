@@ -72,10 +72,10 @@ export default function PoolDetail() {
         <div className="flex items-start gap-3 border border-amber-500/20 bg-amber-500/[0.04] px-4 py-3">
           <AlertTriangle className="w-4 h-4 text-amber-400/70 shrink-0 mt-0.5" />
           <div>
-            <div className="font-bold text-sm text-amber-400/80 mb-0.5">Pool belum ada likuiditas</div>
+            <div className="font-bold text-sm text-amber-400/80 mb-0.5">Pool has no liquidity yet</div>
             <p className="font-mono text-[10px] text-white/35 leading-relaxed">
-              TVL $0 dan bin counter 0 — pool ini masih kosong di on-chain. Agent bisa dipasang, tapi tidak akan ada aksi rebalance sampai ada reserve dan TWA price yang valid.
-              Kamu tetap bisa test AI Advisor untuk analisis kondisi pool saat ini.
+              TVL $0 and bin count 0 — this pool is empty on-chain. An agent can still be deployed, but no rebalance actions will trigger until reserves and a valid TWA price exist.
+              You can still run the AI Advisor to analyze current pool conditions.
             </p>
           </div>
         </div>
@@ -197,10 +197,10 @@ export default function PoolDetail() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="font-bold text-sm text-white/85 group-hover:text-white transition-colors mb-0.5">
-                Tanya AI Advisor
+                Ask AI Advisor
               </div>
               <p className="font-mono text-[10px] text-white/30 leading-relaxed">
-                Analisis kondisi pool ini dengan Claude Opus 4 — dapat rekomendasi action, risk level, dan bin range yang optimal.
+                Analyze this pool with Claude Opus 4 — get an action recommendation, risk level, and optimal bin range.
               </p>
             </div>
             <div className="text-primary/40 group-hover:text-primary/80 transition-colors shrink-0">
@@ -220,7 +220,7 @@ export default function PoolDetail() {
                 Deploy Agent
               </div>
               <p className="font-mono text-[10px] text-white/20 leading-relaxed">
-                Pasang agent otomatis via CLI untuk monitor dan rebalance pool ini.
+                Deploy an automated agent to monitor and rebalance this pool on a schedule.
               </p>
             </div>
           </div>

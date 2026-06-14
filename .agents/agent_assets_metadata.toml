@@ -11,3 +11,9 @@ id = "JsEVPB7X0YpDgDmZ0A1j3"
 uri = "file://artifacts/glidepool/public/hero-bg.png"
 type = "image"
 title = "New Hero Background"
+
+[[outputs]]
+id = "nNw1UT0Z575jn0O6RWWZq"
+uri = "file://PANDUAN.md"
+type = "text"
+title = "Panduan GlidePool — Siap Copy-Paste"

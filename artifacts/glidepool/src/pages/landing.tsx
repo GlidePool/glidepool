@@ -205,7 +205,7 @@ export default function Landing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 border border-white/[0.12] overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-white/[0.12] overflow-hidden">
 
           {/* ── Maverick Protocol ── */}
           <div className="group relative flex flex-col p-8 border-b sm:border-b-0 sm:border-r border-white/[0.12] bg-gradient-to-b from-[#6600ff05] to-transparent hover:from-[#6600ff0a] transition-all duration-500">
@@ -257,7 +257,7 @@ export default function Landing() {
           </div>
 
           {/* ── x402 Integration ── */}
-          <div className="group relative flex flex-col p-8 bg-gradient-to-b from-primary/[0.04] to-transparent hover:from-primary/[0.07] transition-all duration-500">
+          <div className="group relative flex flex-col p-8 border-b lg:border-b-0 border-r border-white/[0.12] bg-gradient-to-b from-primary/[0.04] to-transparent hover:from-primary/[0.07] transition-all duration-500">
             <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">Payment Protocol</div>
             <div className="flex-1 flex items-center justify-center py-6">
               {/* x402 logo — typographic since no official image */}
@@ -282,6 +282,32 @@ export default function Landing() {
               </div>
             </div>
           </div>
+
+          {/* ── Claude (Anthropic) ── */}
+          <div className="group relative flex flex-col p-8 bg-gradient-to-b from-[#d4a57405] to-transparent hover:from-[#d4a57410] transition-all duration-500">
+            <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">AI Model</div>
+            <div className="flex-1 flex items-center justify-center py-6">
+              <img
+                src="/claude-logo.png"
+                alt="Claude"
+                className="h-16 sm:h-20 object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ filter: "brightness(1.1)" }}
+              />
+            </div>
+            <div className="mt-6 space-y-2.5 border-t border-white/[0.07] pt-5">
+              <div className="font-bold text-sm text-white/80">Claude Opus 4</div>
+              <p className="font-mono text-[10px] text-white/30 leading-relaxed">
+                Anthropic's frontier model powers every advisor call — reads live pool state,
+                reasons about IL risk, and outputs structured rebalance recommendations.
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {["Opus 4", "Structured Output", "x402 Gated", "On-chain Context"].map(t => (
+                  <span key={t} className="font-mono text-[9px] text-[#d4a574]/50 border border-[#d4a574]/20 px-1.5 py-0.5">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* Bottom integration stat bar */}

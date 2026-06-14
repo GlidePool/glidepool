@@ -58,7 +58,7 @@ const LEVEL_ICON: Record<LogLevel, React.ReactNode> = {
 };
 
 function actionToLog(action: AgentAction): LogEntry {
-  const ts = new Date(action.createdAt).toLocaleTimeString("en-US", { hour12: false });
+  const ts = new Date(action.createdAt).toLocaleTimeString("en-US", { hour12: false, timeZone: "UTC" }) + " UTC";
   let level: LogLevel = "info";
   let message = action.actionType.toUpperCase();
   let detail: string | undefined;

@@ -55,14 +55,7 @@ export default function Landing() {
   return (
     <div className="relative flex flex-col" style={{ zIndex: 2 }}>
 
-      {/* ─── TICKER ─────────────────────────────── */}
-      <div className="pt-6 relative">
-        <div className="-mx-4 sm:-mx-6 overflow-hidden border-y border-primary/25 bg-primary/[0.05] py-2 select-none">
-          <div className="animate-marquee whitespace-nowrap font-mono text-[11px] text-primary/80 tracking-[0.14em] uppercase">
-            {TICKER.repeat(6)}
-          </div>
-        </div>
-      </div>
+      {/* ─── TICKER — hidden ────────────────────── */}
 
       {/* ─── HERO ───────────────────────────────── */}
       <section className="relative pt-10 sm:pt-14 pb-10 overflow-hidden -mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 min-h-[500px] sm:min-h-[600px] flex flex-col justify-between">

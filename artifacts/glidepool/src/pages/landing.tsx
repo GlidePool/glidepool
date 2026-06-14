@@ -197,6 +197,117 @@ export default function Landing() {
       })()}
 
       {/* ══════════════════════════════════════════
+          INTEGRATIONS — logos strip
+      ══════════════════════════════════════════ */}
+      <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-14 sm:py-16 border-t border-white/[0.05]">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-end gap-4 justify-between">
+          <div>
+            <SectionChip label="Integrations" />
+            <h2 className="font-black uppercase tracking-tighter leading-none" style={{ fontSize: "clamp(28px,4.5vw,56px)" }}>
+              BUILT ON<br /><span className="text-primary">OPEN RAILS</span>
+            </h2>
+          </div>
+          <p className="text-[11px] text-white/25 font-mono max-w-xs leading-relaxed">
+            GlidePool is assembled from best-in-class primitives — no closed systems, no vendor lock-in.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 border border-white/[0.12] overflow-hidden">
+
+          {/* ── Maverick Protocol ── */}
+          <div className="group relative flex flex-col p-8 border-b sm:border-b-0 sm:border-r border-white/[0.12] bg-gradient-to-b from-[#6600ff05] to-transparent hover:from-[#6600ff0a] transition-all duration-500">
+            <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">DLMM Protocol</div>
+            <div className="flex-1 flex items-center justify-center py-6">
+              <img
+                src="/maverick-logo.png"
+                alt="Maverick Protocol"
+                className="h-16 sm:h-20 object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
+            </div>
+            <div className="mt-6 space-y-2.5 border-t border-white/[0.07] pt-5">
+              <div className="font-bold text-sm text-white/80">Maverick Protocol V2</div>
+              <p className="font-mono text-[10px] text-white/30 leading-relaxed">
+                Dynamic liquidity market maker (DLMM) with on-chain bin management, custom fee modes,
+                and the most capital-efficient AMM design on Base.
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {["DLMM", "Static", "Right", "Left", "Both"].map(t => (
+                  <span key={t} className="font-mono text-[9px] text-purple-400/50 border border-purple-500/20 px-1.5 py-0.5">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Base Mainnet ── */}
+          <div className="group relative flex flex-col p-8 border-b sm:border-b-0 sm:border-r border-white/[0.12] bg-gradient-to-b from-[#0052ff05] to-transparent hover:from-[#0052ff0a] transition-all duration-500">
+            <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">L2 Blockchain</div>
+            <div className="flex-1 flex items-center justify-center py-6">
+              <img
+                src="/base-logo.png"
+                alt="Base"
+                className="h-16 sm:h-20 object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+              />
+            </div>
+            <div className="mt-6 space-y-2.5 border-t border-white/[0.07] pt-5">
+              <div className="font-bold text-sm text-white/80">Base Mainnet</div>
+              <p className="font-mono text-[10px] text-white/30 leading-relaxed">
+                Coinbase's OP Stack L2 — low fees, EVM-compatible, and the home of onchain.
+                All agent actions, pool reads, and USDC payments run on Base (chain ID 8453).
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {["Chain ID 8453", "USDC Native", "OP Stack", "EVM"].map(t => (
+                  <span key={t} className="font-mono text-[9px] text-blue-400/50 border border-blue-500/20 px-1.5 py-0.5">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── x402 Integration ── */}
+          <div className="group relative flex flex-col p-8 bg-gradient-to-b from-primary/[0.04] to-transparent hover:from-primary/[0.07] transition-all duration-500">
+            <div className="font-mono text-[9px] text-white/20 uppercase tracking-widest mb-6">Payment Protocol</div>
+            <div className="flex-1 flex items-center justify-center py-6">
+              {/* x402 logo — typographic since no official image */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="font-black text-5xl sm:text-6xl tracking-tighter text-primary/80 group-hover:text-primary transition-colors duration-300"
+                  style={{ textShadow: "0 0 40px rgba(0,245,100,0.35)" }}>
+                  x402
+                </div>
+                <div className="font-mono text-[9px] text-white/20 uppercase tracking-[0.3em]">HTTP Payment Rail</div>
+              </div>
+            </div>
+            <div className="mt-6 space-y-2.5 border-t border-primary/[0.10] pt-5">
+              <div className="font-bold text-sm text-white/80">x402 Integration</div>
+              <p className="font-mono text-[10px] text-white/30 leading-relaxed">
+                HTTP 402 micropayment standard. Each AI advisor call costs <span className="text-primary/60">0.05 USDC</span> on Base,
+                paid automatically by the agent and verified on-chain — no API keys, no subscriptions.
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {["0.05 USDC", "HTTP 402", "On-chain verify", "Auto-pay"].map(t => (
+                  <span key={t} className="font-mono text-[9px] text-primary/50 border border-primary/20 px-1.5 py-0.5">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom integration stat bar */}
+        <div className="border border-t-0 border-white/[0.12] grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/[0.08]">
+          {[
+            { val: "Maverick V2", sub: "DLMM pools" },
+            { val: "Base 8453",   sub: "chain ID" },
+            { val: "0.05 USDC",   sub: "per AI call (x402)" },
+            { val: "100% OSS",    sub: "open source stack" },
+          ].map(({ val, sub }) => (
+            <div key={sub} className="px-5 py-3 flex flex-col gap-0.5">
+              <span className="font-mono text-[11px] font-bold text-white/60">{val}</span>
+              <span className="font-mono text-[9px] text-white/20">{sub}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           ABOUT
       ══════════════════════════════════════════ */}
       <section className="-mx-4 sm:-mx-6 px-8 sm:px-14 lg:px-20 py-16 sm:py-24 border-t border-white/[0.05] relative">

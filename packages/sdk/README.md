@@ -1,6 +1,6 @@
 # @glide-pool/sdk
 
-JavaScript SDK for the [GlidePool](https://github.com/glide-pool/glidepool) autonomous DLMM agent API on Base Mainnet.
+JavaScript SDK for the [GlidePool](https://github.com/GlidePool/glidepool) autonomous DLMM agent API on Base Mainnet.
 
 ## Installation
 
@@ -14,7 +14,7 @@ npm install @glide-pool/sdk
 import { GlidePoolClient } from '@glide-pool/sdk';
 
 const client = new GlidePoolClient({
-  apiUrl: 'https://your-glidepool-instance.replit.app',
+  apiUrl: 'https://api.glidepool.xyz',
 });
 
 // List live Maverick V2 pools

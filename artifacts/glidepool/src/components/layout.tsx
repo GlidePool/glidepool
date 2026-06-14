@@ -172,10 +172,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Developers</div>
               {[
                 { label: "API Guide",  href: "/cli",                                    ext: false },
-                { label: "SDK",        href: "https://docs.glidepool.com/sdk",          ext: true },
-                { label: "API Docs",   href: "https://docs.glidepool.com/api",          ext: true },
-                { label: "GitHub",     href: "https://github.com/GlidePool",            ext: true },
-                { label: "Changelog",  href: "https://github.com/GlidePool/releases",   ext: true },
+                { label: "SDK",        href: "https://github.com/GlidePool/sdk",            ext: true },
+                { label: "API Docs",   href: "https://github.com/GlidePool/docs",         ext: true },
+                { label: "GitHub",     href: "https://github.com/GlidePool",              ext: true },
+                { label: "Changelog",  href: "https://github.com/GlidePool/glidepool/releases", ext: true },
                 { label: "Settings",   href: "/settings",                               ext: false },
               ].map(({ label, href, ext }) => (
                 ext ? (
@@ -195,9 +195,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col gap-3">
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Resources</div>
               {[
-                { label: "Docs",           href: "https://docs.glidepool.com",              ext: true },
-                { label: "Roadmap",        href: "https://github.com/GlidePool/roadmap",    ext: true },
-                { label: "Ecosystem",      href: "https://ecosystem.glidepool.com",         ext: true },
+                { label: "Docs",           href: "https://github.com/GlidePool/docs",        ext: true },
+                { label: "Roadmap",        href: "https://github.com/GlidePool/glidepool/issues", ext: true },
+                { label: "npm",            href: "https://www.npmjs.com/org/glide-pool",   ext: true },
                 { label: "Maverick V2",    href: "https://mav.xyz",                         ext: true },
                 { label: "Privacy Policy", href: "/privacy",                                ext: false },
                 { label: "Terms",          href: "/terms",                                  ext: false },

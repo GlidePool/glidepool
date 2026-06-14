@@ -1,6 +1,6 @@
 # @glide-pool/cli
 
-CLI for [GlidePool](https://github.com/glide-pool/glidepool) — autonomous DLMM agent platform on Base Mainnet.
+CLI for [GlidePool](https://github.com/GlidePool/glidepool) — autonomous DLMM agent platform on Base Mainnet.
 
 Manage agents, browse pools, inspect positions, and get Claude Opus 4 AI advice directly from your terminal.
 
@@ -16,13 +16,13 @@ Point the CLI at your GlidePool API server:
 
 ```bash
 # Save API URL to ~/.glidepool/config.json
-glidepool config set-api https://your-glidepool-instance.replit.app
+glidepool config set-api https://api.glidepool.xyz
 
 # Or use the --api flag on every command
-glidepool --api https://your-instance.replit.app pools list
+glidepool --api https://api.glidepool.xyz pools list
 
-# Or set the env var
-export GLIDEPOOL_API_URL=https://your-glidepool-instance.replit.app
+# Or set the environment variable
+export GLIDEPOOL_API_URL=https://api.glidepool.xyz
 ```
 
 ## Commands

@@ -28,7 +28,7 @@ const FAQS = [
   { q: "What strategies are available?", a: "Conservative (Static bins, tight range), Balanced (Both mode - follows price both ways), Aggressive (Right/Left mode - follows trend). Claude Opus 4 analyzes pool state and your goal each cycle, then recommends the action (hold, rebalance, withdraw, add liquidity)." },
   { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet: WETH/USDC, WETH/USDbC, DAI/USDC, cbETH/WETH, and others. The pool allowlist is configured in the API server and can be extended." },
   { q: "How often does the agent analyze?", a: "The agent loop runs every 30 seconds on the server. Each active agent checks if it's due for analysis based on its analysisIntervalSec setting (default: 60s). LLM decisions are stored in the database and visible in the Monitor page." },
-  { q: "Is a CLI available?", a: "No standalone CLI package exists. All agent management is done via the web UI (Dashboard, Monitor, Setup Agent pages) or directly via the REST API. See the API Guide page for curl examples." },
+  { q: "Is a CLI available?", a: "Yes. Install @glide-pool/cli from npm (npm install -g @glide-pool/cli) to manage agents, browse pools, inspect positions, and get AI advice from your terminal. A JavaScript SDK (@glide-pool/sdk) is also available for programmatic access." },
 ];
 
 /* ══════════════════════════════════════════════════════════════

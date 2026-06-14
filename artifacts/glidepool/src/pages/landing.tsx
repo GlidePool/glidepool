@@ -26,9 +26,9 @@ const FAQS = [
   { q: "Does GlidePool hold my funds?", a: "Never. The API server only reads on-chain data and produces transaction calldata. Every write requires your explicit wallet signature. No private keys, no custody." },
   { q: "How does x402 micropayment work?", a: "When X402_ENABLED=true on the server, the advisor endpoint returns HTTP 402 with a treasury address + 0.05 USDC amount. The server verifies the USDC transfer on-chain via Base RPC, then unlocks Claude Opus 4. x402 is disabled by default — LLM queries run freely without it." },
   { q: "What strategies are available?", a: "Conservative (Static bins, tight range), Balanced (Both mode - follows price both ways), Aggressive (Right/Left mode - follows trend). Claude Opus 4 analyzes pool state and your goal each cycle, then recommends the action (hold, rebalance, withdraw, add liquidity)." },
-  { q: "Which pools are supported?", a: "Maverick V2 DLMM pools on Base Mainnet: WETH/USDC, WETH/USDbC, DAI/USDC, cbETH/WETH, and others. The pool allowlist is configured in the API server and can be extended." },
+  { q: "Which pools are supported?", a: "Any Maverick V2 DLMM pool on Base Mainnet — including WETH/USDC, DAI/USDC, cbETH/WETH, and any custom pool you register. New pools (including Clanker token pairs) can be added permissionlessly via the Create Pool page." },
   { q: "How often does the agent analyze?", a: "The agent loop runs every 30 seconds on the server. Each active agent checks if it's due for analysis based on its analysisIntervalSec setting (default: 60s). LLM decisions are stored in the database and visible in the Monitor page." },
-  { q: "Is a CLI available?", a: "Yes. Install @glide-pool/cli from npm (npm install -g @glide-pool/cli) to manage agents, browse pools, inspect positions, and get AI advice from your terminal. A JavaScript SDK (@glide-pool/sdk) is also available for programmatic access." },
+  { q: "Can I add my own pool?", a: "Yes. Use the Create Pool page to deploy any ERC20 token pair to Maverick V2 (or register an existing pool address). Clanker tokens and any Base-native ERC20 are supported — GlidePool reads symbol, name, and decimals directly from the contract." },
 ];
 
 /* ══════════════════════════════════════════════════════════════

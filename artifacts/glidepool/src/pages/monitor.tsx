@@ -272,7 +272,7 @@ export default function Monitor() {
               <div className="ml-auto font-mono text-[9px] text-white/15">Base Mainnet · chain 8453</div>
             </div>
 
-            <div className="h-[280px] sm:h-[460px] overflow-y-auto p-3 sm:p-4 space-y-0 font-mono text-[11px]">
+            <div className="h-[280px] sm:h-[460px] overflow-y-auto no-scrollbar p-3 sm:p-4 space-y-0 font-mono text-[11px]">
               {actionsLoading ? (
                 <div className="flex items-center gap-2 text-white/20 py-4">
                   <Loader2 className="w-4 h-4 animate-spin" />

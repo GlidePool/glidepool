@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard, Bot, Activity, Layers, Wallet2,
-  Terminal, Settings, ExternalLink, Plus,
+  Terminal, ExternalLink, Plus,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -12,7 +12,6 @@ const NAV_ITEMS = [
   { href: "/pools/create", label: "Create Pool", icon: Plus },
   { href: "/positions",   label: "Positions",   icon: Wallet2 },
   { href: "/cli",         label: "API Guide",   icon: Terminal },
-  { href: "/settings",    label: "Settings",    icon: Settings },
 ];
 
 /* 5 tabs shown in the mobile bottom bar */
@@ -21,7 +20,6 @@ const BOTTOM_TABS = [
   { href: "/pools",     label: "Pools",     icon: Layers },
   { href: "/positions", label: "Positions", icon: Wallet2 },
   { href: "/monitor",   label: "Monitor",   icon: Activity },
-  { href: "/settings",  label: "Settings",  icon: Settings },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -156,14 +154,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {/* Developers */}
             <div className="flex flex-col gap-3">
               <div className="text-[10px] font-mono text-white/25 uppercase tracking-widest mb-1">Developers</div>
-              {[
-                { label: "API Guide",   href: "/cli",      ext: false },
-                { label: "Settings",   href: "/settings", ext: false },
-              ].map(({ label, href }) => (
-                <Link key={label} href={href}>
-                  <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">{label}</span>
-                </Link>
-              ))}
+              <Link href="/cli">
+                <span className="text-xs text-white/40 hover:text-white/75 transition-colors cursor-pointer font-mono">API Guide</span>
+              </Link>
             </div>
 
             {/* Resources */}

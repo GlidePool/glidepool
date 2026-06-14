@@ -17,7 +17,6 @@ import Positions from "@/pages/positions";
 import PositionDetail from "@/pages/position-detail";
 import Advisor from "@/pages/advisor";
 import CliGuide from "@/pages/cli-guide";
-import Settings from "@/pages/settings";
 import CreatePool from "@/pages/create-pool";
 import { Layout } from "@/components/layout";
 
@@ -71,7 +70,6 @@ function Router() {
         <Route path="/agent/setup" component={AgentSetup} />
         <Route path="/monitor" component={Monitor} />
         <Route path="/cli" component={CliGuide} />
-        <Route path="/settings" component={Settings} />
       </Switch>
     </Layout>
   );
